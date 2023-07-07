@@ -1,6 +1,7 @@
 [package]
-name = "protocol_metadata"
+name = "metadata"
 version = "0.1.0"
+authors = ["Tarik Kaced <tarik.kaced@proton.me>"]
 
 [[target.starknet-contract]]
 # Enable Sierra codegen.
@@ -8,9 +9,8 @@ sierra = true
 # Enable CASM codegen.
 casm = true
 name = "compiled"
-authorized-libfuncs = "audited"
 
 # See more keys and their definitions at https://docs.swmansion.com/scarb/docs/reference/manifest
 
 [dependencies]
-starknet = ">=2.0.1"
+starknet = "2.0.0"

@@ -1,1 +1,1 @@
-mod test_protocol_metadata;
+mod test_metadata;

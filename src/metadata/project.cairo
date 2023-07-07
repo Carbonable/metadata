@@ -1,2 +1,1 @@
-mod slots;
 mod contract;
