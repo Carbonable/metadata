@@ -1,4 +1,5 @@
-mod protocol_metadata;
-mod component_library;
+mod metadata;
+mod components;
 
+#[cfg(test)]
 mod tests;
