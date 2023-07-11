@@ -1,6 +1,9 @@
 // Import svgenerator
 // define template
 
-fn generate_token_uri(token_id: u256, data: felt252) -> Array<felt252> {
+use metadata::metadata::common::models::AssetStorageData;
+
+fn generate_token_uri(token_id: u256, data: AssetStorageData) -> Array<felt252> {
+    //TODO: val12 does their magic here
     Default::default()
 }
