@@ -1,3 +1,11 @@
+use starknet::get_contract_address;
+use starknet::ContractAddress;
+
+use metadata::interfaces::erc3525::{IERC3525Dispatcher, IERC3525DispatcherTrait};
+use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
+
+use metadata::metadata::common::models::AssetStorageData;
+
 mod ProjectData {
     const NAME: felt252 = 'Banegas Farm';
     const DEVELOPER: felt252 = 'Corcovado Foundation';
@@ -17,6 +25,21 @@ mod ProjectData {
 
 mod AssetData {}
 
-fn fetch_slot_data(slot: u256) -> felt252 {
+#[inline(always)]
+fn fetch_slot_data(contract_address: ContractAddress, slot: u256) -> felt252 {
     1
+}
+
+
+#[inline(always)]
+fn fetch_token_data(contract_address: ContractAddress, token_id: u256) -> AssetStorageData {
+    let instance = IERC3525Dispatcher { contract_address };
+    let project_instance = IProjectDispatcher { contract_address };
+    let slot = instance.slotOf(token_id);
+    AssetStorageData {
+        total_value: instance.totalValue(slot),
+        project_value: project_instance.getProjectValue(slot),
+        slot,
+        asset_value: instance.valueOf(token_id),
+    }
 }
