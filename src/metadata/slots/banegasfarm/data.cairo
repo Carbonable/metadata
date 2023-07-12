@@ -14,7 +14,7 @@ mod ProjectData {
     const COUNTRY: felt252 = 'Costa Rica';
     const END_YEAR: felt252 = 2052; // mutable storage?
     const END_MONTH: felt252 = 12; // mutable storage?
-    const DURATION_IN_YEARS: felt252 = 30; // 2052 - 2022;
+    const DURATION_IN_YEARS: felt252 = 30; // 2052 - 2022; consteval_int!(END_YEAR - 2022);
     const PROJECTED_CU: felt252 = 1573;
     const COLOR: felt252 = 'Green';
     const TYPE: felt252 = 'Forest';
