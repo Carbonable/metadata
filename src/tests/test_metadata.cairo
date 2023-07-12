@@ -1,4 +1,3 @@
-#[cfg(test)]
 mod metadata_test {
     use serde::Serde;
     use debug::PrintTrait;
