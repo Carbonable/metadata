@@ -30,14 +30,9 @@ mod BanegasFarmUri {
     }
 }
 
-#[starknet::interface]
-trait IERC165<TContractState> {
-    fn supportsInterface(self: @TContractState, interface_id: felt252) -> bool;
-}
-
 mod Assert {
     use starknet::ContractAddress;
-    use super::{IERC165Dispatcher, IERC165DispatcherTrait};
+    use metadata::interfaces::erc165::{IERC165Dispatcher, IERC165DispatcherTrait};
     use metadata::metadata::common::constants;
 
     fn erc165(contract: ContractAddress) {
