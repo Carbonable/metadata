@@ -104,7 +104,7 @@ mod ProjectMock {
         }
 
         fn tokenByIndex(self: @ContractState, index: u256) -> u256 {
-            1_u256
+            index
         }
 
         fn tokenOfOwnerByIndex(self: @ContractState, owner: felt252, index: u256) -> u256 {
