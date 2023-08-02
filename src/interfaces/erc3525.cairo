@@ -54,7 +54,7 @@ trait IERC3525<TContractState> {
     // 3525 Metadata
     //
 
-    fn contractURI(self: @TContractState, ) -> Array<felt252>;
+    fn contractURI(self: @TContractState) -> Array<felt252>;
 
     fn slotURI(self: @TContractState, slot: u256) -> Array<felt252>;
 

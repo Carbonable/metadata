@@ -7,6 +7,8 @@ mod BanegasFarmUri {
     use metadata::metadata::slots::banegasfarm::data::fetch_slot_data;
     use metadata::metadata::slots::banegasfarm::data::fetch_token_data;
 
+    use metadata::interfaces::slot_metadata::ISlotMetadata;
+
     #[storage]
     struct Storage {}
 
@@ -15,6 +17,8 @@ mod BanegasFarmUri {
     impl BanegasFarmMetadata of IBanegasFarmUri {
         fn construct_slot_uri(self: @ContractState, slot: u256) -> Array<felt252> {
             let contract = get_contract_address();
+            super::Assert::compatible(contract);
+
             let slot_data = fetch_slot_data(contract, slot);
             generate_slot_uri(slot, slot_data)
         }
