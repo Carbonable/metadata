@@ -5,13 +5,14 @@ mod interfaces {
     mod contract_metadata;
     mod erc165;
     mod component;
+    mod component_provider;
 }
 
 mod components {
     mod component {
         mod carbonable_logo;
     }
-    mod library;
+    mod provider;
 }
 
 mod metadata {
@@ -22,7 +23,7 @@ mod metadata {
     mod project {
         mod contract;
         mod data;
-        mod library;
+        mod generator;
     }
     mod slots {
         mod banegasfarm {
@@ -44,5 +45,5 @@ mod tests {
     }
     mod test_slot_metadata;
     mod test_contract_metadata;
-    mod test_component_library;
+    mod test_component_provider;
 }
