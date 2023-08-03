@@ -5,6 +5,7 @@ authors = ["Tarik Kaced <tarik.kaced@proton.me>"]
 license = "Apache-2.0"
 license-file = "LICENSE"
 keywords = ["metadata", "carbonable"]
+homepage = "https://github.com/carbonable/metadata"
 
 [[target.starknet-contract]]
 sierra = true
@@ -14,5 +15,10 @@ name = "compiled"
 [dependencies]
 starknet = ">=2.0.1"
 
+cairo_json = { git = "https://github.com/tekkac/cairo-json.git" }
+
 [cairo]
 sierra-replace-ids = true
+
+[scripts]
+all = "scarb build && scarb test"
