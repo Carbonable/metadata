@@ -11,12 +11,22 @@ mod ProjectMock {
     };
 
     #[storage]
-    struct Storage {}
+    struct Storage {
+        provider: ContractAddress, 
+    }
 
     #[external(v0)]
     impl ProjectMockImpl of IProject<ContractState> {
         fn getProjectValue(self: @ContractState, slot: u256) -> u256 {
             31337_000000_u256
+        }
+
+        fn get_component_provider(self: @ContractState) -> ContractAddress {
+            self.provider.read()
+        }
+
+        fn set_component_provider(ref self: ContractState, provider: ContractAddress) {
+            self.provider.write(provider)
         }
     }
 
