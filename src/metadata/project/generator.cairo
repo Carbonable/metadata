@@ -8,6 +8,7 @@ use cairo_json::simple_json::{Json, JsonTrait};
 use array::ArrayTrait;
 use metadata::metadata::common::constants;
 
+#[inline(always)]
 fn generate_contract_uri() -> Span<felt252> {
     let mut uri = Default::default();
     uri.append('data:application/json,');
