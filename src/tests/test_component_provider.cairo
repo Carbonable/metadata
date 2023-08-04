@@ -1,13 +1,12 @@
-use serde::Serde;
 use debug::PrintTrait;
 use array::{ArrayTrait, SpanTrait};
 use result::ResultTrait;
 
 use starknet::{
-    contract_address_const, get_block_info, ContractAddress, Felt252TryIntoContractAddress, TryInto,
-    Into, OptionTrait, class_hash::Felt252TryIntoClassHash
+    contract_address_const, ContractAddress, Felt252TryIntoContractAddress, TryInto, Into,
+    OptionTrait, class_hash::Felt252TryIntoClassHash
 };
-use starknet::testing::{set_caller_address, set_contract_address, set_block_timestamp};
+use starknet::testing::{set_caller_address, set_contract_address};
 use starknet::syscalls::deploy_syscall;
 
 use test::test_utils::assert_eq;
@@ -47,14 +46,9 @@ fn test_component_provider() {
     let (provider_contract, account) = setup();
     provider_contract
         .register('carbonable_logo', CarbonableLogo::TEST_CLASS_HASH.try_into().unwrap());
-    let token_id = 1_u256;
-    let mut args: Array<felt252> = Default::default();
-    token_id.serialize(ref args);
 
-    let logo: Array<felt252> = provider_contract.get('carbonable_logo');
-    let logo_span = logo.span();
-    logo.print();
-    assert_eq(@logo_span.len(), @59_u32, 'Failed to get component');
+    let logo: Span<felt252> = provider_contract.get('carbonable_logo');
+    assert_eq(@logo.len(), @59_u32, 'Failed to get component');
 
     'total gas used: '.print();
     let gas_now = testing::get_available_gas();

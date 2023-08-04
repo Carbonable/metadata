@@ -13,29 +13,40 @@ use starknet::syscalls::deploy_syscall;
 use test::test_utils::assert_eq;
 
 use metadata::metadata::project::contract::ContractMetadata;
+use metadata::components::component::carbonable_logo::CarbonableLogo;
 use metadata::tests::mocks::project::ProjectMock;
+
 use metadata::interfaces::contract_metadata::{
     IContractMetadataDispatcher, IContractMetadataDispatcherTrait,
     IContractMetadataLibraryDispatcher
 };
-use metadata::tests::utils::print_felt_span;
+use metadata::interfaces::component_provider::{
+    IComponentProviderDispatcher, IComponentProviderDispatcherTrait
+};
+use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
+use metadata::tests::utils;
 
-fn setup() -> (ContractAddress, ContractAddress) {
+fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
     let account: ContractAddress = contract_address_const::<1>();
     set_caller_address(account);
 
-    let (address0, _) = deploy_syscall(
-        ProjectMock::TEST_CLASS_HASH.try_into().unwrap(), 0, Default::default().span(), false
-    )
-        .unwrap();
+    let provider = utils::deploy_component_provider();
+    let project_address = utils::deploy_project_mock();
 
-    (address0, account)
+    provider.register('carbonable_logo', CarbonableLogo::TEST_CLASS_HASH.try_into().unwrap());
+    let project = IProjectDispatcher { contract_address: project_address };
+    project.set_component_provider(provider.contract_address);
+
+    (provider, project_address, account)
 }
 
 #[test]
-#[available_gas(200000)]
+#[available_gas(3400000)]
 fn test_construct_contract_uri() {
-    let (project_address, account) = setup();
+    let gas_start = testing::get_available_gas();
+    gas::withdraw_gas().unwrap();
+
+    let (components, project_address, account) = setup();
     let token_id = 1_u256;
     let mut args: Array<felt252> = Default::default();
     token_id.serialize(ref args);
@@ -46,7 +57,11 @@ fn test_construct_contract_uri() {
 
     set_contract_address(project_address);
     let uri: Array<felt252> = metadata.construct_contract_uri();
-    let uri_span = uri.span();
+    let mut uri_span = uri.span();
     uri.print();
-    assert_eq(@uri_span.len(), @1_u32, 'Failed to fetch contract uri');
+    assert_eq(uri_span.pop_back().unwrap(), @'}', 'Failed to fetch contract uri');
+
+    'total gas used: '.print();
+    let gas_now = testing::get_available_gas();
+    (gas_start - gas_now).print();
 }
