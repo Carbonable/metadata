@@ -19,9 +19,12 @@ fn generate_contract_uri(data: felt252) -> Span<felt252> {
     metadata.add('external_url', constants::get_external_url());
     metadata.add('banner_image_url', constants::get_banner_img_url());
     metadata.add('youtube_url', constants::get_youtube_url());
-    metadata.add('image', Default::default().span());
-    // metadata.add('project_count', felt252::from(1).span());
+    metadata.add('image', data::ContractSVG::get_carbonable_logo());
 
+    // Need to use integer to_ascii 
+    // metadata.add('project_count', data::Starknet::get_project_count());
+
+    metadata.append_to_string(ref uri);
     uri.span()
 }
 
