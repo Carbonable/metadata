@@ -45,3 +45,15 @@ fn print_felt_span(a: Span<felt252>) {
         index += 1;
     };
 }
+
+fn start_gas_meter() -> u128 {
+    let gas_start = testing::get_available_gas();
+    gas::withdraw_gas().unwrap();
+    gas_start
+}
+
+fn stop_gas_meter(gas_start: u128) {
+    'total gas used: '.print();
+    let gas_now = testing::get_available_gas();
+    (gas_start - gas_now).print();
+}

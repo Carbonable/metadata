@@ -19,6 +19,8 @@ use metadata::interfaces::component_provider::{
 use metadata::interfaces::component::{IComponentDispatcher, IComponentLibraryDispatcher};
 use metadata::tests::utils::print_felt_span;
 
+use metadata::tests::utils;
+
 fn deploy_component_provider() -> IComponentProviderDispatcher {
     let (address, _) = deploy_syscall(
         ComponentProvider::TEST_CLASS_HASH.try_into().unwrap(), 0, ArrayTrait::new().span(), false
@@ -40,8 +42,7 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress) {
 #[test]
 #[available_gas(1324700)]
 fn test_component_provider() {
-    let gas_start = testing::get_available_gas();
-    gas::withdraw_gas().unwrap();
+    let gas_start = utils::start_gas_meter();
 
     let (provider_contract, account) = setup();
     provider_contract
@@ -50,7 +51,5 @@ fn test_component_provider() {
     let logo: Span<felt252> = provider_contract.get('carbonable_logo');
     assert_eq(@logo.len(), @59_u32, 'Failed to get component');
 
-    'total gas used: '.print();
-    let gas_now = testing::get_available_gas();
-    (gas_start - gas_now).print();
+    utils::stop_gas_meter(gas_start);
 }

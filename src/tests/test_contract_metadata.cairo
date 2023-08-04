@@ -43,8 +43,7 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
 #[test]
 #[available_gas(3400000)]
 fn test_construct_contract_uri() {
-    let gas_start = testing::get_available_gas();
-    gas::withdraw_gas().unwrap();
+    let gas_start = utils::start_gas_meter();
 
     let (components, project_address, account) = setup();
     let token_id = 1_u256;
@@ -58,10 +57,8 @@ fn test_construct_contract_uri() {
     set_contract_address(project_address);
     let uri: Array<felt252> = metadata.construct_contract_uri();
     let mut uri_span = uri.span();
-    uri.print();
+    //uri.print();
     assert_eq(uri_span.pop_back().unwrap(), @'}', 'Failed to fetch contract uri');
 
-    'total gas used: '.print();
-    let gas_now = testing::get_available_gas();
-    (gas_start - gas_now).print();
+    utils::stop_gas_meter(gas_start);
 }
