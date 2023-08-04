@@ -19,12 +19,14 @@ fn get_external_url() -> Span<felt252> {
     a.span()
 }
 
+#[inline(always)]
 fn get_youtube_url() -> Span<felt252> {
     let mut a = ArrayTrait::new();
     a.append('https://youtu.be/5dZrROBmfKU');
     a.span()
 }
 
+#[inline(always)]
 fn get_banner_img_url() -> Span<felt252> {
     let mut a = ArrayTrait::new();
     a.append('ipfs://Qmdjj76nkc1HQn8Tr3ertWs');

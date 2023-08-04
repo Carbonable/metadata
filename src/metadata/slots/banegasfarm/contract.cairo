@@ -39,12 +39,14 @@ mod Assert {
     use metadata::interfaces::erc165::{IERC165Dispatcher, IERC165DispatcherTrait};
     use metadata::metadata::common::constants;
 
+    #[inline(always)]
     fn erc165(contract: ContractAddress) {
         let instance = IERC165Dispatcher { contract_address: contract };
         let is_165 = instance.supportsInterface(constants::IERC165_ID);
         assert(is_165, 'Metadata: not IERC165');
     }
 
+    #[inline(always)]
     fn compatible(contract: ContractAddress) {
         let instance = IERC165Dispatcher { contract_address: contract };
         erc165(contract);
