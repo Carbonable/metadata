@@ -85,10 +85,12 @@ mod CarbonableLogo {
 #[cfg(test)]
 mod test {
     use array::{ArrayTrait, SpanTrait};
-    use metadata::tests::utils::print_felt_span;
     use debug::PrintTrait;
-    use test::test_utils::assert_eq;
     use traits::Into;
+
+    use test::test_utils::assert_eq;
+
+    use metadata::tests::utils::print_felt_span;
     use super::CarbonableLogo;
 
     #[test]
