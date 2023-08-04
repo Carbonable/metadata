@@ -15,7 +15,7 @@ name = "compiled"
 [dependencies]
 starknet = ">=2.0.1"
 
-cairo_json = { git = "https://github.com/tekkac/cairo-json.git" }
+cairo_json = { git = "https://github.com/carbonable-labs/cairo-json.git" }
 
 [cairo]
 sierra-replace-ids = true
