@@ -23,6 +23,7 @@ mod ComponentProvider {
 
         fn get(self: @ContractState, id: felt252) -> Span<felt252> {
             let component: IComponentLibraryDispatcher = self.components.read(id);
+            // TODO: checks
             component.get()
         }
     }
