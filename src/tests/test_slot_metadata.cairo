@@ -3,16 +3,13 @@ use debug::PrintTrait;
 use array::{ArrayTrait, SpanTrait};
 use result::ResultTrait;
 
-use starknet::{
-    contract_address_const, get_block_info, ContractAddress, Felt252TryIntoContractAddress, TryInto,
-    Into, OptionTrait, class_hash::Felt252TryIntoClassHash
-};
-use starknet::testing::{set_caller_address, set_contract_address, set_block_timestamp};
+use starknet::{contract_address_const, ContractAddress, TryInto, OptionTrait};
+use starknet::testing::{set_caller_address, set_contract_address};
 use starknet::syscalls::deploy_syscall;
 
 use test::test_utils::assert_eq;
 
-use metadata::metadata::slots::banegasfarm::contract::{BanegasFarmUri};
+use metadata::metadata::slots::banegasfarm::contract::BanegasFarmUri;
 use metadata::tests::mocks::project::ProjectMock;
 use metadata::interfaces::slot_metadata::{ISlotMetadataDispatcher, ISlotMetadataDispatcherTrait};
 use metadata::tests::utils::print_felt_span;
