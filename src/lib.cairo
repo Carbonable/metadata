@@ -39,7 +39,10 @@ mod metadata {
 
 #[cfg(test)]
 mod tests {
-    mod utils;
+    mod utils {
+        mod tests;
+        mod contracts;
+    }
     mod mocks {
         mod project;
     }
