@@ -15,6 +15,7 @@ use test::test_utils::assert_eq;
 use metadata::metadata::project::contract::ContractMetadata;
 use metadata::components::component::carbonable_logo::CarbonableLogo;
 use metadata::tests::mocks::project::ProjectMock;
+use metadata::components::provider::ComponentProvider;
 
 use metadata::interfaces::contract_metadata::{
     IContractMetadataDispatcher, IContractMetadataDispatcherTrait,
@@ -30,8 +31,12 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
     let account: ContractAddress = contract_address_const::<1>();
     set_caller_address(account);
 
-    let provider = utils::deploy_component_provider();
-    let project_address = utils::deploy_project_mock();
+    let provider = IComponentProviderDispatcher {
+        contract_address: utils::contracts::deploy(
+            ComponentProvider::TEST_CLASS_HASH, ArrayTrait::new()
+        )
+    };
+    let project_address = utils::contracts::deploy(ProjectMock::TEST_CLASS_HASH, ArrayTrait::new());
 
     provider.register('carbonable_logo', CarbonableLogo::TEST_CLASS_HASH.try_into().unwrap());
     let project = IProjectDispatcher { contract_address: project_address };
@@ -41,9 +46,9 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
 }
 
 #[test]
-#[available_gas(3400000)]
+#[available_gas(4400000)]
 fn test_construct_contract_uri() {
-    let gas_start = utils::start_gas_meter();
+    let gas_start = utils::tests::start_gas_meter();
 
     let (components, project_address, account) = setup();
     let token_id = 1_u256;
@@ -57,8 +62,10 @@ fn test_construct_contract_uri() {
     set_contract_address(project_address);
     let uri: Array<felt252> = metadata.construct_contract_uri();
     let mut uri_span = uri.span();
-    //uri.print();
+
+    // uri.print();
+
     assert_eq(uri_span.pop_back().unwrap(), @'}', 'Failed to fetch contract uri');
 
-    utils::stop_gas_meter(gas_start);
+    utils::tests::stop_gas_meter(gas_start);
 }

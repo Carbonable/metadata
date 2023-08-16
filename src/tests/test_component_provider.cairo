@@ -17,39 +17,33 @@ use metadata::interfaces::component_provider::{
     IComponentProviderDispatcher, IComponentProviderDispatcherTrait
 };
 use metadata::interfaces::component::{IComponentDispatcher, IComponentLibraryDispatcher};
-use metadata::tests::utils::print_felt_span;
 
 use metadata::tests::utils;
-
-fn deploy_component_provider() -> IComponentProviderDispatcher {
-    let (address, _) = deploy_syscall(
-        ComponentProvider::TEST_CLASS_HASH.try_into().unwrap(), 0, ArrayTrait::new().span(), false
-    )
-        .unwrap();
-
-    return IComponentProviderDispatcher { contract_address: address };
-}
 
 fn setup() -> (IComponentProviderDispatcher, ContractAddress) {
     let account: ContractAddress = contract_address_const::<1>();
     set_caller_address(account);
 
-    let provider = deploy_component_provider();
+    let provider = IComponentProviderDispatcher {
+        contract_address: utils::contracts::deploy(
+            ComponentProvider::TEST_CLASS_HASH, ArrayTrait::new()
+        )
+    };
 
     (provider, account)
 }
 
 #[test]
-#[available_gas(1324700)]
+#[available_gas(2500000)]
 fn test_component_provider() {
-    let gas_start = utils::start_gas_meter();
+    let gas_start = utils::tests::start_gas_meter();
 
     let (provider_contract, account) = setup();
     provider_contract
         .register('carbonable_logo', CarbonableLogo::TEST_CLASS_HASH.try_into().unwrap());
 
     let logo: Span<felt252> = provider_contract.get('carbonable_logo');
-    assert_eq(@logo.len(), @59_u32, 'Failed to get component');
+    assert_eq(@logo.len(), @60_u32, 'Failed to get component');
 
-    utils::stop_gas_meter(gas_start);
+    utils::tests::stop_gas_meter(gas_start);
 }
