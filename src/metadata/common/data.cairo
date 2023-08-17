@@ -34,3 +34,18 @@ fn get_banner_img_url() -> Span<felt252> {
     a.append('png');
     a.span()
 }
+
+use metadata::interfaces::component_provider::{
+    IComponentProviderDispatcher, IComponentProviderDispatcherTrait
+};
+use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
+use starknet::get_contract_address;
+
+#[inline(always)]
+fn get_provider() -> IComponentProviderDispatcher {
+    let project = IProjectDispatcher { contract_address: get_contract_address() };
+    let provider = IComponentProviderDispatcher {
+        contract_address: project.get_component_provider()
+    };
+    provider
+}

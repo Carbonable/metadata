@@ -1,18 +1,18 @@
 use core::option::OptionTrait;
 use core::traits::TryInto;
 
-mod DescriptionData {
+mod Description {
     use array::ArrayTrait;
 
     #[inline(always)]
-    fn description() -> Array<felt252> {
+    fn get() -> Array<felt252> {
         let mut data = Default::default();
-        add_description(ref data);
+        add(ref data);
         data
     }
 
     #[inline(always)]
-    fn add_description(ref data: Array<felt252>) {
+    fn add(ref data: Array<felt252>) {
         data.append('Unlock the simplest and most ef');
         data.append('ficient path to invest in leadi');
         data.append('ng nature regeneration initiati');
@@ -29,12 +29,12 @@ mod DescriptionData {
     }
 }
 
-mod ContractSVG {
+mod SVG {
     use metadata::interfaces::component_provider::{
         IComponentProviderDispatcher, IComponentProviderDispatcherTrait
     };
     use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
-    use starknet::{contract_address_const, get_contract_address};
+    use starknet::get_contract_address;
 
     #[inline(always)]
     fn get_provider() -> IComponentProviderDispatcher {
@@ -64,6 +64,7 @@ mod Starknet {
         let project = IERC3525Dispatcher { contract_address: get_contract_address() };
         let mut result: Array<felt252> = ArrayTrait::new();
         let count: u256 = project.slotCount();
+        // TODO: to_ascii
         result.append(count.high.into());
         result.append(count.low.into());
         result.span()

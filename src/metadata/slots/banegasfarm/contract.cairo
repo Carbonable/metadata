@@ -37,12 +37,12 @@ mod BanegasFarmUri {
 mod Assert {
     use starknet::ContractAddress;
     use metadata::interfaces::erc165::{IERC165Dispatcher, IERC165DispatcherTrait};
-    use metadata::metadata::common::constants;
+    use metadata::metadata::common::data;
 
     #[inline(always)]
     fn erc165(contract: ContractAddress) {
         let instance = IERC165Dispatcher { contract_address: contract };
-        let is_165 = instance.supportsInterface(constants::IERC165_ID);
+        let is_165 = instance.supportsInterface(data::IERC165_ID);
         assert(is_165, 'Metadata: not IERC165');
     }
 
@@ -50,10 +50,10 @@ mod Assert {
     fn compatible(contract: ContractAddress) {
         let instance = IERC165Dispatcher { contract_address: contract };
         erc165(contract);
-        let is_3525 = instance.supportsInterface(constants::IERC3525_ID);
-        let is_3525_meta = instance.supportsInterface(constants::IERC3525_METADATA_ID);
-        let is_721 = instance.supportsInterface(constants::IERC721_ID);
-        let is_721_meta = instance.supportsInterface(constants::IERC721_METADATA_ID);
+        let is_3525 = instance.supportsInterface(data::IERC3525_ID);
+        let is_3525_meta = instance.supportsInterface(data::IERC3525_METADATA_ID);
+        let is_721 = instance.supportsInterface(data::IERC721_ID);
+        let is_721_meta = instance.supportsInterface(data::IERC721_METADATA_ID);
         let compatible = is_3525 & is_3525_meta & is_721 & is_721_meta;
         assert(compatible, 'Metadata: not IERC3525');
     }
