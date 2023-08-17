@@ -6,7 +6,7 @@ use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait}
 
 use metadata::metadata::common::models::AssetStorageData;
 
-mod ProjectData {
+mod Project {
     const NAME: felt252 = 'Banegas Farm';
     const DEVELOPER: felt252 = 'Corcovado Foundation';
     const CERTIFIER: felt252 = 'Wildsense';
@@ -23,7 +23,22 @@ mod ProjectData {
     const SOURCE: felt252 = 'Carbonable';
 }
 
-mod AssetData {}
+mod Description {
+    use array::ArrayTrait;
+
+    #[inline(always)]
+    fn get() -> Array<felt252> {
+        let mut data = Default::default();
+        add(ref data);
+        data
+    }
+
+    #[inline(always)]
+    fn add(ref data: Array<felt252>) {
+        data.append('TODO: Add description');
+    }
+}
+
 
 #[inline(always)]
 fn fetch_slot_data(contract_address: ContractAddress, slot: u256) -> felt252 {

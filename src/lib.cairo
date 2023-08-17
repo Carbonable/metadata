@@ -11,13 +11,14 @@ mod interfaces {
 mod components {
     mod component {
         mod carbonable_logo;
+        mod sdg1;
     }
     mod provider;
 }
 
 mod metadata {
     mod common {
-        mod constants;
+        mod data;
         mod models;
     }
     mod project {

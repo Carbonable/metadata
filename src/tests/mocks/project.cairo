@@ -6,7 +6,7 @@ mod ProjectMock {
     use metadata::interfaces::project::IProject;
     use metadata::interfaces::erc3525::IERC3525;
     use metadata::interfaces::erc165::IERC165;
-    use metadata::metadata::common::constants::{
+    use metadata::metadata::common::data::{
         IERC165_ID, IERC3525_ID, IERC3525_METADATA_ID, IERC721_ID, IERC721_METADATA_ID
     };
 
