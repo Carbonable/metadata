@@ -14,7 +14,8 @@ name = "compiled"
 
 [dependencies]
 starknet = ">=2.0.1"
-cairo_json = { git = "https://github.com/carbonable-labs/cairo-json.git" }
+cairo_json = { git = "https://github.com/carbonable-labs/cairo-json.git"}
+alexandria_ascii = { git = "https://github.com/keep-starknet-strange/alexandria.git" }
 
 [cairo]
 sierra-replace-ids = true
