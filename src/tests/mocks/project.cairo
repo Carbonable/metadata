@@ -3,6 +3,7 @@ mod ProjectMock {
     use starknet::ContractAddress;
     use starknet::get_caller_address;
     use core::Into;
+    use array::ArrayTrait;
     use metadata::interfaces::project::IProject;
     use metadata::interfaces::erc3525::IERC3525;
     use metadata::interfaces::erc165::IERC165;
@@ -121,23 +122,23 @@ mod ProjectMock {
             index + owner.into()
         }
 
-        fn tokenURI(self: @ContractState, tokenId: u256) -> Array<felt252> {
+        fn tokenURI(self: @ContractState, tokenId: u256) -> Span<felt252> {
             // TODO
-            Default::default()
+            Default::default().span()
         }
 
         //
         // 3525 Metadata
         //
 
-        fn contractURI(self: @ContractState, ) -> Array<felt252> {
+        fn contractURI(self: @ContractState, ) -> Span<felt252> {
             // TODO
-            Default::default()
+            Default::default().span()
         }
 
-        fn slotURI(self: @ContractState, slot: u256) -> Array<felt252> {
+        fn slotURI(self: @ContractState, slot: u256) -> Span<felt252> {
             // TODO
-            Default::default()
+            Default::default().span()
         }
 
         //

@@ -48,15 +48,15 @@ trait IERC3525<TContractState> {
 
     fn tokenOfOwnerByIndex(self: @TContractState, owner: felt252, index: u256) -> u256;
 
-    fn tokenURI(self: @TContractState, tokenId: u256) -> Array<felt252>;
+    fn tokenURI(self: @TContractState, tokenId: u256) -> Span<felt252>;
 
     //
     // 3525 Metadata
     //
 
-    fn contractURI(self: @TContractState) -> Array<felt252>;
+    fn contractURI(self: @TContractState) -> Span<felt252>;
 
-    fn slotURI(self: @TContractState, slot: u256) -> Array<felt252>;
+    fn slotURI(self: @TContractState, slot: u256) -> Span<felt252>;
 
     //
     // Slot Approvable
