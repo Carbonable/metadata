@@ -15,7 +15,7 @@ mod BanegasFarmUri {
     #[generate_trait]
     #[external(v0)]
     impl BanegasFarmMetadata of IBanegasFarmUri {
-        fn construct_slot_uri(self: @ContractState, slot: u256) -> Array<felt252> {
+        fn construct_slot_uri(self: @ContractState, slot: u256) -> Span<felt252> {
             let contract = get_contract_address();
             super::Assert::compatible(contract);
 
@@ -23,7 +23,7 @@ mod BanegasFarmUri {
             generate_slot_uri(slot, slot_data)
         }
 
-        fn construct_token_uri(self: @ContractState, token_id: u256) -> Array<felt252> {
+        fn construct_token_uri(self: @ContractState, token_id: u256) -> Span<felt252> {
             // [Check] calling contract is erc3525 compatible
             let contract = get_contract_address();
             super::Assert::compatible(contract);
