@@ -77,9 +77,9 @@ mod CarbonableLogo {
             data
         }
 
-        fn get(self: @ContractState) -> Span<felt252> {
+        fn get(self: @ContractState) -> Array<felt252> {
             let mut test = ArrayTrait::<felt252>::new();
-            self.concat(test).span()
+            self.concat(test)
         }
     }
 }
