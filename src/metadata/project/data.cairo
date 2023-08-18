@@ -30,9 +30,11 @@ mod Description {
 }
 
 mod SVG {
+    use array::ArrayTrait;
     use metadata::interfaces::component_provider::{
         IComponentProviderDispatcher, IComponentProviderDispatcherTrait
     };
+    use metadata::interfaces::component::{IComponentLibraryDispatcher, IComponentDispatcherTrait};
     use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
     use starknet::get_contract_address;
 
@@ -48,8 +50,9 @@ mod SVG {
     #[inline(always)]
     fn get_carbonable_logo() -> Span<felt252> {
         let provider = get_provider();
-        let logo = provider.get('carbonable_logo');
-        logo
+        let logo_component = provider.get('carbonable_logo');
+        let mut logo = array!['data:image/svg+xml,'];
+        logo_component.concat(logo).span()
     }
 }
 
