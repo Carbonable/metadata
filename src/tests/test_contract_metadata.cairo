@@ -51,19 +51,14 @@ fn test_construct_contract_uri() {
     let gas_start = utils::tests::start_gas_meter();
 
     let (components, project_address, account) = setup();
-    let token_id = 1_u256;
-    let mut args: Array<felt252> = Default::default();
-    token_id.serialize(ref args);
 
     let metadata = IContractMetadataLibraryDispatcher {
         class_hash: ContractMetadata::TEST_CLASS_HASH.try_into().unwrap()
     };
 
     set_contract_address(project_address);
-    let uri: Array<felt252> = metadata.construct_contract_uri();
-    let mut uri_span = uri.span();
-
-    // uri.print();
+    let uri: Span<felt252> = metadata.construct_contract_uri();
+    let mut uri_span = uri;
 
     assert_eq(uri_span.pop_back().unwrap(), @'}', 'Failed to fetch contract uri');
 
