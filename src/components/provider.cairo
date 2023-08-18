@@ -21,10 +21,10 @@ mod ComponentProvider {
             self.components.write(id, IComponentLibraryDispatcher { class_hash: implementation });
         }
 
-        fn get(self: @ContractState, id: felt252) -> Span<felt252> {
+        fn get(self: @ContractState, id: felt252) -> IComponentLibraryDispatcher {
             let component: IComponentLibraryDispatcher = self.components.read(id);
             // TODO: checks
-            component.get()
+            component
         }
     }
 }
