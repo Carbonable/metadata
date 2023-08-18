@@ -1,26 +1,52 @@
 use starknet::get_contract_address;
 use starknet::ContractAddress;
-
+use array::ArrayTrait;
 use metadata::interfaces::erc3525::{IERC3525Dispatcher, IERC3525DispatcherTrait};
 use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
 
-use metadata::metadata::common::models::AssetStorageData;
+use metadata::metadata::common::models::{StorageData, TokenData, SlotData, ProjectStatus};
 
 mod Project {
-    const NAME: felt252 = 'Banegas Farm';
-    const DEVELOPER: felt252 = 'Corcovado Foundation';
-    const CERTIFIER: felt252 = 'Wildsense';
-    const AREA: felt252 = 25;
-    const COUNTRY: felt252 = 'Costa Rica';
-    const END_YEAR: felt252 = 2052; // mutable storage?
-    const END_MONTH: felt252 = 12; // mutable storage?
-    const DURATION_IN_YEARS: felt252 = 30; // 2052 - 2022; consteval_int!(END_YEAR - 2022);
-    const PROJECTED_CU: felt252 = 1573;
-    const COLOR: felt252 = 'Green';
-    const TYPE: felt252 = 'Forest';
-    const CATEGORY: felt252 = 'Regeneration';
-    const STATUS: felt252 = 'Active'; // mutable storage?
-    const SOURCE: felt252 = 'Carbonable';
+    use metadata::metadata::common::models::{ProjectData, String};
+    use array::ArrayTrait;
+    use traits::{Into, TryInto};
+    use integer::BoundedInt;
+    use alexandria_ascii::ToAsciiTrait;
+
+    const NAME: u256 = 'Banegas Farm';
+    const DEVELOPER: u256 = 'Corcovado Foundation';
+    const CERTIFIER: u256 = 'Wildsense';
+    const AREA: u128 = 25;
+    const COUNTRY: u256 = 'Costa Rica';
+    const END_YEAR: u128 = 2052; // mutable storage?
+    const END_MONTH: u128 = 12; // mutable storage?
+    const DURATION_IN_YEARS: u128 = 30; // 2052 - 2022; consteval_int!(END_YEAR - 2022);
+    const PROJECTED_CU: u128 = 1573;
+    const COLOR: u256 = 'Green';
+    const TYPE: u256 = 'Forest';
+    const CATEGORY: u256 = 'Regeneration';
+    const STATUS: u256 = 'Active'; // mutable storage?
+    const SOURCE: u256 = 'Carbonable';
+
+    #[inline(always)]
+    fn get() -> ProjectData {
+        ProjectData {
+            name: NAME.to_ascii().span(),
+            developer: DEVELOPER.to_ascii().span(),
+            certifier: CERTIFIER.to_ascii().span(),
+            area: AREA,
+            country: COUNTRY.to_ascii().span(),
+            end_year: END_YEAR,
+            end_month: END_MONTH,
+            duration_in_years: DURATION_IN_YEARS,
+            projected_cu: PROJECTED_CU,
+            color: COLOR.to_ascii().span(),
+            type_: TYPE.to_ascii().span(),
+            category: CATEGORY.to_ascii().span(),
+            status: STATUS.to_ascii().span(),
+            source: SOURCE.to_ascii().span(),
+        }
+    }
 }
 
 mod Description {
@@ -39,22 +65,31 @@ mod Description {
     }
 }
 
-
 #[inline(always)]
 fn fetch_slot_data(contract_address: ContractAddress, slot: u256) -> felt252 {
-    1
+    'todo'
 }
 
-
 #[inline(always)]
-fn fetch_token_data(contract_address: ContractAddress, token_id: u256) -> AssetStorageData {
+fn fetch_token_data(contract_address: ContractAddress, token_id: u256) -> TokenData {
+    // Local ProjectData
+    // External ProjectData (Starknet) in template?
+
+    let project_data = Project::get();
+
     let instance = IERC3525Dispatcher { contract_address };
     let project_instance = IProjectDispatcher { contract_address };
     let slot = instance.slotOf(token_id);
-    AssetStorageData {
+    let slot_data = SlotData {
+        project_data,
         total_value: instance.totalValue(slot),
         project_value: project_instance.getProjectValue(slot),
         slot,
-        asset_value: instance.valueOf(token_id),
+        status: ProjectStatus::Active,
+        description: Description::get().span()
+    };
+
+    TokenData {
+        slot_data, asset_value: instance.valueOf(token_id), description: Description::get().span()
     }
 }
