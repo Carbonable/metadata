@@ -11,7 +11,15 @@ mod interfaces {
 mod components {
     mod component {
         mod carbonable_logo;
-        mod sdg1;
+        mod sdgs {
+            mod sdg01;
+            mod sdg13;
+            mod sdg14;
+            mod sdg15;
+        }
+        mod jpegs {
+            mod farmer;
+        }
     }
     mod provider;
 }
@@ -20,6 +28,7 @@ mod metadata {
     mod common {
         mod data;
         mod models;
+        mod utils;
     }
     mod project {
         mod contract;
@@ -33,7 +42,10 @@ mod metadata {
         }
         mod template {
             mod slot;
-            mod token;
+            mod token {
+                mod token;
+                mod svg;
+            }
         }
     }
 }

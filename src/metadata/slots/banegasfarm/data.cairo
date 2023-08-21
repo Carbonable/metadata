@@ -9,24 +9,27 @@ use metadata::metadata::common::models::{StorageData, TokenData, SlotData, Proje
 mod Project {
     use metadata::metadata::common::models::{ProjectData, String};
     use array::ArrayTrait;
-    use traits::{Into, TryInto};
-    use integer::BoundedInt;
     use alexandria_ascii::ToAsciiTrait;
 
     const NAME: u256 = 'Banegas Farm';
     const DEVELOPER: u256 = 'Corcovado Foundation';
     const CERTIFIER: u256 = 'Wildsense';
-    const AREA: u128 = 25;
+    const AREA: u256 = 25;
     const COUNTRY: u256 = 'Costa Rica';
-    const END_YEAR: u128 = 2052; // mutable storage?
-    const END_MONTH: u128 = 12; // mutable storage?
-    const DURATION_IN_YEARS: u128 = 30; // 2052 - 2022; consteval_int!(END_YEAR - 2022);
-    const PROJECTED_CU: u128 = 1573;
+    const END_YEAR: u256 = 2052; // mutable storage?
+    const END_MONTH: u256 = 12; // mutable storage?
+    const DURATION_IN_YEARS: u256 = 30; // 2052 - 2022; consteval_int!(END_YEAR - 2022);
+    const PROJECTED_CU: u256 = 1573;
     const COLOR: u256 = 'Green';
     const TYPE: u256 = 'Forest';
     const CATEGORY: u256 = 'Regeneration';
     const STATUS: u256 = 'Active'; // mutable storage?
     const SOURCE: u256 = 'Carbonable';
+
+    #[inline(always)]
+    fn get_sdgs() -> Span<felt252> {
+        array![13, 14, 15].span()
+    }
 
     #[inline(always)]
     fn get() -> ProjectData {
@@ -45,6 +48,7 @@ mod Project {
             category: CATEGORY.to_ascii().span(),
             status: STATUS.to_ascii().span(),
             source: SOURCE.to_ascii().span(),
+            sdgs: get_sdgs(),
         }
     }
 }
