@@ -1,5 +1,5 @@
 #[starknet::contract]
-mod CarbonableLogo {
+mod Component {
     use array::ArrayTrait;
     use metadata::interfaces::component::IComponent;
 
@@ -92,12 +92,12 @@ mod test {
 
     use test::test_utils::assert_eq;
 
-    use super::CarbonableLogo;
+    use super::Component;
 
     #[test]
     #[available_gas(20000)]
     fn test_component_name() {
-        let data: Span<felt252> = CarbonableLogo::__external::name(Default::default().span());
+        let data: Span<felt252> = Component::__external::name(Default::default().span());
         let name: felt252 = *data[0];
         assert_eq(@name, @'Carbonable Logo', 'Couldn\'t get name');
     }
@@ -105,7 +105,7 @@ mod test {
     #[test]
     #[available_gas(400000)]
     fn test_component_get() {
-        let data: Span<felt252> = CarbonableLogo::__external::get(Default::default().span());
+        let data: Span<felt252> = Component::__external::get(Default::default().span());
         assert_eq(@data.len(), @61_u32, 'Couldn\'t get data');
         let mut arr: Array<felt252> = ArrayTrait::new();
     }
