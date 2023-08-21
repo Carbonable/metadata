@@ -33,7 +33,7 @@ use metadata::interfaces::component_provider::{
 };
 use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
 
-use metadata::components::component::carbonable_logo::CarbonableLogo;
+use metadata::components::component::carbonable_logo::Component as CarbonableLogo;
 use metadata::components::provider::ComponentProvider;
 
 fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
