@@ -37,15 +37,16 @@ struct ProjectData {
     name: String,
     developer: String,
     certifier: String,
-    area: u128,
+    area: u256,
     country: String,
-    end_year: u128,
-    end_month: u128,
-    duration_in_years: u128,
-    projected_cu: u128,
+    end_year: u256,
+    end_month: u256,
+    duration_in_years: u256,
+    projected_cu: u256,
     color: String, // Color
     type_: String, // Type
     category: String, // Category
     status: String, // Status
     source: String, // Source
+    sdgs: Span<felt252>,
 }

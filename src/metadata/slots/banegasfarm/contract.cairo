@@ -3,7 +3,7 @@ mod BanegasFarmUri {
     use starknet::get_contract_address;
 
     use metadata::metadata::slots::template::slot::generate_slot_uri;
-    use metadata::metadata::slots::template::token::generate_token_uri;
+    use metadata::metadata::slots::template::token::token::generate_token_uri;
     use metadata::metadata::slots::banegasfarm::data::fetch_slot_data;
     use metadata::metadata::slots::banegasfarm::data::fetch_token_data;
 
