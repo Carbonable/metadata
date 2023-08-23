@@ -1,16 +1,70 @@
-use metadata::metadata::common::models::TokenData;
-use array::ArrayTrait;
+use array::{SpanTrait, ArrayTrait};
+use option::OptionTrait;
 
+use alexandria_ascii::interger::ToAsciiTrait;
+
+use metadata::metadata::common::models::TokenData;
+use metadata::metadata::common::models::String;
+use metadata::metadata::common::utils::to_ascii;
+use metadata::metadata::common::utils::ArrayConcat;
+
+use metadata::metadata::slots::template::token::data;
+
+use debug::PrintTrait;
 // TODO: svgenerator?
+
+fn debug_step() {
+    let gas_now = testing::get_available_gas();
+    gas::withdraw_gas().unwrap();
+    gas_now.print();
+}
+
+fn generate(data: TokenData) -> Span<felt252> {
+    'generating..'.print();
+
+    let mut svg: Array<felt252> = Default::default();
+    let cu_str: String = to_ascii(data.slot_data.project_data.projected_cu);
+    let end_date_str: String = to_ascii(data.slot_data.project_data.end_year);
+    let progress: u8 = data::get_progress(data);
+    let progress_str: String = to_ascii(progress);
+    let area_str: String = data::get_asset_area(data); // TODO
+    let type_str: String = data.slot_data.project_data.type_; // TODO
+    let mut sdgs: Span<felt252> = data.slot_data.project_data.sdgs; // TODO
+    let sdg_count_str: String = to_ascii(sdgs.len());
+    let status_str: String = data.slot_data.project_data.status; // TODO
+    let name: String = data.slot_data.project_data.name;
+    let country: String = data.slot_data.project_data.country;
+    let developer: String = data.slot_data.project_data.developer;
+    let certifier: String = data.slot_data.project_data.certifier;
+
+    svg_header(ref svg);
+    svg_styles(ref svg);
+    svg_bg_filters(ref svg);
+    svg_panel_text(cu_str, end_date_str, progress_str, ref svg);
+    svg_lower_text(area_str, type_str, sdg_count_str, ref svg);
+    svg_progress_bar(progress, ref svg);
+    svg_sdgs(ref sdgs, ref svg);
+    svg_status_group(status_str, ref svg);
+    svg_main_text(name, country, developer, certifier, ref svg);
+    svg_certifier_logo(0, ref svg);
+    svg_background(ref svg);
+    svg_def_patterns(ref svg);
+    svg_def_filters(ref svg);
+    svg_background_image(0, ref svg);
+    svg_end(ref svg);
+
+    svg.span()
+}
 
 fn svg_header(ref data: Array<felt252>) {
     data.append('<svg xmlns=\\"http://www.w3.org');
     data.append('/2000/svg\\" fill=\\"none\\" vi');
-    data.append('ewBox=\\"0 0 316 361\\">');
+    data.append('ewBox=\\"0 0 316 360\\">');
 }
 
-
 fn svg_styles(ref data: Array<felt252>) {
+    // TODO: add colors
+
     data.append('<style> @import url(\\"https://');
     data.append('fonts.googleapis.com/css2?famil');
     data.append('y=Inter:wght@400;500;600;700&di');
@@ -25,181 +79,190 @@ fn svg_styles(ref data: Array<felt252>) {
 
 fn svg_bg_filters(ref data: Array<felt252>) {
     data.append('<g filter=\\"url(#a)\\" clip-pa');
-    data.append('th=\\"url(#b)\\"><path fill=\\"');
-    data.append('url(#c)\\" d=\\"M376 11a8 8 0 0');
-    data.append(' 0-8-8H-86a8 8 0 0 0-8 8v345h47');
-    data.append('0V11Z\\"/><path fill=\\"url(#d)');
-    data.append('\\" d=\\"M376 11a8 8 0 0 0-8-8H');
-    data.append('-86a8 8 0 0 0-8 8v345h470V11Z\\');
-    data.append('"/><g filter=\\"url(#e)\\"><rec');
-    data.append('t width=\\"308\\" height=\\"356');
-    data.append('\\" x=\\"4\\" y=\\"4\\" fill=\\');
-    data.append('"url(#f)\\" fill-opacity=\\".01');
-    data.append('\\"/></g>');
+    data.append('th=\\"url(#b)\\"><rect width=\\');
+    data.append('"308\\" height=\\"353\\" fill=');
+    data.append('\\"url(#c)\\" rx=\\"8\\" transf');
+    data.append('orm=\\"matrix(-1 0 0 1 312 3)\\');
+    data.append('"/><rect width=\\"308\\" height');
+    data.append('=\\"353\\" fill=\\"url(#d)\\" r');
+    data.append('x=\\"8\\" transform=\\"matrix(-');
+    data.append('1 0 0 1 312 3)\\"/><g filter=\\');
+    data.append('"url(#e)\\"><rect width=\\"292');
+    data.append('\\" height=\\"55\\" x=\\"12\\" ');
+    data.append('y=\\"231\\" fill=\\"#0D0D0D\\" ');
+    data.append('fill-opacity=\\".6\\" rx=\\"8\\');
+    data.append('" shape-rendering=\\"crispEdges');
+    data.append('\\"/>');
 }
 
-fn svg_lower_components_filters(ref data: Array<felt252>) {
-    data.append('<g filter=\\"url(#g)\\"><g filt');
-    data.append('er=\\"url(#h)\\" opacity=\\".4');
-    data.append('\\"><rect width=\\"292\\" heigh');
-    data.append('t=\\"56\\" x=\\"12\\" y=\\"231');
-    data.append('\\" fill=\\"#fff\\" fill-opacit');
-    data.append('y=\\".1\\" rx=\\"8\\" shape-ren');
-    data.append('dering=\\"crispEdges\\"/><rect ');
-    data.append('width=\\"292\\" height=\\"56\\"');
-    data.append(' x=\\"12\\" y=\\"231\\" fill=\\');
-    data.append('"url(#i)\\" fill-opacity=\\".08');
-    data.append('\\" rx=\\"8\\" shape-rendering=');
-    data.append('\\"crispEdges\\" style=\\"mix-b');
-    data.append('lend-mode:overlay\\"/><rect wid');
-    data.append('th=\\"291\\" height=\\"55\\" x=');
-    data.append('\\"12.5\\" y=\\"231.5\\" stroke');
-    data.append('=\\"#D0D1D6\\" stroke-opacity=');
-    data.append('\\".1\\" rx=\\"7.5\\" shape-ren');
-    data.append('dering=\\"crispEdges\\"/></g>');
-}
 
 //
 // Dynamic Text
 //
-fn svg_panel_text(ref data: Array<felt252>) {
-    data.append('<text fill=\\"#D0D1D6\\" fill-o');
-    data.append('pacity=\\"0.8\\" xml:space=\\"p');
-    data.append('reserve\\" style=\\"white-space');
-    data.append(': pre\\" font-family=\\"Inter\\');
-    data.append('" font-size=\\"11\\" font-weigh');
-    data.append('t=\\"500\\" letter-spacing=\\"0');
-    data.append('em\\"><tspan x=\\"28\\" y=\\"25');
-    data.append('2.5\\">Carbon units</tspan></te');
-    data.append('xt><text fill=\\"#EBECF0\\" xml');
-    data.append(':space=\\"preserve\\" style=\\"');
-    data.append('white-space: pre\\" font-family');
-    data.append('=\\"Inter\\" font-size=\\"14\\"');
-    data.append(' font-weight=\\"bold\\" letter-');
-    data.append('spacing=\\"0em\\"><tspan x=\\"2');
-    data.append('8\\" y=\\"272.091\\">422 Tons</');
-    data.append('tspan></text><text fill=\\"#D0D');
-    data.append('1D6\\" fill-opacity=\\"0.8\\" x');
-    data.append('ml:space=\\"preserve\\" style=');
-    data.append('\\"white-space: pre\\" font-fam');
-    data.append('ily=\\"Inter\\" font-size=\\"11');
-    data.append('\\" font-weight=\\"500\\" lette');
-    data.append('r-spacing=\\"0em\\"><tspan x=\\');
-    data.append('"117.5\\" y=\\"252.5\\">Ends in');
-    data.append('</tspan></text><text fill=\\"#E');
-    data.append('BECF0\\" xml:space=\\"preserve');
-    data.append('\\" style=\\"white-space: pre\\');
-    data.append('" font-family=\\"Inter\\" font-');
-    data.append('size=\\"14\\" font-weight=\\"bo');
-    data.append('ld\\" letter-spacing=\\"0em\\">');
-    data.append('<tspan x=\\"117.5\\" y=\\"272.0');
-    data.append('91\\">2052</tspan></text><text ');
-    data.append('fill=\\"#EFECEA\\" xml:space=\\');
-    data.append('"preserve\\" style=\\"white-spa');
-    data.append('ce: pre\\" font-family=\\"Inter');
-    data.append('\\" font-size=\\"14\\" font-wei');
-    data.append('ght=\\"600\\" letter-spacing=\\');
-    data.append('"0em\\"><tspan x=\\"257\\" y=\\');
-    data.append('"256.091\\">63%</tspan></text>');
+fn svg_panel_text(cu: String, end_date: String, progress: String, ref data: Array<felt252>) {
+    data.append('<g font-family=\\"Inter\\" xml:');
+    data.append('space=\\"preserve\\" style=\\"w');
+    data.append('hite-space: pre\\"><text fill=');
+    data.append('\\"#D0D1D6\\" fill-opacity=\\"0');
+    data.append('.8\\" font-size=\\"11\\" font-w');
+    data.append('eight=\\"500\\" letter-spacing=');
+    data.append('\\"0em\\"><tspan x=\\"28\\" y=');
+    data.append('\\"252.5\\">Carbon units</tspan');
+    data.append('></text><text fill=\\"#EBECF0\\');
+    data.append('" font-size=\\"14\\" font-weigh');
+    data.append('t=\\"bold\\" letter-spacing=\\"');
+    data.append('0em\\"><tspan x=\\"28\\" y=\\"2');
+    data.append('72.091\\">');
+
+    data.concat(cu);
+    data.append(' Tons</tspan></tex');
+    data.append('t><text fill=\\"#D0D1D6\\" fill');
+    data.append('-opacity=\\"0.8\\" font-size=\\');
+    data.append('"11\\" font-weight=\\"500\\" le');
+    data.append('tter-spacing=\\"0em\\"><tspan x');
+    data.append('=\\"117.5\\" y=\\"252.5\\">Ends');
+    data.append(' in</tspan></text><text fill=\\');
+    data.append('"#EBECF0\\" font-size=\\"14\\" ');
+    data.append('font-weight=\\"bold\\" letter-s');
+    data.append('pacing=\\"0em\\"><tspan x=\\"11');
+    data.append('7.5\\" y=\\"272.091\\">');
+
+    data.concat(end_date);
+    data.append('</ts');
+    data.append('pan></text><text fill=\\"#EFECE');
+    data.append('A\\" font-size=\\"14\\" font-we');
+    data.append('ight=\\"600\\" letter-spacing=');
+    data.append('\\"0em\\"><tspan x=\\"257\\" y=');
+    data.append('\\"256.091\\">');
+
+    data.concat(progress);
+    data.append('%</tspan></text></g>');
 }
 
-fn svg_lower_text(ref data: Array<felt252>) {
-    data.append('<text fill=\\"#D0D1D6\\" fill-o');
-    data.append('pacity=\\"0.8\\" xml:space=\\"p');
-    data.append('reserve\\" style=\\"white-space');
-    data.append(': pre\\" font-family=\\"Inter\\');
-    data.append('" font-size=\\"10\\" font-weigh');
-    data.append('t=\\"500\\" letter-spacing=\\"0');
-    data.append('em\\"><tspan x=\\"24\\" y=\\"31');
-    data.append('5.636\\">Surface</tspan></text>');
-    data.append('<text fill=\\"#EBECF0\\" xml:sp');
-    data.append('ace=\\"preserve\\" style=\\"whi');
-    data.append('te-space: pre\\" font-family=\\');
-    data.append('"Inter\\" font-size=\\"14\\" fo');
-    data.append('nt-weight=\\"bold\\" letter-spa');
-    data.append('cing=\\"0em\\"><tspan x=\\"24\\');
-    data.append('" y=\\"333.091\\">250m</tspan><');
-    data.append('/text><text fill=\\"#EBECF0\\" ');
-    data.append('xml:space=\\"preserve\\" style=');
-    data.append('\\"white-space: pre\\" font-fam');
-    data.append('ily=\\"Inter\\" font-size=\\"14');
-    data.append('\\" font-weight=\\"bold\\" lett');
-    data.append('er-spacing=\\"0em\\"><tspan x=');
-    data.append('\\"64.25\\" y=\\"333.091\\">&#x');
-    data.append('b2;</tspan></text><text fill=\\');
-    data.append('"#D0D1D6\\" fill-opacity=\\"0.8');
-    data.append('\\" xml:space=\\"preserve\\" st');
-    data.append('yle=\\"white-space: pre\\" font');
-    data.append('-family=\\"Inter\\" font-size=');
-    data.append('\\"10\\" font-weight=\\"500\\" ');
-    data.append('letter-spacing=\\"0em\\"><tspan');
-    data.append(' x=\\"117\\" y=\\"315.636\\">Ty');
-    data.append('pe</tspan></text><text fill=\\"');
-    data.append('#EFECEA\\" xml:space=\\"preserv');
-    data.append('e\\" style=\\"white-space: pre');
-    data.append('\\" font-family=\\"Inter\\" fon');
-    data.append('t-size=\\"14\\" font-weight=\\"');
-    data.append('bold\\" letter-spacing=\\"0em\\');
-    data.append('"><tspan x=\\"117\\" y=\\"333.0');
-    data.append('91\\">ARR</tspan></text><text f');
-    data.append('ill=\\"#D0D1D6\\" fill-opacity=');
-    data.append('\\"0.8\\" xml:space=\\"preserve');
-    data.append('\\" style=\\"white-space: pre\\');
-    data.append('" font-family=\\"Inter\\" font-');
-    data.append('size=\\"10\\" font-weight=\\"50');
-    data.append('0\\" letter-spacing=\\"0em\\"><');
-    data.append('tspan x=\\"186\\" y=\\"315.636');
-    data.append('\\">Impact on</tspan></text><te');
-    data.append('xt fill=\\"#EFECEA\\" xml:space');
-    data.append('=\\"preserve\\" style=\\"white-');
-    data.append('space: pre\\" font-family=\\"In');
-    data.append('ter\\" font-size=\\"14\\" font-');
-    data.append('weight=\\"bold\\" letter-spacin');
-    data.append('g=\\"0em\\"><tspan x=\\"181\\" ');
-    data.append('y=\\"333.091\\">3 SDG&#x2019;s<');
-    data.append('/tspan></text>');
+fn svg_lower_text(
+    asset_area: String, project_type: String, sdg_count: String, ref data: Array<felt252>
+) {
+    data.append('<g xml:space=\\"preserve\\" sty');
+    data.append('le=\\"white-space: pre\\" font-');
+    data.append('family=\\"Inter\\"><text fill=');
+    data.append('\\"#D0D1D6\\" fill-opacity=\\"0');
+    data.append('.8\\" font-size=\\"10\\" font-w');
+    data.append('eight=\\"500\\" letter-spacing=');
+    data.append('\\"0em\\"><tspan x=\\"24\\" y=');
+    data.append('\\"315.636\\">Surface</tspan></');
+    data.append('text><text fill=\\"#EBECF0\\" f');
+    data.append('ont-size=\\"14\\" font-weight=');
+    data.append('\\"bold\\" letter-spacing=\\"0e');
+    data.append('m\\"><tspan x=\\"24\\" y=\\"333');
+    data.append('.091\\">');
+
+    data.concat(asset_area); // 250
+    data.append('m</tspan></text><tex');
+    data.append('t fill=\\"#EBECF0\\" font-size=');
+    data.append('\\"14\\" font-weight=\\"bold\\"');
+    data.append(' letter-spacing=\\"0em\\"><tspa');
+    data.append('n x=\\"64.25\\" y=\\"333.091\\"');
+    data.append('>&#xb2;</tspan></text><text fil');
+    data.append('l=\\"#D0D1D6\\" fill-opacity=\\');
+    data.append('"0.8\\" font-size=\\"10\\" font');
+    data.append('-weight=\\"500\\" letter-spacin');
+    data.append('g=\\"0em\\"><tspan x=\\"117\\" ');
+    data.append('y=\\"315.636\\">Type</tspan></t');
+    data.append('ext><text fill=\\"#EFECEA\\" fo');
+    data.append('nt-size=\\"14\\" font-weight=\\');
+    data.append('"bold\\" letter-spacing=\\"0em');
+    data.append('\\"><tspan x=\\"117\\" y=\\"333');
+    data.append('.091\\">');
+
+    data.concat(project_type); // ARR';
+    data.append('</tspan></text><text');
+    data.append(' fill=\\"#D0D1D6\\" fill-opacit');
+    data.append('y=\\"0.8\\" font-size=\\"10\\" ');
+    data.append('font-weight=\\"500\\"><tspan x=');
+    data.append('\\"186\\" y=\\"315.636\\">Impac');
+    data.append('t on </tspan></text><text fill=');
+    data.append('\\"#EFECEA\\" font-size=\\"14\\');
+    data.append('" font-weight=\\"bold\\"><tspan');
+    data.append(' x=\\"181\\" y=\\"333.091\\">');
+
+    data.concat(sdg_count); // 3
+    data.append('SDG&#x2019;s</tspan></text></g>');
 }
 
 // Progress bar
-fn svg_progress_bar(ref data: Array<felt252>) {
-    data.append('<path d=\\"M179 269h106\\" stro');
-    data.append('ke=\\"url(#j)\\" stroke-opacity');
-    data.append('=\\"0.3\\" stroke-width=\\"8\\"');
-    data.append(' stroke-linecap=\\"round\\"/><p');
-    data.append('ath d=\\"M180 269H244\\" stroke');
-    data.append('=\\"url(#k)\\" stroke-opacity=');
-    data.append('\\"0.8\\" stroke-width=\\"4\\" ');
-    data.append('stroke-linecap=\\"round\\"/>');
+fn svg_progress_bar(progress: u8, ref data: Array<felt252>) {
+    // TODO: get progress + colors
+    data.append('<path stroke=\\"url(#f)\\" stro');
+    data.append('ke-linecap=\\"round\\" stroke-o');
+    data.append('pacity=\\".3\\" stroke-width=\\');
+    data.append('"8\\" d=\\"M179 269h106\\"/><pa');
+    data.append('th stroke=\\"url(#g)\\" stroke-');
+    data.append('linecap=\\"round\\" stroke-opac');
+    data.append('ity=\\".8\\" stroke-width=\\"4');
+    data.append('\\" d=\\"M180 269h64\\"/><rect ');
+    data.append('width=\\"291\\" height=\\"54\\"');
+    data.append(' x=\\"12.5\\" y=\\"231.5\\" str');
+    data.append('oke=\\"#D0D1D6\\" stroke-opacit');
+    data.append('y=\\".2\\" rx=\\"7.5\\" shape-r');
+    data.append('endering=\\"crispEdges\\"/></g>');
 }
 
 // SDGs images
-fn svg_sdgs(ref data: Array<felt252>) {
-    data.append('<rect width=\\"30\\" height=\\"');
-    data.append('30\\" x=\\"246\\" y=\\"307\\" f');
-    data.append('ill=\\"#272727\\" rx=\\"2\\"/><');
-    data.append('rect width=\\"30\\" height=\\"3');
-    data.append('0\\" x=\\"246\\" y=\\"307\\" fi');
-    data.append('ll=\\"url(#l)\\" fill-opacity=');
-    data.append('\\".6\\" rx=\\"2\\"/><rect widt');
-    data.append('h=\\"30\\" height=\\"30\\" x=\\');
-    data.append('"254\\" y=\\"307\\" fill=\\"#27');
-    data.append('2727\\" rx=\\"2\\"/><rect width');
-    data.append('=\\"30\\" height=\\"30\\" x=\\"');
-    data.append('254\\" y=\\"307\\" fill=\\"url(');
-    data.append('#m)\\" fill-opacity=\\".6\\" rx');
-    data.append('=\\"2\\"/><rect width=\\"30\\" ');
-    data.append('height=\\"30\\" x=\\"262\\" y=');
-    data.append('\\"307\\" fill=\\"#272727\\" rx');
-    data.append('=\\"2\\"/><rect width=\\"30\\" ');
-    data.append('height=\\"30\\" x=\\"262\\" y=');
-    data.append('\\"307\\" fill=\\"url(#n)\\" fi');
-    data.append('ll-opacity=\\".6\\" rx=\\"2\\"/');
-    data.append('></g></g>');
+fn svg_sdgs(ref sdgs: Span<felt252>, ref data: Array<felt252>) {
+    loop {
+        match sdgs.pop_front() {
+            Option::Some(sdg) => {
+                svg_sdg(*sdg, ref data);
+            },
+            Option::None => {
+                break;
+            },
+        };
+    };
 }
 
+fn svg_sdg(sdg: felt252, ref data: Array<felt252>) {
+    // TODO: dynamize
+    data.append('<rect width=\\"30\\" height=\\"');
+    data.append('30\\" x=\\"246\\" y=\\"306\\" f');
+    data.append('ill=\\"#272727\\" rx=\\"2\\"/>');
+    svg_sdg(0, ref data);
+
+    data.append('<defs><clipPath id=\\"SDG13-cli');
+    data.append('p\\"><rect width=\\"30\\" heigh');
+    data.append('t=\\"30\\" x=\\"246\\" y=\\"306');
+    data.append('\\" rx=\\"2\\"/></clipPath></de');
+    data.append('fs><g fill=\\"url(#h)\\" fill-o');
+    data.append('pacity=\\".6\\" rx=\\"2\\" clip');
+    data.append('-path=\\"url(#SDG13-clip)\\"><s');
+    data.append('vg id=\\"SDG13\\" xmlns=\\"http');
+    data.append('://www.w3.org/2000/svg\\" viewB');
+    data.append('ox=\\"0 0 62.11 62.11\\" width=');
+    data.append('\\"30\\" height=\\"30\\" x=\\"2');
+    data.append('46\\" y=\\"306\\">');
+
+    data.append('</g><rect width=\\"30\\" h');
+    data.append('eight=\\"30\\" x=\\"254\\" y=\\');
+    data.append('"306\\" fill=\\"#272727\\" rx=');
+    data.append('\\"2\\"/><rect width=\\"30\\" h');
+    data.append('eight=\\"30\\" x=\\"254\\" y=\\');
+    data.append('"306\\" fill=\\"url(#i)\\" fill');
+    data.append('-opacity=\\".6\\" rx=\\"2\\"/><');
+    data.append('rect width=\\"30\\" height=\\"3');
+    data.append('0\\" x=\\"262\\" y=\\"306\\" fi');
+    data.append('ll=\\"#272727\\" rx=\\"2\\"/><r');
+    data.append('ect width=\\"30\\" height=\\"30');
+    data.append('\\" x=\\"262\\" y=\\"306\\" fil');
+    data.append('l=\\"url(#j)\\" fill-opacity=\\');
+    data.append('".6\\" rx=\\"2\\"/></g>');
+}
+
+
 // Live group
-fn svg_status_group(ref data: Array<felt252>) {
-    data.append('<g filter=\\"url(#o)\\"><rect x');
+fn svg_status_group(status: String, ref data: Array<felt252>) {
+    // TODO: dynamize 
+
+    data.append('<g filter=\\"url(#k)\\"><rect x');
     data.append('=\\"246\\" y=\\"20\\" width=\\"');
     data.append('50\\" height=\\"22\\" rx=\\"11');
     data.append('\\" fill=\\"#1F2128\\" fill-opa');
@@ -210,271 +273,242 @@ fn svg_status_group(ref data: Array<felt252>) {
     data.append('e\\" style=\\"white-space: pre');
     data.append('\\" font-family=\\"Inter\\" fon');
     data.append('t-size=\\"12\\" font-weight=\\"');
-    data.append('500\\" letter-spacing=\\"0em\\"');
-    data.append('><tspan x=\\"264.311\\" y=\\"35');
-    data.append('.3636\\">Live</tspan></text><re');
-    data.append('ct x=\\"246.5\\" y=\\"20.5\\" w');
-    data.append('idth=\\"49\\" height=\\"21\\" r');
-    data.append('x=\\"10.5\\" stroke=\\"#ABEFC6');
-    data.append('\\" stroke-opacity=\\"0.3\\"/><');
-    data.append('/g>');
+    data.append('500\\"><tspan x=\\"264.311\\" y');
+    data.append('=\\"35.3636\\">');
+
+    data.concat(status);
+    data.append('</tspan></te');
+    data.append('xt><rect x=\\"246.5\\" y=\\"20.');
+    data.append('5\\" width=\\"49\\" height=\\"2');
+    data.append('1\\" rx=\\"10.5\\" stroke=\\"#A');
+    data.append('BEFC6\\" stroke-opacity=\\"0.3');
+    data.append('\\"/></g>');
 }
 
 // Main text
-fn svg_main_text(ref data: Array<felt252>) {
-    data.append('<text fill=\\"#EFECEA\\" font-f');
-    data.append('amily=\\"Inter\\" font-size=\\"');
-    data.append('21\\" font-weight=\\"700\\" lin');
-    data.append('e-height=\\"21\\" letter-spacin');
-    data.append('g=\\"-0.03em\\" text-align=\\"l');
-    data.append('eft\\"><tspan x=\\"20\\" y=\\"1');
-    data.append('76.136\\">Banegas Farm</tspan><');
-    data.append('/text><text fill=\\"#D0D1D6\\" ');
-    data.append('fill-opacity=\\"0.8\\" xml:spac');
-    data.append('e=\\"preserve\\" style=\\"white');
-    data.append('-space: pre\\" font-family=\\"I');
-    data.append('nter\\" font-size=\\"10\\" lett');
-    data.append('er-spacing=\\"0em\\"><tspan x=');
-    data.append('\\"20.1074\\" y=\\"195.636\\">B');
-    data.append('ased in </tspan></text><text fi');
-    data.append('ll=\\"#D0D1D6\\" xml:space=\\"p');
-    data.append('reserve\\" style=\\"white-space');
-    data.append(': pre\\" font-family=\\"Inter\\');
-    data.append('" font-size=\\"10\\" font-weigh');
-    data.append('t=\\"600\\" letter-spacing=\\"0');
-    data.append('em\\"><tspan x=\\"63.3496\\" y=');
-    data.append('\\"195.636\\">Costa Rica</tspan');
+fn svg_main_text(
+    name: String, country: String, developer: String, certifier: String, ref data: Array<felt252>
+) {
+    data.append('<g xml:space=\\"preserve\\" sty');
+    data.append('le=\\"white-space: pre\\" font-');
+    data.append('family=\\"Inter\\"><text fill=');
+    data.append('\\"#EFECEA\\" font-family=\\"In');
+    data.append('ter\\" font-size=\\"21\\" font-');
+    data.append('weight=\\"700\\" line-height=\\');
+    data.append('"21\\" letter-spacing=\\"-0.03e');
+    data.append('m\\" text-align=\\"left\\"><tsp');
+    data.append('an x=\\"20\\" y=\\"176.136\\">');
+
+    data.concat(name); // 'Banegas Farm'
+    data.append('</tspan></text><text');
+    data.append(' fill=\\"#D0D1D6\\" fill-opacit');
+    data.append('y=\\"0.8\\" font-size=\\"10\\">');
+    data.append('<tspan x=\\"20.1074\\" y=\\"195');
+    data.append('.636\\">Based in </tspan></text');
+    data.append('><text fill=\\"#D0D1D6\\" font-');
+    data.append('size=\\"10\\" font-weight=\\"60');
+    data.append('0\\"><tspan x=\\"63.3496\\" y=');
+    data.append('\\"195.636\\">');
+
+    data.concat(country); // 'Costa Rica'
+    data.append('</tspan');
     data.append('></text><text fill=\\"#D0D1D6\\');
-    data.append('" fill-opacity=\\"0.8\\" xml:sp');
-    data.append('ace=\\"preserve\\" style=\\"whi');
-    data.append('te-space: pre\\" font-family=\\');
-    data.append('"Inter\\" font-size=\\"10\\" le');
-    data.append('tter-spacing=\\"0em\\"><tspan x');
-    data.append('=\\"20\\" y=\\"209.636\\">By </');
-    data.append('tspan></text><text fill=\\"#D0D');
-    data.append('1D6\\" xml:space=\\"preserve\\"');
-    data.append(' style=\\"white-space: pre\\" f');
-    data.append('ont-family=\\"Inter\\" font-siz');
-    data.append('e=\\"10\\" font-weight=\\"600\\');
-    data.append('" letter-spacing=\\"0em\\"><tsp');
-    data.append('an x=\\"34.8828\\" y=\\"209.636');
-    data.append('\\">Corcovado Foundation</tspan');
+    data.append('" fill-opacity=\\"0.8\\" font-s');
+    data.append('ize=\\"10\\" letter-spacing=\\"');
+    data.append('0em\\"><tspan x=\\"20\\" y=\\"2');
+    data.append('09.636\\">By </tspan></text><te');
+    data.append('xt fill=\\"#D0D1D6\\" font-size');
+    data.append('=\\"10\\" font-weight=\\"600\\"');
+    data.append(' letter-spacing=\\"0em\\"><tspa');
+    data.append('n x=\\"34.8828\\" y=\\"209.636');
+    data.append('\\">');
+
+    data.concat(developer); // 'Corcovado Foundation';
+    data.append('</tspan');
     data.append('></text><text fill=\\"#D0D1D6\\');
-    data.append('" fill-opacity=\\"0.8\\" xml:sp');
-    data.append('ace=\\"preserve\\" style=\\"whi');
-    data.append('te-space: pre\\" font-family=\\');
-    data.append('"Inter\\" font-size=\\"10\\" le');
-    data.append('tter-spacing=\\"0em\\"><tspan x');
-    data.append('=\\"204\\" y=\\"195.636\\">Cert');
-    data.append('ified by</tspan></text><text fi');
-    data.append('ll=\\"#EFECEA\\" xml:space=\\"p');
-    data.append('reserve\\" style=\\"white-space');
-    data.append(': pre\\" font-family=\\"Inter\\');
-    data.append('" font-size=\\"11\\" font-weigh');
-    data.append('t=\\"600\\" letter-spacing=\\"0');
-    data.append('em\\"><tspan x=\\"239\\" y=\\"2');
-    data.append('09.5\\">ERS</tspan></text>');
+    data.append('" fill-opacity=\\"0.8\\" font-s');
+    data.append('ize=\\"10\\" letter-spacing=\\"');
+    data.append('0em\\"><tspan x=\\"204\\" y=\\"');
+    data.append('195.636\\">Certified by</tspan>');
+    data.append('</text><text fill=\\"#EFECEA\\"');
+    data.append(' font-size=\\"11\\" font-weight');
+    data.append('=\\"600\\" letter-spacing=\\"0e');
+    data.append('m\\"><tspan x=\\"239\\" y=\\"20');
+    data.append('9.5\\">');
+
+    data.concat(certifier); // 'ERS';
+    data.append('</tspan></text></g>');
 }
 
 // ERS logo ?
-fn svg_certifier_logo(ref data: Array<felt252>) {
+fn svg_certifier_logo(component_id: felt252, ref data: Array<felt252>) {
     data.append('<rect width=\\"28\\" height=\\"');
     data.append('28\\" x=\\"268\\" y=\\"185\\" f');
     data.append('ill=\\"#EBECF0\\" fill-opacity=');
-    data.append('\\".1\\" rx=\\"14\\"/><rect wid');
-    data.append('th=\\"14\\" height=\\"14\\" x=');
-    data.append('\\"275\\" y=\\"192\\" fill=\\"u');
-    data.append('rl(#p)\\" style=\\"mix-blend-mo');
-    data.append('de:screen\\"/><rect width=\\"27');
-    data.append('\\" height=\\"27\\" x=\\"268.5');
-    data.append('\\" y=\\"185.5\\" stroke=\\"#EB');
-    data.append('ECF0\\" stroke-dasharray=\\"3 3');
-    data.append('\\" stroke-linecap=\\"round\\" ');
-    data.append('stroke-miterlimit=\\"1.23\\" st');
-    data.append('roke-opacity=\\".7\\" rx=\\"13.');
-    data.append('5\\"/>');
+    data.append('\\".1\\" rx=\\"14\\"/><svg widt');
+    data.append('h=\\"14\\" height=\\"14\\" x=\\');
+    data.append('"275\\" y=\\"192\\" viewBox=\\"');
+    data.append('0 0 51 61\\"><g opacity=\\"0.6');
+    data.append('\\" style=\\"mix-blend-mode:scr');
+    data.append('een\\"><path d=\\"M18.0435 41.8');
+    data.append('89L16.1607 46.8835H1.8828L0 60.');
+    data.append('7391H13.6503L15.2977 56.228C16.');
+    data.append('0822 54.1335 18.1219 52.6835 20');
+    data.append('.3185 52.6835H43.7751L45.6579 3');
+    data.append('8.8279H22.3582C20.4754 38.9085 ');
+    data.append('18.7495 40.1168 18.0435 41.889Z');
+    data.append('\\" fill=\\"#F5F5F5\\"/><path d');
+    data.append('=\\"M17.965 36.814C18.7495 34.7');
+    data.append('196 20.7892 33.2696 22.9858 33.');
+    data.append('2696H38.5189L40.4017 19.414H24.');
+    data.append('9471C23.0643 19.414 21.3384 20.');
+    data.append('6223 20.7108 22.3945L18.828 27.');
+    data.append('4695H4.5501L2.6673 41.3251H16.3');
+    data.append('176L17.965 36.814Z\\" fill=\\"#');
+    data.append('F5F5F5\\"/><path d=\\"M23.2212 ');
+    data.append('2.98057L21.3384 8.05558H7.0605L');
+    data.append('5.1777 21.8306H18.828L20.4754 1');
+    data.append('7.3195C21.2599 15.2251 23.2996 ');
+    data.append('13.775 25.4962 13.775H48.9528L5');
+    data.append('0.8356 0H27.4575C25.5747 0 23.9');
+    data.append('272 1.20834 23.2212 2.98057Z\\"');
+    data.append(' fill=\\"#F5F5F5\\"/></g></svg>');
+    data.append('<rect width=\\"27\\" height=\\"');
+    data.append('27\\" x=\\"268.5\\" y=\\"185.5');
+    data.append('\\" stroke=\\"#EBECF0\\" stroke');
+    data.append('-dasharray=\\"3 3\\" stroke-lin');
+    data.append('ecap=\\"round\\" stroke-miterli');
+    data.append('mit=\\"1.23\\" stroke-opacity=');
+    data.append('\\".7\\" rx=\\"13.5\\"/>');
 }
-
 
 fn svg_background(ref data: Array<felt252>) {
     data.append('<rect width=\\"312\\" height=\\');
-    data.append('"357\\" x=\\"2\\" y=\\"2\\" str');
-    data.append('oke=\\"url(#q)\\" stroke-linejo');
+    data.append('"356\\" x=\\"2\\" y=\\"2\\" str');
+    data.append('oke=\\"url(#m)\\" stroke-linejo');
     data.append('in=\\"round\\" stroke-opacity=');
     data.append('\\".8\\" stroke-width=\\"4\\" r');
     data.append('x=\\"14\\"/>');
 }
 
-fn generate(data: TokenData) -> Span<felt252> {
-    let mut svg: Array<felt252> = Default::default();
-    svg_header(ref svg);
-    svg_styles(ref svg);
-    svg.span()
-}
-
 // Defs:
 fn svg_def_patterns(ref data: Array<felt252>) {
+    // TODO: check if need dynamization (progress bar)
     data.append('<defs><pattern id=\\"c\\" width');
     data.append('=\\"1\\" height=\\"1\\" pattern');
     data.append('ContentUnits=\\"objectBoundingB');
-    data.append('ox\\"><use href=\\"#r\\" transf');
-    data.append('orm=\\"matrix(.0017 0 0 .00225 ');
-    data.append('-.07 0) scale(-1, 1) translate(');
-    data.append('-676, 0)\\"/></pattern><pattern');
-    data.append(' id=\\"i\\" width=\\"7.01\\" he');
-    data.append('ight=\\"36.57\\" patternContent');
-    data.append('Units=\\"objectBoundingBox\\"><');
-    data.append('use href=\\"#s\\" transform=\\"');
-    data.append('scale(.00342 .01786)\\"/></patt');
-    data.append('ern><pattern id=\\"l\\" width=');
-    data.append('\\"1\\" height=\\"1\\" patternC');
-    data.append('ontentUnits=\\"objectBoundingBo');
-    data.append('x\\"><use href=\\"#t\\" transfo');
-    data.append('rm=\\"scale(.00098)\\"/></patte');
-    data.append('rn><pattern id=\\"m\\" width=\\');
-    data.append('"1\\" height=\\"1\\" patternCon');
-    data.append('tentUnits=\\"objectBoundingBox');
-    data.append('\\"><use href=\\"#u\\" transfor');
-    data.append('m=\\"scale(.00065)\\"/></patter');
-    data.append('n><pattern id=\\"n\\" width=\\"');
-    data.append('1\\" height=\\"1\\" patternCont');
-    data.append('entUnits=\\"objectBoundingBox\\');
-    data.append('"><use href=\\"#v\\" transform=');
-    data.append('\\"scale(.00065)\\"/></pattern>');
-    data.append('<pattern id=\\"p\\" width=\\"1');
-    data.append('\\" height=\\"1\\" patternConte');
-    data.append('ntUnits=\\"objectBoundingBox\\"');
-    data.append('><use href=\\"#w\\" transform=');
-    data.append('\\"translate(.08) scale(.0032)');
-    data.append('\\"/></pattern>');
+    data.append('ox\\"><use href=\\"#n\\" transf');
+    data.append('orm=\\"matrix(.00258 0 0 .00225');
+    data.append(' -.37 0)\\"/></pattern><pattern');
+    data.append(' id=\\"h\\" width=\\"1\\" heigh');
+    data.append('t=\\"1\\" patternContentUnits=');
+    data.append('\\"objectBoundingBox\\"><use hr');
+    data.append('ef=\\"#o\\" transform=\\"scale(');
+    data.append('.00098)\\"/></pattern><pattern ');
+    data.append('id=\\"i\\" width=\\"1\\" height');
+    data.append('=\\"1\\" patternContentUnits=\\');
+    data.append('"objectBoundingBox\\"><use href');
+    data.append('=\\"#p\\" transform=\\"scale(.0');
+    data.append('0065)\\"/></pattern><pattern id');
+    data.append('=\\"j\\" width=\\"1\\" height=');
+    data.append('\\"1\\" patternContentUnits=\\"');
+    data.append('objectBoundingBox\\"><use href=');
+    data.append('\\"#q\\" transform=\\"scale(.00');
+    data.append('065)\\"/></pattern><pattern id=');
+    data.append('\\"l\\" width=\\"1\\" height=\\');
+    data.append('"1\\" patternContentUnits=\\"ob');
+    data.append('jectBoundingBox\\"><use href=\\');
+    data.append('"#r\\" transform=\\"translate(.');
+    data.append('08) scale(.0032)\\"/></pattern>');
 }
 
 // filters
 fn svg_def_filters(ref data: Array<felt252>) {
-    data.append('<filter id=\\"a\\" width=\\"310');
-    data.append('\\" height=\\"355\\" x=\\"3\\" ');
-    data.append('y=\\"3\\" color-interpolation-f');
-    data.append('ilters=\\"sRGB\\" filterUnits=');
-    data.append('\\"userSpaceOnUse\\"><feFlood f');
-    data.append('lood-opacity=\\"0\\" result=\\"');
-    data.append('BackgroundImageFix\\"/><feColor');
-    data.append('Matrix in=\\"SourceAlpha\\" res');
-    data.append('ult=\\"hardAlpha\\" values=\\"0');
-    data.append(' 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ');
-    data.append('0 0 127 0\\"/><feMorphology in=');
-    data.append('\\"SourceAlpha\\" operator=\\"d');
-    data.append('ilate\\" radius=\\"1\\" result=');
-    data.append('\\"effect1_dropShadow_2951_1923');
-    data.append('38\\"/><feOffset /><feColorMatr');
-    data.append('ix values=\\"0 0 0 0 0.321569 0');
-    data.append(' 0 0 0 0.337255 0 0 0 0 0.38039');
-    data.append('2 0 0 0 0.4 0\\"/><feBlend in2=');
-    data.append('\\"BackgroundImageFix\\" result');
+    // TODO: check if need dynamization (progress bar)
+    data.append('<linearGradient id=\\"d\\" x1=');
+    data.append('\\"153.74\\" x2=\\"154.71\\" y1');
+    data.append('=\\"116.5\\" y2=\\"353\\" gradi');
+    data.append('entUnits=\\"userSpaceOnUse\\"><');
+    data.append('stop stop-color=\\"#0B0D13\\" s');
+    data.append('top-opacity=\\".4\\"/><stop off');
+    data.append('set=\\"1\\" stop-color=\\"#0B0D');
+    data.append('13\\" stop-opacity=\\".9\\"/></');
+    data.append('linearGradient><linearGradient ');
+    data.append('id=\\"f\\" x1=\\"285\\" x2=\\"1');
+    data.append('79\\" y1=\\"270\\" y2=\\"270\\"');
+    data.append(' gradientUnits=\\"userSpaceOnUs');
+    data.append('e\\"><stop offset=\\".4\\" stop');
+    data.append('-color=\\"#A8C4EF\\"/><stop off');
+    data.append('set=\\"1\\" stop-color=\\"#0AF2');
+    data.append('AD\\"/></linearGradient><linear');
+    data.append('Gradient id=\\"g\\" x1=\\"244\\');
+    data.append('" x2=\\"180\\" y1=\\"270\\" y2=');
+    data.append('\\"270\\" gradientUnits=\\"user');
+    data.append('SpaceOnUse\\"><stop offset=\\".');
+    data.append('4\\" stop-color=\\"#A8C4EF\\"/>');
+    data.append('<stop offset=\\"1\\" stop-color');
+    data.append('=\\"#0AF2AD\\"/></linearGradien');
+    data.append('t><filter id=\\"a\\" width=\\"3');
+    data.append('10\\" height=\\"354\\" x=\\"3\\');
+    data.append('" y=\\"3\\" color-interpolation');
+    data.append('-filters=\\"sRGB\\" filterUnits');
+    data.append('=\\"userSpaceOnUse\\"><feFlood ');
+    data.append('flood-opacity=\\"0\\" result=\\');
+    data.append('"BackgroundImageFix\\"/><feColo');
+    data.append('rMatrix in=\\"SourceAlpha\\" re');
+    data.append('sult=\\"hardAlpha\\" values=\\"');
+    data.append('0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0');
+    data.append(' 0 0 127 0\\"/><feMorphology in');
+    data.append('=\\"SourceAlpha\\" operator=\\"');
+    data.append('dilate\\" radius=\\"1\\" result');
     data.append('=\\"effect1_dropShadow_2951_192');
-    data.append('338\\"/><feBlend in=\\"SourceGr');
-    data.append('aphic\\" in2=\\"effect1_dropSha');
-    data.append('dow_2951_192338\\" result=\\"sh');
-    data.append('ape\\"/></filter><filter id=\\"');
-    data.append('e\\" width=\\"316\\" height=\\"');
-    data.append('364\\" x=\\"0\\" y=\\"0\\" colo');
-    data.append('r-interpolation-filters=\\"sRGB');
-    data.append('\\" filterUnits=\\"userSpaceOnU');
-    data.append('se\\"><feFlood flood-opacity=\\');
-    data.append('"0\\" result=\\"BackgroundImage');
-    data.append('Fix\\"/><feGaussianBlur in=\\"B');
-    data.append('ackgroundImageFix\\" stdDeviati');
-    data.append('on=\\"2\\"/><feComposite in2=\\');
-    data.append('"SourceAlpha\\" operator=\\"in');
-    data.append('\\" result=\\"effect1_backgroun');
-    data.append('dBlur_2951_192338\\"/><feBlend ');
-    data.append('in=\\"SourceGraphic\\" in2=\\"e');
-    data.append('ffect1_backgroundBlur_2951_1923');
-    data.append('38\\" result=\\"shape\\"/></fil');
-    data.append('ter><filter id=\\"g\\" width=\\');
-    data.append('"332\\" height=\\"234\\" x=\\"-');
-    data.append('8\\" y=\\"137\\" color-interpol');
-    data.append('ation-filters=\\"sRGB\\" filter');
-    data.append('Units=\\"userSpaceOnUse\\"><feF');
-    data.append('lood flood-opacity=\\"0\\" resu');
-    data.append('lt=\\"BackgroundImageFix\\"/><f');
-    data.append('eGaussianBlur in=\\"BackgroundI');
-    data.append('mageFix\\" stdDeviation=\\"6\\"');
-    data.append('/><feComposite in2=\\"SourceAlp');
-    data.append('ha\\" operator=\\"in\\" result=');
-    data.append('\\"effect1_backgroundBlur_2951_');
-    data.append('192338\\"/><feColorMatrix in=\\');
-    data.append('"SourceAlpha\\" result=\\"hardA');
-    data.append('lpha\\" values=\\"0 0 0 0 0 0 0');
-    data.append(' 0 0 0 0 0 0 0 0 0 0 0 127 0\\"');
-    data.append('/><feOffset dy=\\"8\\"/><feGaus');
-    data.append('sianBlur stdDeviation=\\"3\\"/>');
-    data.append('<feComposite in2=\\"hardAlpha\\');
-    data.append('" operator=\\"out\\"/><feColorM');
-    data.append('atrix values=\\"0 0 0 0 0 0 0 0');
-    data.append(' 0 0 0 0 0 0 0 0 0 0 0.05 0\\"/');
-    data.append('><feBlend in2=\\"effect1_backgr');
-    data.append('oundBlur_2951_192338\\" result=');
-    data.append('\\"effect2_dropShadow_2951_1923');
-    data.append('38\\"/><feBlend in=\\"SourceGra');
-    data.append('phic\\" in2=\\"effect2_dropShad');
-    data.append('ow_2951_192338\\" result=\\"sha');
-    data.append('pe\\"/><feColorMatrix in=\\"Sou');
-    data.append('rceAlpha\\" result=\\"hardAlpha');
-    data.append('\\" values=\\"0 0 0 0 0 0 0 0 0');
-    data.append(' 0 0 0 0 0 0 0 0 0 127 0\\"/><f');
-    data.append('eOffset dy=\\"2\\"/><feGaussian');
-    data.append('Blur stdDeviation=\\"4\\"/><feC');
-    data.append('omposite in2=\\"hardAlpha\\" k2');
-    data.append('=\\"-1\\" k3=\\"1\\" operator=');
-    data.append('\\"arithmetic\\"/><feColorMatri');
-    data.append('x values=\\"0 0 0 0 1 0 0 0 0 1');
-    data.append(' 0 0 0 0 1 0 0 0 0.25 0\\"/><fe');
-    data.append('Blend in2=\\"shape\\" result=\\');
-    data.append('"effect3_innerShadow_2951_19233');
-    data.append('8\\"/></filter><filter id=\\"h');
-    data.append('\\" width=\\"328\\" height=\\"9');
-    data.append('2\\" x=\\"-6\\" y=\\"213\\" col');
-    data.append('or-interpolation-filters=\\"sRG');
-    data.append('B\\" filterUnits=\\"userSpaceOn');
-    data.append('Use\\"><feFlood flood-opacity=');
+    data.append('338\\"/><feOffset /><feColorMat');
+    data.append('rix values=\\"0 0 0 0 0.321569 ');
+    data.append('0 0 0 0 0.337255 0 0 0 0 0.3803');
+    data.append('92 0 0 0 0.4 0\\"/><feBlend in2');
+    data.append('=\\"BackgroundImageFix\\" resul');
+    data.append('t=\\"effect1_dropShadow_2951_19');
+    data.append('2338\\"/><feBlend in=\\"SourceG');
+    data.append('raphic\\" in2=\\"effect1_dropSh');
+    data.append('adow_2951_192338\\" result=\\"s');
+    data.append('hape\\"/></filter><filter id=\\');
+    data.append('"e\\" width=\\"304\\" height=\\');
+    data.append('"69\\" x=\\"6\\" y=\\"231\\" co');
+    data.append('lor-interpolation-filters=\\"sR');
+    data.append('GB\\" filterUnits=\\"userSpaceO');
+    data.append('nUse\\"><feFlood flood-opacity=');
     data.append('\\"0\\" result=\\"BackgroundIma');
-    data.append('geFix\\"/><feGaussianBlur in=\\');
-    data.append('"BackgroundImageFix\\" stdDevia');
-    data.append('tion=\\"9\\"/><feComposite in2=');
-    data.append('\\"SourceAlpha\\" operator=\\"i');
-    data.append('n\\" result=\\"effect1_backgrou');
-    data.append('ndBlur_2951_192338\\"/><feColor');
-    data.append('Matrix in=\\"SourceAlpha\\" res');
-    data.append('ult=\\"hardAlpha\\" values=\\"0');
+    data.append('geFix\\"/><feColorMatrix in=\\"');
+    data.append('SourceAlpha\\" result=\\"hardAl');
+    data.append('pha\\" values=\\"0 0 0 0 0 0 0 ');
+    data.append('0 0 0 0 0 0 0 0 0 0 0 127 0\\"/');
+    data.append('><feOffset dy=\\"8\\"/><feGauss');
+    data.append('ianBlur stdDeviation=\\"3\\"/><');
+    data.append('feComposite in2=\\"hardAlpha\\"');
+    data.append(' operator=\\"out\\"/><feColorMa');
+    data.append('trix values=\\"0 0 0 0 0 0 0 0 ');
+    data.append('0 0 0 0 0 0 0 0 0 0 0.05 0\\"/>');
+    data.append('<feBlend in2=\\"BackgroundImage');
+    data.append('Fix\\" result=\\"effect1_dropSh');
+    data.append('adow_2951_192338\\"/><feBlend i');
+    data.append('n=\\"SourceGraphic\\" in2=\\"ef');
+    data.append('fect1_dropShadow_2951_192338\\"');
+    data.append(' result=\\"shape\\"/><feColorMa');
+    data.append('trix in=\\"SourceAlpha\\" resul');
+    data.append('t=\\"hardAlpha\\" values=\\"0 0');
     data.append(' 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ');
-    data.append('0 0 127 0\\"/><feOffset dy=\\"8');
-    data.append('\\"/><feGaussianBlur stdDeviati');
-    data.append('on=\\"3\\"/><feComposite in2=\\');
-    data.append('"hardAlpha\\" operator=\\"out\\');
-    data.append('"/><feColorMatrix values=\\"0 0');
-    data.append(' 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ');
-    data.append('0 0.05 0\\"/><feBlend in2=\\"ef');
-    data.append('fect1_backgroundBlur_2951_19233');
-    data.append('8\\" result=\\"effect2_dropShad');
-    data.append('ow_2951_192338\\"/><feBlend in=');
-    data.append('\\"SourceGraphic\\" in2=\\"effe');
-    data.append('ct2_dropShadow_2951_192338\\" r');
-    data.append('esult=\\"shape\\"/><feColorMatr');
-    data.append('ix in=\\"SourceAlpha\\" result=');
-    data.append('\\"hardAlpha\\" values=\\"0 0 0');
-    data.append(' 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ');
-    data.append('127 0\\"/><feOffset dy=\\"1\\"/');
-    data.append('><feGaussianBlur stdDeviation=');
-    data.append('\\"3.5\\"/><feComposite in2=\\"');
-    data.append('hardAlpha\\" k2=\\"-1\\" k3=\\"');
-    data.append('1\\" operator=\\"arithmetic\\"/');
-    data.append('><feColorMatrix values=\\"0 0 0');
-    data.append(' 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 ');
-    data.append('0.25 0\\"/><feBlend in2=\\"shap');
-    data.append('e\\" result=\\"effect3_innerSha');
-    data.append('dow_2951_192338\\"/></filter><f');
-    data.append('ilter id=\\"o\\" width=\\"90\\"');
-    data.append(' height=\\"62\\" x=\\"226\\" y=');
+    data.append('0 127 0\\"/><feOffset dy=\\"2\\');
+    data.append('"/><feGaussianBlur stdDeviation');
+    data.append('=\\"4\\"/><feComposite in2=\\"h');
+    data.append('ardAlpha\\" k2=\\"-1\\" k3=\\"1');
+    data.append('\\" operator=\\"arithmetic\\"/>');
+    data.append('<feColorMatrix values=\\"0 0 0 ');
+    data.append('0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0');
+    data.append('.25 0\\"/><feBlend in2=\\"shape');
+    data.append('\\" result=\\"effect2_innerShad');
+    data.append('ow_2951_192338\\"/></filter><fi');
+    data.append('lter id=\\"k\\" width=\\"90\\" ');
+    data.append('height=\\"62\\" x=\\"226\\" y=');
     data.append('\\"0\\" color-interpolation-fil');
     data.append('ters=\\"sRGB\\" filterUnits=\\"');
     data.append('userSpaceOnUse\\"><feFlood floo');
@@ -488,72 +522,40 @@ fn svg_def_filters(ref data: Array<felt252>) {
     data.append('"/><feBlend in=\\"SourceGraphic');
     data.append('\\" in2=\\"effect1_backgroundBl');
     data.append('ur_2951_192338\\" result=\\"sha');
-    data.append('pe\\"/></filter><linearGradient');
-    data.append(' id=\\"d\\" x1=\\"141.39\\" x2=');
-    data.append('\\"140.76\\" y1=\\"119.5\\" y2=');
-    data.append('\\"356\\" gradientUnits=\\"user');
-    data.append('SpaceOnUse\\"><stop stop-color=');
-    data.append('\\"#0B0D13\\" stop-opacity=\\".');
-    data.append('4\\"/><stop offset=\\"1\\" stop');
-    data.append('-color=\\"#0B0D13\\" stop-opaci');
-    data.append('ty=\\".9\\"/></linearGradient><');
-    data.append('linearGradient id=\\"f\\" x1=\\');
-    data.append('"158\\" x2=\\"158\\" y1=\\"4\\"');
-    data.append(' y2=\\"360\\" gradientUnits=\\"');
-    data.append('userSpaceOnUse\\"><stop offset=');
-    data.append('\\".41\\" stop-color=\\"#D9D9D9');
-    data.append('\\" stop-opacity=\\"0\\"/><stop');
-    data.append(' offset=\\"1\\" stop-color=\\"#');
-    data.append('D9D9D9\\" stop-opacity=\\".01\\');
-    data.append('"/></linearGradient><linearGrad');
-    data.append('ient id=\\"j\\" x1=\\"285\\" x2');
-    data.append('=\\"179\\" y1=\\"270\\" y2=\\"2');
-    data.append('70\\" gradientUnits=\\"userSpac');
-    data.append('eOnUse\\"><stop offset=\\".4\\"');
-    data.append(' stop-color=\\"#A8C4EF\\"/><sto');
-    data.append('p offset=\\"1\\" stop-color=\\"');
-    data.append('#0AF2AD\\"/></linearGradient><l');
-    data.append('inearGradient id=\\"k\\" x1=\\"');
-    data.append('244\\" x2=\\"180\\" y1=\\"270\\');
-    data.append('" y2=\\"270\\" gradientUnits=\\');
-    data.append('"userSpaceOnUse\\"><stop offset');
-    data.append('=\\".4\\" stop-color=\\"#A8C4EF');
-    data.append('\\"/><stop offset=\\"1\\" stop-');
-    data.append('color=\\"#0AF2AD\\"/></linearGr');
-    data.append('adient><radialGradient id=\\"q');
-    data.append('\\" cx=\\"0\\" cy=\\"0\\" r=\\"');
-    data.append('1\\" gradientTransform=\\"matri');
-    data.append('x(277.26268 -279.7368 989.4931 ');
-    data.append('980.74152 101.47 200.84)\\" gra');
-    data.append('dientUnits=\\"userSpaceOnUse\\"');
-    data.append('><stop offset=\\".02\\" stop-co');
-    data.append('lor=\\"#E8E7E7\\"/><stop offset');
-    data.append('=\\".06\\" stop-color=\\"#BAD3C');
-    data.append('B\\"/><stop offset=\\".38\\" st');
-    data.append('op-color=\\"#0AF2AD\\"/><stop o');
-    data.append('ffset=\\".4\\" stop-color=\\"#2');
-    data.append('7EABA\\"/><stop offset=\\".56\\');
-    data.append('" stop-color=\\"#C3C2FF\\"/><st');
-    data.append('op offset=\\".75\\" stop-color=');
-    data.append('\\"#FFFCFC\\"/><stop offset=\\"');
-    data.append('.88\\" stop-color=\\"#E8E3E3\\"');
-    data.append('/><stop offset=\\"1\\" stop-col');
-    data.append('or=\\"#B3B3B3\\"/></radialGradi');
-    data.append('ent><clipPath id=\\"b\\"><rect ');
-    data.append('width=\\"308\\" height=\\"353\\');
-    data.append('" x=\\"4\\" y=\\"4\\" fill=\\"#');
-    data.append('fff\\" rx=\\"12\\"/></clipPath>');
+    data.append('pe\\"/></filter><radialGradient');
+    data.append(' id=\\"m\\" cx=\\"0\\" cy=\\"0');
+    data.append('\\" r=\\"1\\" gradientTransform');
+    data.append('=\\"matrix(277.26244 -278.9438 ');
+    data.append('986.71036 980.76284 101.47 200.');
+    data.append('29)\\" gradientUnits=\\"userSpa');
+    data.append('ceOnUse\\"><stop offset=\\".02');
+    data.append('\\" stop-color=\\"#E8E7E7\\"/><');
+    data.append('stop offset=\\".06\\" stop-colo');
+    data.append('r=\\"#BAD3CB\\"/><stop offset=');
+    data.append('\\".38\\" stop-color=\\"#0AF2AD');
+    data.append('\\"/><stop offset=\\".4\\" stop');
+    data.append('-color=\\"#27EABA\\"/><stop off');
+    data.append('set=\\".56\\" stop-color=\\"#C3');
+    data.append('C2FF\\"/><stop offset=\\".75\\"');
+    data.append(' stop-color=\\"#FFFCFC\\"/><sto');
+    data.append('p offset=\\".88\\" stop-color=');
+    data.append('\\"#E8E3E3\\"/><stop offset=\\"');
+    data.append('1\\" stop-color=\\"#B3B3B3\\"/>');
+    data.append('</radialGradient><clipPath id=');
+    data.append('\\"b\\"><rect width=\\"308\\" h');
+    data.append('eight=\\"352\\" x=\\"4\\" y=\\"');
+    data.append('4\\" fill=\\"#fff\\" rx=\\"12\\');
+    data.append('"/></clipPath>');
 }
 
 // + b64 JPEG images
-fn svg_background_image(ref data: Array<felt252>) {
+fn svg_background_image(comp_id: felt252, ref data: Array<felt252>) {
     data.append('<image id=\\"image0\\" width=\\');
     data.append('"673\\" height=\\"444\\" xlink:');
     data.append('href=\\"data:image/jpeg;base64,');
-// Insert background image from provider here
+// TODO: get from provider Insert background image from provider here
 }
 
 fn svg_end(ref data: Array<felt252>) {
     data.append('</defs></svg>');
 }
-
