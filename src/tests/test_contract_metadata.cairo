@@ -13,7 +13,7 @@ use starknet::syscalls::deploy_syscall;
 use test::test_utils::assert_eq;
 
 use metadata::metadata::project::contract::ContractMetadata;
-use metadata::components::component::carbonable_logo::Component as CarbonableLogo;
+use metadata::components::component::logos::carbonable::Component as CarbonableLogo;
 use metadata::tests::mocks::project::ProjectMock;
 use metadata::components::provider::ComponentProvider;
 

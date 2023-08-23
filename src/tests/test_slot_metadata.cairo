@@ -33,7 +33,7 @@ use metadata::interfaces::component_provider::{
 };
 use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
 
-use metadata::components::component::carbonable_logo::Component as CarbonableLogo;
+use metadata::components::component::logos::carbonable::Component as CarbonableLogo;
 use metadata::components::provider::ComponentProvider;
 
 fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
@@ -55,7 +55,7 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
 }
 
 #[test]
-#[available_gas(1100000)]
+#[available_gas(1_100_000)]
 fn test_construct_slot_uri() {
     let gas_start = utils::tests::start_gas_meter();
 
@@ -70,7 +70,7 @@ fn test_construct_slot_uri() {
     let uri: Span<felt252> = metadata.construct_slot_uri(slot);
     let mut uri_span = uri;
 
-    utils::tests::print_felt_span(uri_span);
+    // utils::tests::print_felt_span(uri_span);
 
     assert_eq(uri_span.pop_back().unwrap(), @'example.com/', 'Failed to fetch slot uri');
 
@@ -79,7 +79,7 @@ fn test_construct_slot_uri() {
 
 
 #[test]
-#[available_gas(98100000)]
+#[available_gas(28_000_000)]
 fn test_construct_token_uri() {
     let gas_start = utils::tests::start_gas_meter();
 
@@ -91,6 +91,7 @@ fn test_construct_token_uri() {
     };
 
     set_contract_address(project_address);
+    'testing..'.print();
     let uri: Span<felt252> = metadata.construct_token_uri(token_id);
     let mut uri_span = uri;
 

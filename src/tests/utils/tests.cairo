@@ -54,5 +54,6 @@ fn start_gas_meter() -> u128 {
 fn stop_gas_meter(gas_start: u128) {
     'total gas used: '.print();
     let gas_now = testing::get_available_gas();
+    gas::withdraw_gas().unwrap(); // needed?
     (gas_start - gas_now).print();
 }
