@@ -1,3 +1,4 @@
+const NAME: felt252 = 'SDG01.svg';
 #[starknet::contract]
 mod Component {
     use array::ArrayTrait;
@@ -9,7 +10,7 @@ mod Component {
     #[external(v0)]
     impl ComponentImpl of IComponent<ContractState> {
         fn name(self: @ContractState) -> felt252 {
-            'SDG 1'
+            super::NAME
         }
 
         fn concat(self: @ContractState, mut data: Array<felt252>) -> Array<felt252> {
@@ -199,7 +200,7 @@ mod test {
     fn test_component_name() {
         let data: Span<felt252> = Component::__external::name(Default::default().span());
         let name: felt252 = *data[0];
-        assert_eq(@name, @'SDG 1', 'Couldn\'t get name');
+        assert_eq(@name, @super::NAME, 'Couldn\'t get name');
     }
 
     #[test]
