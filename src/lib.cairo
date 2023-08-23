@@ -10,7 +10,10 @@ mod interfaces {
 
 mod components {
     mod component {
-        mod carbonable_logo;
+        mod logos {
+            mod carbonable;
+            mod ers;
+        }
         mod sdgs {
             mod sdg01;
             mod sdg13;
@@ -43,7 +46,9 @@ mod metadata {
         mod template {
             mod slot;
             mod token {
-                mod token;
+                mod data;
+                mod generate;
+                mod starknet;
                 mod svg;
             }
         }

@@ -31,25 +31,18 @@ mod Description {
 
 mod SVG {
     use array::ArrayTrait;
+
     use metadata::interfaces::component_provider::{
         IComponentProviderDispatcher, IComponentProviderDispatcherTrait
     };
     use metadata::interfaces::component::{IComponentLibraryDispatcher, IComponentDispatcherTrait};
     use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
-    use starknet::get_contract_address;
-
-    #[inline(always)]
-    fn get_provider() -> IComponentProviderDispatcher {
-        let project = IProjectDispatcher { contract_address: get_contract_address() };
-        let provider = IComponentProviderDispatcher {
-            contract_address: project.get_component_provider()
-        };
-        provider
-    }
+    use metadata::metadata::common::data::get_provider;
 
     #[inline(always)]
     fn get_carbonable_logo() -> Span<felt252> {
-        let provider = get_provider();
+        // TODO: contract_address in params
+        let provider = get_provider(); // add contract address?
         let logo_component = provider.get('carbonable_logo');
         let mut logo = array!['data:image/svg+xml,'];
         logo_component.concat(logo).span()
@@ -64,10 +57,11 @@ mod Starknet {
 
     #[inline(always)]
     fn get_project_count() -> Span<felt252> {
+        // TODO: contract_address in params
         let project = IERC3525Dispatcher { contract_address: get_contract_address() };
         let mut result: Array<felt252> = ArrayTrait::new();
         let count: u256 = project.slotCount();
-        // TODO: to_ascii
+        // TODO: to_ascii?
         result.append(count.high.into());
         result.append(count.low.into());
         result.span()
