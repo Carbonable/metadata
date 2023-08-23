@@ -12,7 +12,7 @@ use starknet::syscalls::deploy_syscall;
 use test::test_utils::assert_eq;
 
 use metadata::components::provider::ComponentProvider;
-use metadata::components::component::carbonable_logo::Component as CarbonableLogo;
+use metadata::components::component::logos::carbonable::Component as CarbonableLogo;
 use metadata::interfaces::component_provider::{
     IComponentProviderDispatcher, IComponentProviderDispatcherTrait
 };
