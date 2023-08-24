@@ -14,6 +14,20 @@ use metadata::tests::mocks::project::ProjectMock;
 use metadata::interfaces::slot_metadata::{
     ISlotMetadataLibraryDispatcher, ISlotMetadataDispatcherTrait
 };
+use metadata::interfaces::component_provider::{
+    IComponentProviderDispatcher, IComponentProviderDispatcherTrait
+};
+use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
+
+use metadata::components::component::logos::carbonable::Component as CarbonableLogo;
+use metadata::components::component::logos::ers::Component as ERSLogo;
+use metadata::components::component::sdgs::sdg13::Component as SDG13;
+use metadata::components::component::sdgs::sdg14::Component as SDG14;
+use metadata::components::component::sdgs::sdg15::Component as SDG15;
+use metadata::components::component::jpegs::farmer::Component as FarmerBackground;
+use metadata::components::provider::ComponentProvider;
+
+
 use metadata::tests::utils;
 
 fn setup2() -> (ContractAddress, ContractAddress) {
@@ -28,14 +42,6 @@ fn setup2() -> (ContractAddress, ContractAddress) {
     (address0, account)
 }
 
-use metadata::interfaces::component_provider::{
-    IComponentProviderDispatcher, IComponentProviderDispatcherTrait
-};
-use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
-
-use metadata::components::component::logos::carbonable::Component as CarbonableLogo;
-use metadata::components::provider::ComponentProvider;
-
 fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
     let account: ContractAddress = contract_address_const::<1>();
     set_caller_address(account);
@@ -48,6 +54,12 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
     let project_address = utils::contracts::deploy(ProjectMock::TEST_CLASS_HASH, ArrayTrait::new());
 
     provider.register('carbonable_logo', CarbonableLogo::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('Farmer.jpeg.b64', FarmerBackground::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('ERS.svg', ERSLogo::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('SDG13.svg', SDG13::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('SDG14.svg', SDG14::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('SDG15.svg', SDG15::TEST_CLASS_HASH.try_into().unwrap());
+
     let project = IProjectDispatcher { contract_address: project_address };
     project.set_component_provider(provider.contract_address);
 
@@ -79,7 +91,7 @@ fn test_construct_slot_uri() {
 
 
 #[test]
-#[available_gas(28_000_000)]
+#[available_gas(55_000_000)]
 fn test_construct_token_uri() {
     let gas_start = utils::tests::start_gas_meter();
 
@@ -91,7 +103,7 @@ fn test_construct_token_uri() {
     };
 
     set_contract_address(project_address);
-    'testing..'.print();
+
     let uri: Span<felt252> = metadata.construct_token_uri(token_id);
     let mut uri_span = uri;
 
