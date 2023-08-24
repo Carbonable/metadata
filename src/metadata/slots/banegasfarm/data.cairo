@@ -78,6 +78,7 @@ fn fetch_slot_data(contract_address: ContractAddress, slot: u256) -> felt252 {
 fn fetch_token_data(contract_address: ContractAddress, token_id: u256) -> TokenData {
     // Local ProjectData
     // External ProjectData (Starknet) in template?
+    // TODO
 
     let project_data = Project::get();
 
@@ -89,7 +90,7 @@ fn fetch_token_data(contract_address: ContractAddress, token_id: u256) -> TokenD
         total_value: instance.totalValue(slot),
         project_value: project_instance.getProjectValue(slot),
         slot,
-        status: ProjectStatus::Active,
+        status: ProjectStatus::Live, 
         description: Description::get().span()
     };
 

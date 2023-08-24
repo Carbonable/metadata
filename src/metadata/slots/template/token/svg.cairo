@@ -3,10 +3,16 @@ use option::OptionTrait;
 
 use alexandria_ascii::interger::ToAsciiTrait;
 
-use metadata::metadata::common::models::TokenData;
+use metadata::interfaces::component::{IComponentLibraryDispatcher, IComponentDispatcherTrait};
+use metadata::interfaces::component_provider::{
+    IComponentProviderDispatcher, IComponentProviderDispatcherTrait
+};
+
+use metadata::metadata::common::models::{TokenData, ProjectStatus};
 use metadata::metadata::common::models::String;
 use metadata::metadata::common::utils::to_ascii;
 use metadata::metadata::common::utils::ArrayConcat;
+use metadata::metadata::common::data::get_provider;
 
 use metadata::metadata::slots::template::token::data;
 
@@ -19,10 +25,13 @@ fn debug_step() {
     gas_now.print();
 }
 
+// TODO: provider as a param?
 fn generate(data: TokenData) -> Span<felt252> {
     'generating..'.print();
 
     let mut svg: Array<felt252> = Default::default();
+
+    // TODO: move to data::get_svg_data
     let cu_str: String = to_ascii(data.slot_data.project_data.projected_cu);
     let end_date_str: String = to_ascii(data.slot_data.project_data.end_year);
     let progress: u8 = data::get_progress(data);
@@ -36,21 +45,28 @@ fn generate(data: TokenData) -> Span<felt252> {
     let country: String = data.slot_data.project_data.country;
     let developer: String = data.slot_data.project_data.developer;
     let certifier: String = data.slot_data.project_data.certifier;
+    let status = ProjectStatus::Live; // TODO
+
+    let provider = get_provider();
+    let bg_image_id: felt252 = 'Farmer.jpeg.b64';
+    let certifier_image_id: felt252 = 'ERS.svg';
+    let bg_image_comp = provider.get(bg_image_id);
+    let certifier_comp = provider.get(certifier_image_id);
 
     svg_header(ref svg);
     svg_styles(ref svg);
     svg_bg_filters(ref svg);
     svg_panel_text(cu_str, end_date_str, progress_str, ref svg);
     svg_lower_text(area_str, type_str, sdg_count_str, ref svg);
-    svg_progress_bar(progress, ref svg);
+    svg_progress_bar(progress, status, ref svg);
     svg_sdgs(ref sdgs, ref svg);
     svg_status_group(status_str, ref svg);
     svg_main_text(name, country, developer, certifier, ref svg);
-    svg_certifier_logo(0, ref svg);
-    svg_background(ref svg);
+    svg_certifier_logo(certifier_comp, ref svg);
+    svg_card_border(ref svg);
     svg_def_patterns(ref svg);
     svg_def_filters(ref svg);
-    svg_background_image(0, ref svg);
+    svg_background_image(bg_image_comp, ref svg);
     svg_end(ref svg);
 
     svg.span()
@@ -63,7 +79,7 @@ fn svg_header(ref data: Array<felt252>) {
 }
 
 fn svg_styles(ref data: Array<felt252>) {
-    // TODO: add colors
+    // TODO: add colors?
 
     data.append('<style> @import url(\\"https://');
     data.append('fonts.googleapis.com/css2?famil');
@@ -94,7 +110,6 @@ fn svg_bg_filters(ref data: Array<felt252>) {
     data.append('" shape-rendering=\\"crispEdges');
     data.append('\\"/>');
 }
-
 
 //
 // Dynamic Text
@@ -190,43 +205,63 @@ fn svg_lower_text(
 }
 
 // Progress bar
-fn svg_progress_bar(progress: u8, ref data: Array<felt252>) {
+fn svg_progress_bar(progress: u8, status: ProjectStatus, ref data: Array<felt252>) {
     // TODO: get progress + colors
     data.append('<path stroke=\\"url(#f)\\" stro');
     data.append('ke-linecap=\\"round\\" stroke-o');
     data.append('pacity=\\".3\\" stroke-width=\\');
-    data.append('"8\\" d=\\"M179 269h106\\"/><pa');
-    data.append('th stroke=\\"url(#g)\\" stroke-');
+    data.append('"8\\" d=\\"M182 269h103\\"/><pa');
+    data.append('th stroke=\\"');
+    // TODO: depend on status
+    // TODO: stoke-opacity and whatnot
+    data.append('url(#g)');
+    data.append('\\" stroke-');
     data.append('linecap=\\"round\\" stroke-opac');
     data.append('ity=\\".8\\" stroke-width=\\"4');
-    data.append('\\" d=\\"M180 269h64\\"/><rect ');
+    data.append('\\" d=\\"M183 269h');
+
+    data.append((1_u8 + progress).to_ascii());
+    data.append('\\"/><rect ');
     data.append('width=\\"291\\" height=\\"54\\"');
     data.append(' x=\\"12.5\\" y=\\"231.5\\" str');
-    data.append('oke=\\"#D0D1D6\\" stroke-opacit');
+    data.append('oke=\\"');
+
+    // TODO: Same here
+    data.append('#D0D1D6');
+    data.append('\\" stroke-opacit');
     data.append('y=\\".2\\" rx=\\"7.5\\" shape-r');
     data.append('endering=\\"crispEdges\\"/></g>');
 }
 
 // SDGs images
 fn svg_sdgs(ref sdgs: Span<felt252>, ref data: Array<felt252>) {
+    let size = sdgs.len();
+    let rows = size / 4;
+    let mut i = 1;
     loop {
         match sdgs.pop_front() {
             Option::Some(sdg) => {
-                svg_sdg(*sdg, ref data);
+                svg_sdg(rows, i, *sdg, ref data);
             },
             Option::None => {
                 break;
             },
         };
+        i += 1;
     };
 }
 
-fn svg_sdg(sdg: felt252, ref data: Array<felt252>) {
+fn svg_sdg(n_rows: usize, index: usize, sdg: felt252, ref data: Array<felt252>) {
+    // TODO: num_rows, index ?
     // TODO: dynamize
+
+    // size depends on num_rows
+    // x = f(n_rows, index) (div)
+    // y = f(n_rows, index) (mod)
+
     data.append('<rect width=\\"30\\" height=\\"');
     data.append('30\\" x=\\"246\\" y=\\"306\\" f');
     data.append('ill=\\"#272727\\" rx=\\"2\\"/>');
-    svg_sdg(0, ref data);
 
     data.append('<defs><clipPath id=\\"SDG13-cli');
     data.append('p\\"><rect width=\\"30\\" heigh');
@@ -340,39 +375,19 @@ fn svg_main_text(
     data.append('</tspan></text></g>');
 }
 
-// ERS logo ?
-fn svg_certifier_logo(component_id: felt252, ref data: Array<felt252>) {
+// ERS logo
+fn svg_certifier_logo(logo: IComponentLibraryDispatcher, ref data: Array<felt252>) {
     data.append('<rect width=\\"28\\" height=\\"');
     data.append('28\\" x=\\"268\\" y=\\"185\\" f');
     data.append('ill=\\"#EBECF0\\" fill-opacity=');
-    data.append('\\".1\\" rx=\\"14\\"/><svg widt');
-    data.append('h=\\"14\\" height=\\"14\\" x=\\');
-    data.append('"275\\" y=\\"192\\" viewBox=\\"');
-    data.append('0 0 51 61\\"><g opacity=\\"0.6');
-    data.append('\\" style=\\"mix-blend-mode:scr');
-    data.append('een\\"><path d=\\"M18.0435 41.8');
-    data.append('89L16.1607 46.8835H1.8828L0 60.');
-    data.append('7391H13.6503L15.2977 56.228C16.');
-    data.append('0822 54.1335 18.1219 52.6835 20');
-    data.append('.3185 52.6835H43.7751L45.6579 3');
-    data.append('8.8279H22.3582C20.4754 38.9085 ');
-    data.append('18.7495 40.1168 18.0435 41.889Z');
-    data.append('\\" fill=\\"#F5F5F5\\"/><path d');
-    data.append('=\\"M17.965 36.814C18.7495 34.7');
-    data.append('196 20.7892 33.2696 22.9858 33.');
-    data.append('2696H38.5189L40.4017 19.414H24.');
-    data.append('9471C23.0643 19.414 21.3384 20.');
-    data.append('6223 20.7108 22.3945L18.828 27.');
-    data.append('4695H4.5501L2.6673 41.3251H16.3');
-    data.append('176L17.965 36.814Z\\" fill=\\"#');
-    data.append('F5F5F5\\"/><path d=\\"M23.2212 ');
-    data.append('2.98057L21.3384 8.05558H7.0605L');
-    data.append('5.1777 21.8306H18.828L20.4754 1');
-    data.append('7.3195C21.2599 15.2251 23.2996 ');
-    data.append('13.775 25.4962 13.775H48.9528L5');
-    data.append('0.8356 0H27.4575C25.5747 0 23.9');
-    data.append('272 1.20834 23.2212 2.98057Z\\"');
-    data.append(' fill=\\"#F5F5F5\\"/></g></svg>');
+    data.append('\\".1\\" rx=\\"14\\"/>');
+
+    data.append('g opacity=\\"0.6\\" style=\\"mix-b');
+    data.append('lend-mode:screen\\">');
+    let mut image = logo.get(); // TODO: add parameters for sizing
+    data.concat(image.span());
+    data.append('</g>');
+
     data.append('<rect width=\\"27\\" height=\\"');
     data.append('27\\" x=\\"268.5\\" y=\\"185.5');
     data.append('\\" stroke=\\"#EBECF0\\" stroke');
@@ -382,7 +397,7 @@ fn svg_certifier_logo(component_id: felt252, ref data: Array<felt252>) {
     data.append('\\".7\\" rx=\\"13.5\\"/>');
 }
 
-fn svg_background(ref data: Array<felt252>) {
+fn svg_card_border(ref data: Array<felt252>) {
     data.append('<rect width=\\"312\\" height=\\');
     data.append('"356\\" x=\\"2\\" y=\\"2\\" str');
     data.append('oke=\\"url(#m)\\" stroke-linejo');
@@ -549,11 +564,17 @@ fn svg_def_filters(ref data: Array<felt252>) {
 }
 
 // + b64 JPEG images
-fn svg_background_image(comp_id: felt252, ref data: Array<felt252>) {
+fn svg_background_image(component: IComponentLibraryDispatcher, ref data: Array<felt252>) {
     data.append('<image id=\\"image0\\" width=\\');
     data.append('"673\\" height=\\"444\\" xlink:');
     data.append('href=\\"data:image/jpeg;base64,');
-// TODO: get from provider Insert background image from provider here
+    // TODO: move up? 
+    // TODO: and see why can't use concat directly instead of get
+    //let mut data = component.concat(data);
+    let mut image = component.get();
+    data.concat(image.span());
+    data.append('\\"/>');
+//data
 }
 
 fn svg_end(ref data: Array<felt252>) {
