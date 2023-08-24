@@ -25,9 +25,11 @@ struct SlotData {
 
 #[derive(Copy, Drop)]
 enum ProjectStatus {
-    Active,
-    Inactive,
-    Closed,
+    Upcoming,
+    Live,
+    Paused,
+    Stopped,
+    Ended
 }
 
 type String = Span<felt252>;
