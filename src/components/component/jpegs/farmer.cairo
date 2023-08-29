@@ -13,8 +13,8 @@ mod Component {
         fn name(self: @ContractState) -> felt252 {
             super::NAME
         }
-
-        fn concat(self: @ContractState, mut data: Array<felt252>) -> Array<felt252> {
+        fn render(self: @ContractState, args: Option<Span<felt252>>) -> Array<felt252> {
+            let mut data: Array<felt252> = Default::default();
             data.append('/9j/4AAQSkZJRgABAQIAHAAcAAD/2wB');
             data.append('DABQODxIPDRQSEBIXFRQYHjIhHhwcHj');
             data.append('0sLiQySUBMS0dARkVQWnNiUFVtVkVGZ');
@@ -1160,11 +1160,6 @@ mod Component {
 
             data
         }
-
-        fn get(self: @ContractState) -> Array<felt252> {
-            let mut test = ArrayTrait::<felt252>::new();
-            self.concat(test)
-        }
     }
 }
 
@@ -1179,7 +1174,7 @@ mod test {
     use super::Component;
 
     #[test]
-    #[available_gas(20000)]
+    #[available_gas(15_000)]
     fn test_component_name() {
         let data: Span<felt252> = Component::__external::name(Default::default().span());
         let name: felt252 = *data[0];
@@ -1187,9 +1182,13 @@ mod test {
     }
 
     #[test]
-    #[available_gas(10000000)]
+    #[available_gas(5_300_000)]
     fn test_component_get() {
-        let data: Span<felt252> = Component::__external::get(Default::default().span());
+        let mut calldata: Array<felt252> = Default::default();
+        let args_props: Option<Span<felt252>> = Option::None;
+        args_props.serialize(ref calldata);
+        let data: Span<felt252> = Component::__external::render(calldata.span());
+
         assert_eq(@data.len(), @0x477_u32, 'Couldn\'t get data');
         let mut arr: Array<felt252> = ArrayTrait::new();
     }
