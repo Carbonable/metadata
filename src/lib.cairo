@@ -9,6 +9,9 @@ mod interfaces {
 }
 
 mod components {
+    mod configs {
+        mod svg;
+    }
     mod component {
         mod logos {
             mod carbonable;
@@ -23,6 +26,8 @@ mod components {
         mod jpegs {
             mod farmer;
         }
+
+        mod progress_bar;
     }
     mod provider;
 }

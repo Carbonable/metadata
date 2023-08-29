@@ -30,6 +30,7 @@ mod Description {
 }
 
 mod SVG {
+    use alexandria_data_structures::array_ext::ArrayTraitExt;
     use array::ArrayTrait;
 
     use metadata::interfaces::component_provider::{
@@ -38,14 +39,18 @@ mod SVG {
     use metadata::interfaces::component::{IComponentLibraryDispatcher, IComponentDispatcherTrait};
     use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
     use metadata::metadata::common::data::get_provider;
+    // use metadata::metadata::common::utils::ArrayConcat;
 
     #[inline(always)]
     fn get_carbonable_logo() -> Span<felt252> {
         // TODO: contract_address in params
         let provider = get_provider(); // add contract address?
         let logo_component = provider.get('carbonable_logo');
-        let mut logo = array!['data:image/svg+xml,'];
-        logo_component.concat(logo).span()
+        let mut logo: Array<felt252> = array!['data:image/svg+xml,'];
+        let image: Array<felt252> = logo_component.render(Option::None);
+        logo.concat(@image);
+
+        logo.span()
     }
 }
 

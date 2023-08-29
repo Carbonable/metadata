@@ -52,7 +52,7 @@ fn add_metadata_attributes(ref metadata: JsonMetadata, project_data: ProjectData
 }
 
 fn generate_token_uri(token_id: u256, data: TokenData) -> Span<felt252> {
-    let mut uri = Default::default();
+    let mut uri: Array<felt252> = Default::default();
     uri.append('data:application/json,');
 
     let mut metadata: JsonMetadata = JsonMetadata {
