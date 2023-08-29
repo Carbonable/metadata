@@ -1,5 +1,6 @@
 use array::{SpanTrait, ArrayTrait};
 use option::OptionTrait;
+use core::{TryInto};
 
 use alexandria_ascii::interger::ToAsciiTrait;
 
@@ -7,28 +8,18 @@ use metadata::interfaces::component::{IComponentLibraryDispatcher, IComponentDis
 use metadata::interfaces::component_provider::{
     IComponentProviderDispatcher, IComponentProviderDispatcherTrait
 };
-
 use metadata::metadata::common::models::{TokenData, ProjectStatus};
 use metadata::metadata::common::models::String;
 use metadata::metadata::common::utils::to_ascii;
 use metadata::metadata::common::utils::ArrayConcat;
 use metadata::metadata::common::data::get_provider;
-
 use metadata::metadata::slots::template::token::data;
+use metadata::components::configs::svg;
 
-use debug::PrintTrait;
 // TODO: svgenerator?
-
-fn debug_step() {
-    let gas_now = testing::get_available_gas();
-    gas::withdraw_gas().unwrap();
-    gas_now.print();
-}
 
 // TODO: provider as a param?
 fn generate(data: TokenData) -> Span<felt252> {
-    'generating..'.print();
-
     let mut svg: Array<felt252> = Default::default();
 
     // TODO: move to data::get_svg_data
@@ -52,15 +43,37 @@ fn generate(data: TokenData) -> Span<felt252> {
     let certifier_image_id: felt252 = 'ERS.svg';
     let bg_image_comp = provider.get(bg_image_id);
     let certifier_comp = provider.get(certifier_image_id);
+    let mut sdg_comps: Array<IComponentLibraryDispatcher> = ArrayTrait::new();
+    loop {
+        match sdgs.pop_front() {
+            Option::Some(sdg) => {
+                // Get SDG SVG from provider
+                let sdg: u32 = (*sdg).try_into().unwrap();
+                let mut id: felt252 = sdg.to_ascii() * 0x1_00_00_00_00 + '.svg';
+                if sdg < 10 {
+                    id += 'SDG0' * 0x1_00_00000000;
+                } else {
+                    id += 'SDG' * 0x1_0000_00000000;
+                }
+                sdg_comps.append(provider.get(id));
+            },
+            Option::None => {
+                break;
+            },
+        };
+    };
+    let mut sdg_comps = sdg_comps.span();
 
     svg_header(ref svg);
     svg_styles(ref svg);
     svg_bg_filters(ref svg);
     svg_panel_text(cu_str, end_date_str, progress_str, ref svg);
-    svg_lower_text(area_str, type_str, sdg_count_str, ref svg);
     svg_progress_bar(progress, status, ref svg);
-    svg_sdgs(ref sdgs, ref svg);
-    svg_status_group(status_str, ref svg);
+
+    svg_lower_text(area_str, type_str, sdg_count_str, ref svg);
+
+    svg_sdgs(ref sdg_comps, ref svg);
+    svg_status_group(status, ref svg);
     svg_main_text(name, country, developer, certifier, ref svg);
     svg_certifier_logo(certifier_comp, ref svg);
     svg_card_border(ref svg);
@@ -72,27 +85,28 @@ fn generate(data: TokenData) -> Span<felt252> {
     svg.span()
 }
 
+#[inline(always)]
 fn svg_header(ref data: Array<felt252>) {
     data.append('<svg xmlns=\\"http://www.w3.org');
     data.append('/2000/svg\\" fill=\\"none\\" vi');
     data.append('ewBox=\\"0 0 316 360\\">');
 }
 
+#[inline(always)]
 fn svg_styles(ref data: Array<felt252>) {
-    // TODO: add colors?
-
     data.append('<style> @import url(\\"https://');
     data.append('fonts.googleapis.com/css2?famil');
     data.append('y=Inter:wght@400;500;600;700&di');
-    data.append('splay=swap\\"); ');
+    data.append('splay=swap\\");');
     data.append('svg text { -webkit-user-select:');
-    data.append(' none; -moz-user-select: none; ');
+    data.append(' none; -moz-user-select: none;');
     data.append('-ms-user-select: none; user-sel');
     data.append('ect: none; -webkit-tap-highligh');
     data.append('t-color: rgba(255, 255, 255, 0)');
     data.append('; } </style>');
 }
 
+#[inline(always)]
 fn svg_bg_filters(ref data: Array<felt252>) {
     data.append('<g filter=\\"url(#a)\\" clip-pa');
     data.append('th=\\"url(#b)\\"><rect width=\\');
@@ -104,8 +118,8 @@ fn svg_bg_filters(ref data: Array<felt252>) {
     data.append('x=\\"8\\" transform=\\"matrix(-');
     data.append('1 0 0 1 312 3)\\"/><g filter=\\');
     data.append('"url(#e)\\"><rect width=\\"292');
-    data.append('\\" height=\\"55\\" x=\\"12\\" ');
-    data.append('y=\\"231\\" fill=\\"#0D0D0D\\" ');
+    data.append('\\" height=\\"55\\" x=\\"12\\"');
+    data.append('y=\\"231\\" fill=\\"#0D0D0D\\"');
     data.append('fill-opacity=\\".6\\" rx=\\"8\\');
     data.append('" shape-rendering=\\"crispEdges');
     data.append('\\"/>');
@@ -114,6 +128,7 @@ fn svg_bg_filters(ref data: Array<felt252>) {
 //
 // Dynamic Text
 //
+#[inline(always)]
 fn svg_panel_text(cu: String, end_date: String, progress: String, ref data: Array<felt252>) {
     data.append('<g font-family=\\"Inter\\" xml:');
     data.append('space=\\"preserve\\" style=\\"w');
@@ -130,14 +145,14 @@ fn svg_panel_text(cu: String, end_date: String, progress: String, ref data: Arra
     data.append('72.091\\">');
 
     data.concat(cu);
-    data.append(' Tons</tspan></tex');
+    data.append('</tspan></tex');
     data.append('t><text fill=\\"#D0D1D6\\" fill');
     data.append('-opacity=\\"0.8\\" font-size=\\');
     data.append('"11\\" font-weight=\\"500\\" le');
     data.append('tter-spacing=\\"0em\\"><tspan x');
     data.append('=\\"117.5\\" y=\\"252.5\\">Ends');
     data.append(' in</tspan></text><text fill=\\');
-    data.append('"#EBECF0\\" font-size=\\"14\\" ');
+    data.append('"#EBECF0\\" font-size=\\"14\\"');
     data.append('font-weight=\\"bold\\" letter-s');
     data.append('pacing=\\"0em\\"><tspan x=\\"11');
     data.append('7.5\\" y=\\"272.091\\">');
@@ -154,6 +169,7 @@ fn svg_panel_text(cu: String, end_date: String, progress: String, ref data: Arra
     data.append('%</tspan></text></g>');
 }
 
+#[inline(always)]
 fn svg_lower_text(
     asset_area: String, project_type: String, sdg_count: String, ref data: Array<felt252>
 ) {
@@ -181,7 +197,7 @@ fn svg_lower_text(
     data.append('l=\\"#D0D1D6\\" fill-opacity=\\');
     data.append('"0.8\\" font-size=\\"10\\" font');
     data.append('-weight=\\"500\\" letter-spacin');
-    data.append('g=\\"0em\\"><tspan x=\\"117\\" ');
+    data.append('g=\\"0em\\"><tspan x=\\"117\\"');
     data.append('y=\\"315.636\\">Type</tspan></t');
     data.append('ext><text fill=\\"#EFECEA\\" fo');
     data.append('nt-size=\\"14\\" font-weight=\\');
@@ -192,7 +208,7 @@ fn svg_lower_text(
     data.concat(project_type); // ARR';
     data.append('</tspan></text><text');
     data.append(' fill=\\"#D0D1D6\\" fill-opacit');
-    data.append('y=\\"0.8\\" font-size=\\"10\\" ');
+    data.append('y=\\"0.8\\" font-size=\\"10\\"');
     data.append('font-weight=\\"500\\"><tspan x=');
     data.append('\\"186\\" y=\\"315.636\\">Impac');
     data.append('t on </tspan></text><text fill=');
@@ -205,6 +221,7 @@ fn svg_lower_text(
 }
 
 // Progress bar
+#[inline(always)]
 fn svg_progress_bar(progress: u8, status: ProjectStatus, ref data: Array<felt252>) {
     // TODO: get progress + colors
     data.append('<path stroke=\\"url(#f)\\" stro');
@@ -221,8 +238,8 @@ fn svg_progress_bar(progress: u8, status: ProjectStatus, ref data: Array<felt252
     data.append('\\" d=\\"M183 269h');
 
     data.append((1_u8 + progress).to_ascii());
-    data.append('\\"/><rect ');
-    data.append('width=\\"291\\" height=\\"54\\"');
+    data.append('\\"/><rect');
+    data.append(' width=\\"291\\" height=\\"54\\"');
     data.append(' x=\\"12.5\\" y=\\"231.5\\" str');
     data.append('oke=\\"');
 
@@ -234,14 +251,13 @@ fn svg_progress_bar(progress: u8, status: ProjectStatus, ref data: Array<felt252
 }
 
 // SDGs images
-fn svg_sdgs(ref sdgs: Span<felt252>, ref data: Array<felt252>) {
+fn svg_sdgs(ref sdgs: Span<IComponentLibraryDispatcher>, ref data: Array<felt252>) {
     let size = sdgs.len();
-    let rows = size / 4;
-    let mut i = 1;
+    let mut i = 0;
     loop {
         match sdgs.pop_front() {
             Option::Some(sdg) => {
-                svg_sdg(rows, i, *sdg, ref data);
+                svg_sdg(size, i, *sdg, ref data);
             },
             Option::None => {
                 break;
@@ -249,78 +265,135 @@ fn svg_sdgs(ref sdgs: Span<felt252>, ref data: Array<felt252>) {
         };
         i += 1;
     };
+    data.append('</g>');
 }
 
-fn svg_sdg(n_rows: usize, index: usize, sdg: felt252, ref data: Array<felt252>) {
-    // TODO: num_rows, index ?
-    // TODO: dynamize
+fn svg_sdg(
+    num_sdgs: usize, index: usize, sdg: IComponentLibraryDispatcher, ref data: Array<felt252>
+) {
+    // Draw at most 4 per row
+    // TODO: compute positions outside ?
 
-    // size depends on num_rows
-    // x = f(n_rows, index) (div)
-    // y = f(n_rows, index) (mod)
+    let n_rows = num_sdgs / 4 + 1;
+    let size: usize = 30 / n_rows;
+    let mut dx: usize = 0;
+    if n_rows > 1 {
+        dx = (46 - size) / 4;
+    } else if num_sdgs > 1 {
+        dx = (46 - size) / (num_sdgs - 1);
+    }
 
-    data.append('<rect width=\\"30\\" height=\\"');
-    data.append('30\\" x=\\"246\\" y=\\"306\\" f');
-    data.append('ill=\\"#272727\\" rx=\\"2\\"/>');
+    let x = 246 + (dx * (index % 4));
+    let y = 306 + (size * (index / 4)); // assuming max 2 rows
 
-    data.append('<defs><clipPath id=\\"SDG13-cli');
-    data.append('p\\"><rect width=\\"30\\" heigh');
-    data.append('t=\\"30\\" x=\\"246\\" y=\\"306');
+    let size_str: felt252 = size.to_ascii();
+    let x_str: felt252 = x.to_ascii();
+    let y_str: felt252 = y.to_ascii();
+    let index_str: felt252 = index.to_ascii();
+
+    // Shadow
+    data.append('<rect width=\\"');
+    data.append(size_str);
+    data.append('\\" height=\\"');
+    data.append(size_str);
+    data.append('\\" x=\\"');
+    data.append(x_str);
+    data.append('\\" y=\\"');
+    data.append(y_str);
+    data.append('\\" fill=\\"#272727\\" rx=\\"2\\"/>');
+
+    // clip path and group
+    data.append('<defs>');
+    data.append('<clipPath id=\\"clip');
+    data.append(index_str);
+    data.append('\\"><rect width=\\"');
+    data.append(size_str);
+    data.append('\\" height=\\"');
+    data.append(size_str);
+    data.append('\\" x=\\"');
+    data.append(x_str);
+    data.append('\\" y=\\"');
+    data.append(y_str);
     data.append('\\" rx=\\"2\\"/></clipPath></de');
     data.append('fs><g fill=\\"url(#h)\\" fill-o');
     data.append('pacity=\\".6\\" rx=\\"2\\" clip');
-    data.append('-path=\\"url(#SDG13-clip)\\"><s');
-    data.append('vg id=\\"SDG13\\" xmlns=\\"http');
-    data.append('://www.w3.org/2000/svg\\" viewB');
-    data.append('ox=\\"0 0 62.11 62.11\\" width=');
-    data.append('\\"30\\" height=\\"30\\" x=\\"2');
-    data.append('46\\" y=\\"306\\">');
+    data.append('-path=\\"url(#clip');
+    data.append(index_str);
+    data.append(')\\">');
 
-    data.append('</g><rect width=\\"30\\" h');
-    data.append('eight=\\"30\\" x=\\"254\\" y=\\');
-    data.append('"306\\" fill=\\"#272727\\" rx=');
-    data.append('\\"2\\"/><rect width=\\"30\\" h');
-    data.append('eight=\\"30\\" x=\\"254\\" y=\\');
-    data.append('"306\\" fill=\\"url(#i)\\" fill');
-    data.append('-opacity=\\".6\\" rx=\\"2\\"/><');
-    data.append('rect width=\\"30\\" height=\\"3');
-    data.append('0\\" x=\\"262\\" y=\\"306\\" fi');
-    data.append('ll=\\"#272727\\" rx=\\"2\\"/><r');
-    data.append('ect width=\\"30\\" height=\\"30');
-    data.append('\\" x=\\"262\\" y=\\"306\\" fil');
-    data.append('l=\\"url(#j)\\" fill-opacity=\\');
-    data.append('".6\\" rx=\\"2\\"/></g>');
+    // SDG
+    // TODO: separate
+    let props: svg::Properties = svg::Properties {
+        width: Option::Some(size),
+        height: Option::Some(size),
+        x: Option::Some(x),
+        y: Option::Some(y),
+    };
+
+    let mut args: Array<felt252> = Default::default();
+    props.serialize(ref args);
+    let mut image = sdg.render(Option::Some(args.span()));
+
+    data.concat(image.span());
+    data.append('</g>');
 }
 
 
 // Live group
-fn svg_status_group(status: String, ref data: Array<felt252>) {
-    // TODO: dynamize 
+#[inline(always)]
+fn svg_status_group(status: ProjectStatus, ref data: Array<felt252>) {
+    // TODO: dynamize
+    // TODO: update corresponding filter
+
+    let (status_str, r1_width, c_fill, c_opacity, t_fill, r2_width, r2_stroke, r2_stroke_opacity) =
+        match status {
+        ProjectStatus::Upcoming => (
+            'Upcoming', '85', '#8CA5FF', '.9', '#97ACFA', '84', '#8994F5', '.3'
+        ),
+        ProjectStatus::Live => ('Live', '50', '#09E1A1', '1', '#0AF2AD', '49', '#ABEFC6', '.3'),
+        ProjectStatus::Paused => (
+            'Paused', '69', '#F7640E', '.7', '#EA8C55', '68', '#D2540B', '.3'
+        ),
+        ProjectStatus::Stopped => (
+            'Stopped', '75', '#F93743', '.7', '#FF6868', '74', '#F93743', '.3'
+        ),
+        ProjectStatus::Ended => ('Ended', '63', '#D0D1D6', '.7', '#D0D1D6', '62', '#D0D1D6', '.2'),
+    };
 
     data.append('<g filter=\\"url(#k)\\"><rect x');
     data.append('=\\"246\\" y=\\"20\\" width=\\"');
-    data.append('50\\" height=\\"22\\" rx=\\"11');
+    data.append(r1_width);
+    data.append('\\" height=\\"22\\" rx=\\"11');
     data.append('\\" fill=\\"#1F2128\\" fill-opa');
     data.append('city=\\"0.2\\"/><circle cx=\\"2');
     data.append('56\\" cy=\\"31\\" r=\\"3\\" fil');
-    data.append('l=\\"#09E1A1\\"/><text fill=\\"');
-    data.append('#0AF2AD\\" xml:space=\\"preserv');
+    data.append('l=\\"');
+    data.append(c_fill);
+    data.append('opacity=\\"');
+    data.append(c_opacity);
+    data.append('\\"/><text fill=\\"');
+    data.append(t_fill);
+    data.append('\\" xml:space=\\"preserv');
     data.append('e\\" style=\\"white-space: pre');
     data.append('\\" font-family=\\"Inter\\" fon');
     data.append('t-size=\\"12\\" font-weight=\\"');
-    data.append('500\\"><tspan x=\\"264.311\\" y');
-    data.append('=\\"35.3636\\">');
-
-    data.concat(status);
+    data.append('500\\"><tspan x=\\"264.311\\" y=\\"');
+    data.append('35.3636\\">');
+    data.append(status_str);
     data.append('</tspan></te');
     data.append('xt><rect x=\\"246.5\\" y=\\"20.');
-    data.append('5\\" width=\\"49\\" height=\\"2');
-    data.append('1\\" rx=\\"10.5\\" stroke=\\"#A');
-    data.append('BEFC6\\" stroke-opacity=\\"0.3');
+    data.append('5\\" width=\\"');
+    data.append(r2_width);
+    data.append('\\" height=\\"2');
+    data.append('1\\" rx=\\"10.5\\" stroke=\\"');
+    data.append(r2_stroke);
+    data.append('\\" stroke-opacity=\\"');
+    data.append(r2_stroke_opacity);
     data.append('\\"/></g>');
 }
 
 // Main text
+#[inline(always)]
 fn svg_main_text(
     name: String, country: String, developer: String, certifier: String, ref data: Array<felt252>
 ) {
@@ -371,20 +444,35 @@ fn svg_main_text(
     data.append('m\\"><tspan x=\\"239\\" y=\\"20');
     data.append('9.5\\">');
 
+    // TODO: right-to-left justify!
     data.concat(certifier); // 'ERS';
     data.append('</tspan></text></g>');
 }
 
 // ERS logo
+#[inline(always)]
 fn svg_certifier_logo(logo: IComponentLibraryDispatcher, ref data: Array<felt252>) {
     data.append('<rect width=\\"28\\" height=\\"');
     data.append('28\\" x=\\"268\\" y=\\"185\\" f');
     data.append('ill=\\"#EBECF0\\" fill-opacity=');
     data.append('\\".1\\" rx=\\"14\\"/>');
 
-    data.append('g opacity=\\"0.6\\" style=\\"mix-b');
-    data.append('lend-mode:screen\\">');
-    let mut image = logo.get(); // TODO: add parameters for sizing
+    data.append('<g opacity=\\"0.6\\" style=\\"mix-');
+    data.append('blend-mode:screen\\">');
+
+    // Resize to: width="14" height="14" x="275" y="192"
+
+    let props: svg::Properties = svg::Properties {
+        width: Option::Some(14),
+        height: Option::Some(14),
+        x: Option::Some(275),
+        y: Option::Some(192),
+    };
+
+    let mut args: Array<felt252> = Default::default();
+    props.serialize(ref args);
+    let mut image = logo.render(Option::Some(args.span()));
+
     data.concat(image.span());
     data.append('</g>');
 
@@ -407,6 +495,7 @@ fn svg_card_border(ref data: Array<felt252>) {
 }
 
 // Defs:
+#[inline(always)]
 fn svg_def_patterns(ref data: Array<felt252>) {
     // TODO: check if need dynamization (progress bar)
     data.append('<defs><pattern id=\\"c\\" width');
@@ -419,8 +508,8 @@ fn svg_def_patterns(ref data: Array<felt252>) {
     data.append('t=\\"1\\" patternContentUnits=');
     data.append('\\"objectBoundingBox\\"><use hr');
     data.append('ef=\\"#o\\" transform=\\"scale(');
-    data.append('.00098)\\"/></pattern><pattern ');
-    data.append('id=\\"i\\" width=\\"1\\" height');
+    data.append('.00098)\\"/></pattern><pattern');
+    data.append(' id=\\"i\\" width=\\"1\\" height');
     data.append('=\\"1\\" patternContentUnits=\\');
     data.append('"objectBoundingBox\\"><use href');
     data.append('=\\"#p\\" transform=\\"scale(.0');
@@ -438,6 +527,7 @@ fn svg_def_patterns(ref data: Array<felt252>) {
 }
 
 // filters
+#[inline(always)]
 fn svg_def_filters(ref data: Array<felt252>) {
     // TODO: check if need dynamization (progress bar)
     data.append('<linearGradient id=\\"d\\" x1=');
@@ -448,8 +538,8 @@ fn svg_def_filters(ref data: Array<felt252>) {
     data.append('top-opacity=\\".4\\"/><stop off');
     data.append('set=\\"1\\" stop-color=\\"#0B0D');
     data.append('13\\" stop-opacity=\\".9\\"/></');
-    data.append('linearGradient><linearGradient ');
-    data.append('id=\\"f\\" x1=\\"285\\" x2=\\"1');
+    data.append('linearGradient><linearGradient');
+    data.append(' id=\\"f\\" x1=\\"285\\" x2=\\"1');
     data.append('79\\" y1=\\"270\\" y2=\\"270\\"');
     data.append(' gradientUnits=\\"userSpaceOnUs');
     data.append('e\\"><stop offset=\\".4\\" stop');
@@ -467,8 +557,8 @@ fn svg_def_filters(ref data: Array<felt252>) {
     data.append('10\\" height=\\"354\\" x=\\"3\\');
     data.append('" y=\\"3\\" color-interpolation');
     data.append('-filters=\\"sRGB\\" filterUnits');
-    data.append('=\\"userSpaceOnUse\\"><feFlood ');
-    data.append('flood-opacity=\\"0\\" result=\\');
+    data.append('=\\"userSpaceOnUse\\"><feFlood');
+    data.append(' flood-opacity=\\"0\\" result=\\');
     data.append('"BackgroundImageFix\\"/><feColo');
     data.append('rMatrix in=\\"SourceAlpha\\" re');
     data.append('sult=\\"hardAlpha\\" values=\\"');
@@ -478,9 +568,9 @@ fn svg_def_filters(ref data: Array<felt252>) {
     data.append('dilate\\" radius=\\"1\\" result');
     data.append('=\\"effect1_dropShadow_2951_192');
     data.append('338\\"/><feOffset /><feColorMat');
-    data.append('rix values=\\"0 0 0 0 0.321569 ');
-    data.append('0 0 0 0 0.337255 0 0 0 0 0.3803');
-    data.append('92 0 0 0 0.4 0\\"/><feBlend in2');
+    data.append('rix values=\\"0 0 0 0 0.321569');
+    data.append(' 0 0 0 0 0.337255 0 0 0 0 0.380');
+    data.append('392 0 0 0 0.4 0\\"/><feBlend in2');
     data.append('=\\"BackgroundImageFix\\" resul');
     data.append('t=\\"effect1_dropShadow_2951_19');
     data.append('2338\\"/><feBlend in=\\"SourceG');
@@ -495,14 +585,14 @@ fn svg_def_filters(ref data: Array<felt252>) {
     data.append('\\"0\\" result=\\"BackgroundIma');
     data.append('geFix\\"/><feColorMatrix in=\\"');
     data.append('SourceAlpha\\" result=\\"hardAl');
-    data.append('pha\\" values=\\"0 0 0 0 0 0 0 ');
-    data.append('0 0 0 0 0 0 0 0 0 0 0 127 0\\"/');
+    data.append('pha\\" values=\\"0 0 0 0 0 0 0');
+    data.append(' 0 0 0 0 0 0 0 0 0 0 0 127 0\\"/');
     data.append('><feOffset dy=\\"8\\"/><feGauss');
     data.append('ianBlur stdDeviation=\\"3\\"/><');
     data.append('feComposite in2=\\"hardAlpha\\"');
     data.append(' operator=\\"out\\"/><feColorMa');
-    data.append('trix values=\\"0 0 0 0 0 0 0 0 ');
-    data.append('0 0 0 0 0 0 0 0 0 0 0.05 0\\"/>');
+    data.append('trix values=\\"0 0 0 0 0 0 0 0');
+    data.append(' 0 0 0 0 0 0 0 0 0 0 0.05 0\\"/>');
     data.append('<feBlend in2=\\"BackgroundImage');
     data.append('Fix\\" result=\\"effect1_dropSh');
     data.append('adow_2951_192338\\"/><feBlend i');
@@ -511,18 +601,18 @@ fn svg_def_filters(ref data: Array<felt252>) {
     data.append(' result=\\"shape\\"/><feColorMa');
     data.append('trix in=\\"SourceAlpha\\" resul');
     data.append('t=\\"hardAlpha\\" values=\\"0 0');
-    data.append(' 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ');
-    data.append('0 127 0\\"/><feOffset dy=\\"2\\');
+    data.append(' 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0');
+    data.append(' 0 127 0\\"/><feOffset dy=\\"2\\');
     data.append('"/><feGaussianBlur stdDeviation');
     data.append('=\\"4\\"/><feComposite in2=\\"h');
     data.append('ardAlpha\\" k2=\\"-1\\" k3=\\"1');
     data.append('\\" operator=\\"arithmetic\\"/>');
-    data.append('<feColorMatrix values=\\"0 0 0 ');
-    data.append('0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0');
-    data.append('.25 0\\"/><feBlend in2=\\"shape');
+    data.append('<feColorMatrix values=\\"0 0 0');
+    data.append(' 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0');
+    data.append('0.25 0\\"/><feBlend in2=\\"shape');
     data.append('\\" result=\\"effect2_innerShad');
     data.append('ow_2951_192338\\"/></filter><fi');
-    data.append('lter id=\\"k\\" width=\\"90\\" ');
+    data.append('lter id=\\"k\\" width=\\"90\\"');
     data.append('height=\\"62\\" x=\\"226\\" y=');
     data.append('\\"0\\" color-interpolation-fil');
     data.append('ters=\\"sRGB\\" filterUnits=\\"');
@@ -540,9 +630,9 @@ fn svg_def_filters(ref data: Array<felt252>) {
     data.append('pe\\"/></filter><radialGradient');
     data.append(' id=\\"m\\" cx=\\"0\\" cy=\\"0');
     data.append('\\" r=\\"1\\" gradientTransform');
-    data.append('=\\"matrix(277.26244 -278.9438 ');
-    data.append('986.71036 980.76284 101.47 200.');
-    data.append('29)\\" gradientUnits=\\"userSpa');
+    data.append('=\\"matrix(277.26244 -278.9438');
+    data.append(' 986.71036 980.76284 101.47 200');
+    data.append('.29)\\" gradientUnits=\\"userSpa');
     data.append('ceOnUse\\"><stop offset=\\".02');
     data.append('\\" stop-color=\\"#E8E7E7\\"/><');
     data.append('stop offset=\\".06\\" stop-colo');
@@ -564,19 +654,22 @@ fn svg_def_filters(ref data: Array<felt252>) {
 }
 
 // + b64 JPEG images
+#[inline(always)]
 fn svg_background_image(component: IComponentLibraryDispatcher, ref data: Array<felt252>) {
-    data.append('<image id=\\"image0\\" width=\\');
+    data.append('<image id=\\"n\\" width=\\');
     data.append('"673\\" height=\\"444\\" xlink:');
     data.append('href=\\"data:image/jpeg;base64,');
     // TODO: move up? 
     // TODO: and see why can't use concat directly instead of get
     //let mut data = component.concat(data);
-    let mut image = component.get();
+
+    let args = Option::None;
+    let mut image = component.render(args);
     data.concat(image.span());
     data.append('\\"/>');
-//data
 }
 
+#[inline(always)]
 fn svg_end(ref data: Array<felt252>) {
     data.append('</defs></svg>');
 }
