@@ -3,6 +3,7 @@ const NAME: felt252 = 'SDG01.svg';
 mod Component {
     use array::ArrayTrait;
     use metadata::interfaces::component::IComponent;
+    use metadata::components::configs::svg;
 
     #[storage]
     struct Storage {}
@@ -13,8 +14,13 @@ mod Component {
             super::NAME
         }
 
-        fn concat(self: @ContractState, mut data: Array<felt252>) -> Array<felt252> {
-            data.append('<svg id=\\"SDG1\\" xmlns=\\"htt');
+        fn render(self: @ContractState, args: Option<Span<felt252>>) -> Array<felt252> {
+            let props: svg::Properties = svg::parse_properties(args);
+
+            let mut data: Array<felt252> = Default::default();
+            svg::add_header_helper(props, ref data);
+
+            data.append('id=\\"SDG1\\" xmlns=\\"htt');
             data.append('p://www.w3.org/2000/svg\\" view');
             data.append('Box=\\"0 0 62 62\\"> <rect fill');
             data.append('=\\"#ea1d2d\\" width=\\"62\\" h');
@@ -177,11 +183,6 @@ mod Component {
 
             data
         }
-
-        fn get(self: @ContractState) -> Array<felt252> {
-            let mut test = ArrayTrait::<felt252>::new();
-            self.concat(test)
-        }
     }
 }
 
@@ -194,9 +195,10 @@ mod test {
     use test::test_utils::assert_eq;
 
     use super::Component;
+    use metadata::components::configs::svg;
 
     #[test]
-    #[available_gas(20000)]
+    #[available_gas(15_000)]
     fn test_component_name() {
         let data: Span<felt252> = Component::__external::name(Default::default().span());
         let name: felt252 = *data[0];
@@ -204,10 +206,17 @@ mod test {
     }
 
     #[test]
-    #[available_gas(1000000)]
+    #[available_gas(1_100_000)]
     fn test_component_get() {
-        let data: Span<felt252> = Component::__external::get(Default::default().span());
-        assert_eq(@data.len(), @0xa1_u32, 'Couldn\'t get data');
+        let mut calldata: Array<felt252> = Default::default();
+        let props: svg::Properties = Default::default();
+        let mut props_se: Array<felt252> = Default::default();
+        props.serialize(ref props_se);
+        let args_props: Option<Span<felt252>> = Option::Some(props_se.span());
+        args_props.serialize(ref calldata);
+        let data: Span<felt252> = Component::__external::render(calldata.span());
+        // data.len().print();
+        assert_eq(@data.len(), @0xa2_u32, 'Couldn\'t get data');
         let mut arr: Array<felt252> = ArrayTrait::new();
     }
 }

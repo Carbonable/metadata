@@ -1,8 +1,13 @@
 const NAME: felt252 = 'Carbonable_Logo.svg';
+
+
 #[starknet::contract]
 mod Component {
+    use option::OptionTrait;
     use array::ArrayTrait;
+
     use metadata::interfaces::component::IComponent;
+    use metadata::components::configs::svg;
 
     #[storage]
     struct Storage {}
@@ -13,13 +18,17 @@ mod Component {
             super::NAME
         }
 
-        fn concat(self: @ContractState, mut data: Array<felt252>) -> Array<felt252> {
-            data.append('<svg width=\\"1080\\" height=\\');
-            data.append('"1080\\" viewBox=\\"0 0 1080 10');
-            data.append('80\\" fill=\\"none\\" xmlns=\\"');
-            data.append('http://www.w3.org/2000/svg\\"> ');
+        fn render(self: @ContractState, args: Option<Span<felt252>>) -> Array<felt252> {
+            let props: svg::Properties = svg::parse_properties(args);
+
+            let mut data: Array<felt252> = Default::default();
+            svg::add_header_helper(props, ref data);
+
+            data.append('viewBox=\\"0 0 1080 1080\\"');
+            data.append(' fill=\\"none\\" xmlns=\\"');
+            data.append('http://www.w3.org/2000/svg\\">');
             data.append('<rect width=\\"1080\\" height=');
-            data.append('\\"1080\\" fill=\\"white\\" /> ');
+            data.append('\\"1080\\" fill=\\"white\\" />');
             data.append('<path fill-rule=\\"evenodd\\" c');
             data.append('lip-rule=\\"evenodd\\" d=\\"M51');
             data.append('1.843 487.724C467.052 546.797 4');
@@ -77,11 +86,6 @@ mod Component {
 
             data
         }
-
-        fn get(self: @ContractState) -> Array<felt252> {
-            let mut test = ArrayTrait::<felt252>::new();
-            self.concat(test)
-        }
     }
 }
 
@@ -94,9 +98,11 @@ mod test {
     use test::test_utils::assert_eq;
 
     use super::Component;
+    use metadata::components::configs::svg;
+
 
     #[test]
-    #[available_gas(20000)]
+    #[available_gas(15_000)]
     fn test_component_name() {
         let data: Span<felt252> = Component::__external::name(Default::default().span());
         let name: felt252 = *data[0];
@@ -104,9 +110,16 @@ mod test {
     }
 
     #[test]
-    #[available_gas(400000)]
+    #[available_gas(500_000)]
     fn test_component_get() {
-        let data: Span<felt252> = Component::__external::get(Default::default().span());
+        let mut calldata: Array<felt252> = Default::default();
+        let props: svg::Properties = Default::default();
+        let mut props_se: Array<felt252> = Default::default();
+        props.serialize(ref props_se);
+        let args_props: Option<Span<felt252>> = Option::Some(props_se.span());
+        args_props.serialize(ref calldata);
+        let data: Span<felt252> = Component::__external::render(calldata.span());
+
         assert_eq(@data.len(), @61_u32, 'Couldn\'t get data');
         let mut arr: Array<felt252> = ArrayTrait::new();
     }

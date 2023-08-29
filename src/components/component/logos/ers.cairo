@@ -4,6 +4,7 @@ const NAME: felt252 = 'ERS.svg';
 mod Component {
     use array::ArrayTrait;
     use metadata::interfaces::component::IComponent;
+    use metadata::components::configs::svg;
 
     #[storage]
     struct Storage {}
@@ -14,9 +15,13 @@ mod Component {
             super::NAME
         }
 
-        fn concat(self: @ContractState, mut data: Array<felt252>) -> Array<felt252> {
-            data.append('<svg width=\\"51\\" height=\\"6');
-            data.append('1\\" viewBox=\\"0 0 51 61\\" fi');
+        fn render(self: @ContractState, args: Option<Span<felt252>>) -> Array<felt252> {
+            let props: svg::Properties = svg::parse_properties(args);
+
+            let mut data: Array<felt252> = Default::default();
+            svg::add_header_helper(props, ref data);
+
+            data.append(' viewBox=\\"0 0 51 61\\" fi');
             data.append('ll=\\"none\\" xmlns=\\"http://w');
             data.append('ww.w3.org/2000/svg\\"><path d=');
             data.append('\\"M18.0435 41.889L16.1607 46.8');
@@ -36,19 +41,14 @@ mod Component {
             data.append('14Z\\" fill=\\"#F5F5F5\\"/><pat');
             data.append('h d=\\"M23.2212 2.98057L21.3384');
             data.append(' 8.05558H7.0605L5.1777 21.8306H');
-            data.append('18.828L20.4754 17.3195C21.2599 ');
-            data.append('15.2251 23.2996 13.775 25.4962 ');
-            data.append('13.775H48.9528L50.8356 0H27.457');
-            data.append('5C25.5747 0 23.9272 1.20834 23.');
-            data.append('2212 2.98057Z\\" fill=\\"#F5F5F');
+            data.append('18.828L20.4754 17.3195C21.2599');
+            data.append(' 15.2251 23.2996 13.775 25.4962');
+            data.append(' 13.775H48.9528L50.8356 0H27.45');
+            data.append('75C25.5747 0 23.9272 1.20834 23');
+            data.append('.2212 2.98057Z\\" fill=\\"#F5F5F');
             data.append('5\\"/></svg>');
 
             data
-        }
-
-        fn get(self: @ContractState) -> Array<felt252> {
-            let mut test = ArrayTrait::<felt252>::new();
-            self.concat(test)
         }
     }
 }
@@ -62,9 +62,10 @@ mod test {
     use test::test_utils::assert_eq;
 
     use super::Component;
+    use metadata::components::configs::svg;
 
     #[test]
-    #[available_gas(20000)]
+    #[available_gas(15_000)]
     fn test_component_name() {
         let data: Span<felt252> = Component::__external::name(Default::default().span());
         let name: felt252 = *data[0];
@@ -72,9 +73,15 @@ mod test {
     }
 
     #[test]
-    #[available_gas(400000)]
+    #[available_gas(320_000)]
     fn test_component_get() {
-        let data: Span<felt252> = Component::__external::get(Default::default().span());
+        let mut calldata: Array<felt252> = Default::default();
+        let props: svg::Properties = Default::default();
+        let mut props_se: Array<felt252> = Default::default();
+        props.serialize(ref props_se);
+        let args_props: Option<Span<felt252>> = Option::Some(props_se.span());
+        args_props.serialize(ref calldata);
+        let data: Span<felt252> = Component::__external::render(calldata.span());
 
         assert_eq(@data.len(), @28_u32, 'Couldn\'t get data');
         let mut arr: Array<felt252> = ArrayTrait::new();
