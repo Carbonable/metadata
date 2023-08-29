@@ -5,7 +5,7 @@ mod ComponentProvider {
 
     #[storage]
     struct Storage {
-        components: LegacyMap<felt252, IComponentLibraryDispatcher>, 
+        components: LegacyMap<felt252, IComponentLibraryDispatcher>,
     }
 
     #[constructor]
