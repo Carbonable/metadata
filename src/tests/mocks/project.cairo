@@ -13,7 +13,7 @@ mod ProjectMock {
 
     #[storage]
     struct Storage {
-        provider: ContractAddress, 
+        provider: ContractAddress,
     }
 
     #[external(v0)]
@@ -131,7 +131,7 @@ mod ProjectMock {
         // 3525 Metadata
         //
 
-        fn contractURI(self: @ContractState, ) -> Span<felt252> {
+        fn contractURI(self: @ContractState,) -> Span<felt252> {
             // TODO
             Default::default().span()
         }
@@ -163,7 +163,7 @@ mod ProjectMock {
         // Slot Enumerable
         //
 
-        fn slotCount(self: @ContractState, ) -> u256 {
+        fn slotCount(self: @ContractState,) -> u256 {
             1_u256
         }
 

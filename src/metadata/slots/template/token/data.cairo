@@ -54,7 +54,7 @@ fn get_colors(data: TokenData) -> Span<felt252> {
 use metadata::metadata::common::models::String;
 
 struct SvgData {
-    status: String, 
+    status: String,
 }
 
 fn get_svg_data() -> SvgData {

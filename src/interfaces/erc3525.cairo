@@ -74,7 +74,7 @@ trait IERC3525<TContractState> {
     // Slot Enumerable
     //
 
-    fn slotCount(self: @TContractState, ) -> u256;
+    fn slotCount(self: @TContractState,) -> u256;
 
     fn slotByIndex(self: @TContractState, index: u256) -> u256;
 
