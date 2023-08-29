@@ -24,9 +24,9 @@ use metadata::components::component::logos::ers::Component as ERSLogo;
 use metadata::components::component::sdgs::sdg13::Component as SDG13;
 use metadata::components::component::sdgs::sdg14::Component as SDG14;
 use metadata::components::component::sdgs::sdg15::Component as SDG15;
+use metadata::components::component::progress_bar::Component as ProgressBar;
 use metadata::components::component::jpegs::farmer::Component as FarmerBackground;
 use metadata::components::provider::ComponentProvider;
-
 
 use metadata::tests::utils;
 
@@ -59,6 +59,7 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
     provider.register('SDG13.svg', SDG13::TEST_CLASS_HASH.try_into().unwrap());
     provider.register('SDG14.svg', SDG14::TEST_CLASS_HASH.try_into().unwrap());
     provider.register('SDG15.svg', SDG15::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('ProgressBar.svg', ProgressBar::TEST_CLASS_HASH.try_into().unwrap());
 
     let project = IProjectDispatcher { contract_address: project_address };
     project.set_component_provider(provider.contract_address);
@@ -67,10 +68,8 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
 }
 
 #[test]
-#[available_gas(1_100_000)]
+#[available_gas(2_000_000)]
 fn test_construct_slot_uri() {
-    let gas_start = utils::tests::start_gas_meter();
-
     let (_, project_address, _) = setup();
     let slot = 1_u256;
 
@@ -85,16 +84,11 @@ fn test_construct_slot_uri() {
     // utils::tests::print_felt_span(uri_span);
 
     assert_eq(uri_span.pop_back().unwrap(), @'example.com/', 'Failed to fetch slot uri');
-
-    utils::tests::stop_gas_meter(gas_start);
 }
 
-
 #[test]
-#[available_gas(55_000_000)]
+#[available_gas(80_000_000)]
 fn test_construct_token_uri() {
-    let gas_start = utils::tests::start_gas_meter();
-
     let (_, project_address, _) = setup();
     let token_id = 1_u256;
 
@@ -111,6 +105,4 @@ fn test_construct_token_uri() {
 
     let first = uri_span.pop_front().unwrap();
     assert_eq(first, @'data:application/json,', 'Failed to fetch token uri');
-
-    utils::tests::stop_gas_meter(gas_start);
 }

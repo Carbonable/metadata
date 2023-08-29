@@ -48,8 +48,6 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
 #[test]
 #[available_gas(4400000)]
 fn test_construct_contract_uri() {
-    let gas_start = utils::tests::start_gas_meter();
-
     let (components, project_address, account) = setup();
 
     let metadata = IContractMetadataLibraryDispatcher {
@@ -61,6 +59,4 @@ fn test_construct_contract_uri() {
     let mut uri_span = uri;
 
     assert_eq(uri_span.pop_back().unwrap(), @'}', 'Failed to fetch contract uri');
-
-    utils::tests::stop_gas_meter(gas_start);
 }
