@@ -11,20 +11,20 @@ mod Project {
     use array::ArrayTrait;
     use alexandria_ascii::ToAsciiTrait;
 
-    const NAME: u256 = 'Banegas Farm';
-    const DEVELOPER: u256 = 'Corcovado Foundation';
-    const CERTIFIER: u256 = 'Wildsense';
+    const NAME: felt252 = 'Banegas Farm';
+    const DEVELOPER: felt252 = 'Corcovado Foundation';
+    const CERTIFIER: felt252 = 'ERS';
     const AREA: u256 = 25;
-    const COUNTRY: u256 = 'Costa Rica';
-    const END_YEAR: u256 = 2052; // mutable storage?
-    const END_MONTH: u256 = 12; // mutable storage?
-    const DURATION_IN_YEARS: u256 = 30; // 2052 - 2022; consteval_int!(END_YEAR - 2022);
-    const PROJECTED_CU: u256 = 1573;
-    const COLOR: u256 = 'Green';
-    const TYPE: u256 = 'Forest';
-    const CATEGORY: u256 = 'Regeneration';
-    const STATUS: u256 = 'Active'; // mutable storage?
-    const SOURCE: u256 = 'Carbonable';
+    const COUNTRY: felt252 = 'Costa Rica';
+    const END_YEAR: u256 = 2052; // get from project
+    const END_MONTH: u256 = 12; // get from project
+    const DURATION_IN_YEARS: u256 = 30; // get from project
+    const PROJECTED_CU: u256 = 1573; // get from project
+    const COLOR: felt252 = 'Green';
+    const TYPE: felt252 = 'ARR';
+    const CATEGORY: felt252 = 'Regeneration';
+    const STATUS: felt252 = 'Active'; // get from project
+    const SOURCE: felt252 = 'Carbonable';
 
     #[inline(always)]
     fn get_sdgs() -> Span<felt252> {
@@ -34,20 +34,20 @@ mod Project {
     #[inline(always)]
     fn get() -> ProjectData {
         ProjectData {
-            name: NAME.to_ascii().span(),
-            developer: DEVELOPER.to_ascii().span(),
-            certifier: CERTIFIER.to_ascii().span(),
+            name: array![NAME].span(),
+            developer: array![DEVELOPER].span(),
+            certifier: array![CERTIFIER].span(),
             area: AREA,
-            country: COUNTRY.to_ascii().span(),
+            country: array![COUNTRY].span(),
             end_year: END_YEAR,
             end_month: END_MONTH,
             duration_in_years: DURATION_IN_YEARS,
             projected_cu: PROJECTED_CU,
-            color: COLOR.to_ascii().span(),
-            type_: TYPE.to_ascii().span(),
-            category: CATEGORY.to_ascii().span(),
-            status: STATUS.to_ascii().span(),
-            source: SOURCE.to_ascii().span(),
+            color: array![COLOR].span(),
+            type_: array![TYPE].span(),
+            category: array![CATEGORY].span(),
+            status: array![STATUS].span(),
+            source: array![SOURCE].span(),
             sdgs: get_sdgs(),
         }
     }
@@ -90,7 +90,7 @@ fn fetch_token_data(contract_address: ContractAddress, token_id: u256) -> TokenD
         total_value: instance.totalValue(slot),
         project_value: project_instance.getProjectValue(slot),
         slot,
-        status: ProjectStatus::Live, 
+        status: ProjectStatus::Live,
         description: Description::get().span()
     };
 
