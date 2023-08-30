@@ -11,6 +11,7 @@ struct TokenData {
     slot_data: SlotData,
     asset_value: u256,
     description: Span<felt252>,
+    token_id: u256,
 }
 
 #[derive(Copy, Drop)]
@@ -45,7 +46,7 @@ struct ProjectData {
     end_month: u256,
     duration_in_years: u256,
     projected_cu: u256,
-    color: String, // Color
+    color: String, // Color 
     type_: String, // Type
     category: String, // Category
     status: String, // Status
