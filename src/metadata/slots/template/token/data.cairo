@@ -7,7 +7,26 @@ use metadata::metadata::common::models::{StorageData, TokenData};
 use metadata::metadata::common::utils::{ToSpanOption};
 use alexandria_ascii::ToAsciiTrait;
 
+#[derive(Drop)]
+struct SvgData {}
+
+#[derive(Drop)]
+struct JsonData {}
+
+#[derive(Drop)]
+struct TemplateData {
+    svg: SvgData,
+    json: JsonData,
+}
+
+#[inline(always)]
+fn generate(static_data: TokenData, starknet_data: StorageData) -> TemplateData {
+    TemplateData { svg: SvgData {}, json: JsonData {}, }
+}
+
+
 // TODO: to be used in 'Asset avg. annual capacity' attribute
+#[inline(always)]
 fn get_asset_capacity(data: TokenData) -> Span<felt252> {
     let project_value = data.slot_data.project_value;
 
@@ -15,6 +34,7 @@ fn get_asset_capacity(data: TokenData) -> Span<felt252> {
 }
 
 // TODO: to be used in 'Asset area (m2)' attribute
+#[inline(always)]
 fn get_asset_area(data: TokenData) -> Span<felt252> {
     let project_value = data.slot_data.project_value;
     let project_area = data.slot_data.project_data.area;
@@ -22,6 +42,7 @@ fn get_asset_area(data: TokenData) -> Span<felt252> {
     Default::default().span()
 }
 
+#[inline(always)]
 fn get_progress(data: TokenData) -> u8 {
     // TODO: fetch from contract ???
     let project_cu = data.slot_data.project_data.projected_cu;
@@ -39,6 +60,7 @@ fn get_progress(data: TokenData) -> u8 {
 }
 
 // TODO: get SFT colors (Status + Progress bar)
+#[inline(always)]
 fn get_colors(data: TokenData) -> Span<felt252> {
     // match status
     // status circle
@@ -50,13 +72,3 @@ fn get_colors(data: TokenData) -> Span<felt252> {
     colors
 }
 
-// Needed?
-use metadata::metadata::common::models::String;
-
-struct SvgData {
-    status: String,
-}
-
-fn get_svg_data() -> SvgData {
-    SvgData { status: 'Live'.to_span().unwrap() }
-}

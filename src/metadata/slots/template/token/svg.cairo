@@ -16,6 +16,8 @@ use metadata::metadata::common::data::get_provider;
 use metadata::metadata::slots::template::token::data;
 use metadata::components::configs::svg;
 
+use alexandria_ascii::ToAsciiArrayTrait;
+
 // TODO: svgenerator?
 
 // TODO: provider as a param?
@@ -23,7 +25,8 @@ fn generate(data: TokenData) -> Span<felt252> {
     let mut svg: Array<felt252> = Default::default();
 
     // TODO: move to data::get_svg_data
-    let cu_str: String = to_ascii(data.slot_data.project_data.projected_cu);
+    // TODO: maybe use to_ascii_array everywhere?
+    let cu_str: String = data.slot_data.project_data.projected_cu.to_ascii_array().span();
     let end_date_str: String = to_ascii(data.slot_data.project_data.end_year);
     let progress: u8 = data::get_progress(data);
     let progress_str: String = to_ascii(progress);

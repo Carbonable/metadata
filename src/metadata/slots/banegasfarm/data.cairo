@@ -9,7 +9,6 @@ use metadata::metadata::common::models::{StorageData, TokenData, SlotData, Proje
 mod Project {
     use metadata::metadata::common::models::{ProjectData, String};
     use array::ArrayTrait;
-    use alexandria_ascii::ToAsciiTrait;
 
     const NAME: felt252 = 'Banegas Farm';
     const DEVELOPER: felt252 = 'Corcovado Foundation';
@@ -85,6 +84,7 @@ fn fetch_token_data(contract_address: ContractAddress, token_id: u256) -> TokenD
     let instance = IERC3525Dispatcher { contract_address };
     let project_instance = IProjectDispatcher { contract_address };
     let slot = instance.slotOf(token_id);
+
     let slot_data = SlotData {
         project_data,
         total_value: instance.totalValue(slot),
@@ -94,7 +94,17 @@ fn fetch_token_data(contract_address: ContractAddress, token_id: u256) -> TokenD
         description: Description::get().span()
     };
 
+    // TokenStaticData {
+    //     project_data: Project::get_data(),
+    //     slot_description: SlotDescription::get().span(),
+    //     token_description: Description::get().span(),
+    //     token_id
+    // };
+
     TokenData {
-        slot_data, asset_value: instance.valueOf(token_id), description: Description::get().span()
+        slot_data,
+        asset_value: instance.valueOf(token_id),
+        description: Description::get().span(),
+        token_id
     }
 }
