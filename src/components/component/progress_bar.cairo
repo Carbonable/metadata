@@ -248,7 +248,7 @@ mod test {
         args_props.serialize(ref calldata);
         let data: Span<felt252> = Component::__external::render(calldata.span());
 
-        utils::tests::print_felt_span(data);
+        // utils::tests::print_felt_span(data);
 
         assert_eq(@data.len(), @0x16_u32, 'Couldn\'t get data');
         let mut arr: Array<felt252> = ArrayTrait::new();
