@@ -53,7 +53,7 @@ mod metadata {
             mod token {
                 mod data;
                 mod generate;
-                mod starknet;
+                mod storage;
                 mod svg;
             }
         }
