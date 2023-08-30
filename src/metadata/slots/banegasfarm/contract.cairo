@@ -20,7 +20,7 @@ mod BanegasFarmUri {
             super::Assert::compatible(contract);
 
             let slot_data = fetch_slot_data(contract, slot);
-            generate_slot_uri(slot, slot_data)
+            generate_slot_uri(contract, slot, slot_data)
         }
 
         fn construct_token_uri(self: @ContractState, token_id: u256) -> Span<felt252> {
@@ -29,7 +29,7 @@ mod BanegasFarmUri {
             super::Assert::compatible(contract);
 
             let token_data = fetch_token_data(contract, token_id);
-            generate_token_uri(token_id, token_data)
+            generate_token_uri(contract, token_id, token_data)
         }
     }
 }
