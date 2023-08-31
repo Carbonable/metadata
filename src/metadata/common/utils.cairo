@@ -12,18 +12,6 @@ impl ToSpanOptionImpl of ToSpanOption {
     }
 }
 
-fn to_ascii<T, impl TDrop: Drop<T>, impl TToAsciiTrait: ToAsciiTrait<T, Array<felt252>>>(
-    x: T
-) -> Span<felt252> {
-    let res: Array<felt252> = x.to_ascii();
-    res.span()
-}
-// #[inline(always)]
-// fn to_ascii(x: u128) -> Span<felt252> {
-//     let res: Array<felt252> = x.to_ascii();
-//     res.span()
-// }
-
 trait ArrayConcat<T> {
     fn concat(ref self: Array<T>, data: Span<T>);
 }

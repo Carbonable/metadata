@@ -4,8 +4,7 @@ mod BanegasFarmUri {
 
     use metadata::metadata::slots::template::slot::generate_slot_uri;
     use metadata::metadata::slots::template::token::generate::generate_token_uri;
-    use metadata::metadata::slots::banegasfarm::data::fetch_slot_data;
-    use metadata::metadata::slots::banegasfarm::data::fetch_token_data;
+    use metadata::metadata::slots::banegasfarm::data::get_static_data;
 
     use metadata::interfaces::slot_metadata::ISlotMetadata;
 
@@ -19,8 +18,8 @@ mod BanegasFarmUri {
             let contract = get_contract_address();
             super::Assert::compatible(contract);
 
-            let slot_data = fetch_slot_data(contract, slot);
-            generate_slot_uri(contract, slot, slot_data)
+            let static_data = get_static_data();
+            generate_slot_uri(contract, slot, static_data)
         }
 
         fn construct_token_uri(self: @ContractState, token_id: u256) -> Span<felt252> {
@@ -28,8 +27,8 @@ mod BanegasFarmUri {
             let contract = get_contract_address();
             super::Assert::compatible(contract);
 
-            let token_data = fetch_token_data(contract, token_id);
-            generate_token_uri(contract, token_id, token_data)
+            let static_data = get_static_data();
+            generate_token_uri(contract, token_id, static_data)
         }
     }
 }
