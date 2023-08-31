@@ -8,12 +8,11 @@ use metadata::interfaces::component::{IComponentLibraryDispatcher, IComponentDis
 use metadata::interfaces::component_provider::{
     IComponentProviderDispatcher, IComponentProviderDispatcherTrait
 };
-use metadata::metadata::common::models::{TokenData, ProjectStatus};
-use metadata::metadata::common::models::String;
-use metadata::metadata::common::utils::to_ascii;
+use metadata::metadata::common::models::{String, ProjectStatus};
 use metadata::metadata::common::utils::ArrayConcat;
 use metadata::metadata::common::data::get_provider;
 use metadata::metadata::slots::template::token::data;
+use metadata::metadata::slots::template::token::data::TemplateData;
 use metadata::components::configs::svg;
 
 use alexandria_ascii::ToAsciiArrayTrait;
@@ -21,24 +20,22 @@ use alexandria_ascii::ToAsciiArrayTrait;
 // TODO: svgenerator?
 
 // TODO: provider as a param?
-fn generate(data: TokenData) -> Span<felt252> {
+fn generate(data: @TemplateData) -> Span<felt252> {
     let mut svg: Array<felt252> = Default::default();
 
-    // TODO: move to data::get_svg_data
-    // TODO: maybe use to_ascii_array everywhere?
-    let cu_str: String = data.slot_data.project_data.projected_cu.to_ascii_array().span();
-    let end_date_str: String = to_ascii(data.slot_data.project_data.end_year);
-    let progress: u8 = data::get_progress(data);
-    let progress_str: String = to_ascii(progress);
-    let area_str: String = data::get_asset_area(data); // TODO
-    let type_str: String = data.slot_data.project_data.type_; // TODO
-    let mut sdgs: Span<felt252> = data.slot_data.project_data.sdgs; // TODO
-    let sdg_count_str: String = to_ascii(sdgs.len());
-    let status_str: String = data.slot_data.project_data.status; // TODO
-    let name: String = data.slot_data.project_data.name;
-    let country: String = data.slot_data.project_data.country;
-    let developer: String = data.slot_data.project_data.developer;
-    let certifier: String = data.slot_data.project_data.certifier;
+    let cu_str: String = *data.project_projected_cu_str;
+    let end_date_str: String = *data.project_end_year_str;
+    let progress: u8 = *data.progress;
+    let progress_str: String = *data.progress_str;
+    let area_str: String = *data.asset_area_str;
+    let type_str: String = *data.project.type_;
+    let mut sdgs: Span<felt252> = *data.project.sdgs;
+    let sdg_count_str: String = *data.sdg_count_str;
+    let status_str: String = *data.status_str; // TODO
+    let name: String = *data.project.name;
+    let country: String = *data.project.country;
+    let developer: String = *data.project.developer;
+    let certifier: String = *data.project.certifier;
     let status = ProjectStatus::Live; // TODO
 
     let provider = get_provider();

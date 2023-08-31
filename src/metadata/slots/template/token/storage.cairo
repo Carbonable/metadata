@@ -4,7 +4,7 @@ use metadata::interfaces::erc3525::{IERC3525Dispatcher, IERC3525DispatcherTrait}
 use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
 
 #[inline(always)]
-fn fetch_storage_data(contract_address: ContractAddress, token_id: u256) -> StorageData {
+fn fetch_data(contract_address: ContractAddress, token_id: u256) -> StorageData {
     let erc3525 = IERC3525Dispatcher { contract_address };
     let project = IProjectDispatcher { contract_address };
     let slot = erc3525.slotOf(token_id);
