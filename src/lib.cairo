@@ -19,15 +19,40 @@ mod components {
         }
         mod sdgs {
             mod sdg01;
+            mod sdg02;
+            mod sdg03;
+            mod sdg04;
+            mod sdg05;
+            mod sdg06;
+            mod sdg07;
+            mod sdg08;
+            mod sdg09;
+            mod sdg10;
+            mod sdg11;
+            mod sdg12;
             mod sdg13;
             mod sdg14;
             mod sdg15;
+            mod sdg16;
+            mod sdg17;
         }
         mod jpegs {
             mod farmer;
         }
 
-        mod progress_bar;
+        mod sft {
+            mod progress_bar;
+            mod status;
+            mod border;
+            mod badges {
+                mod badge_Infty;
+                mod badge_L;
+                mod badge_M;
+                mod badge_S;
+                mod badge_XL;
+                mod badge_XS;
+            }
+        }
     }
     mod provider;
 }

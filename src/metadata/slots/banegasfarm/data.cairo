@@ -1,24 +1,26 @@
 use array::ArrayTrait;
 
-use metadata::metadata::common::models::{ProjectStaticData, String};
+use metadata::metadata::common::models::{ProjectStaticData, String, Shortstring};
 
-const NAME: felt252 = 'Banegas Farm';
-const DEVELOPER: felt252 = 'Corcovado Foundation';
-const CERTIFIER: felt252 = 'ERS';
-const AREA: u256 = 25;
-const COUNTRY: felt252 = 'Costa Rica';
-const END_YEAR: u256 = 2052; // get from project
-const END_MONTH: u256 = 12; // get from project
-const DURATION_IN_YEARS: u256 = 30; // get from project
-const PROJECTED_CU: u256 = 1573; // get from project
-const COLOR: felt252 = 'Green';
-const TYPE: felt252 = 'ARR';
-const CATEGORY: felt252 = 'Regeneration';
-const SOURCE: felt252 = 'Carbonable';
+const NAME: Shortstring = 'Banegas Farm';
+const DEVELOPER: Shortstring = 'Corcovado Foundation';
+const CERTIFIER: Shortstring = 'ERS';
+const AREA: u32 = 25;
+const COUNTRY: Shortstring = 'Costa Rica';
+const END_YEAR: u32 = 2052; // get from project
+const END_MONTH: u8 = 12; // get from project
+const DURATION_IN_YEARS: u32 = 30; // get from project
+const PROJECTED_CU: u128 = 1573; // get from project
+const COLOR: Shortstring = 'Green';
+const TYPE: Shortstring = 'ARR';
+const CATEGORY: Shortstring = 'Regeneration';
+const SOURCE: Shortstring = 'Carbonable';
 
 #[inline(always)]
-fn get_sdgs_() -> Span<felt252> {
-    array![13, 14, 15].span()
+fn get_sdgs_() -> Span<u8> {
+    //array![13, 14, 15].span()
+    array![4, 9, 10, 13, 14, 15].span()
+// array![].span()
 }
 
 #[inline(always)]
