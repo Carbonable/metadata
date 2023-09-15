@@ -1,5 +1,3 @@
-use array::ArrayTrait;
-
 use cairo_json::simple_json::{Json, JsonTrait};
 
 use metadata::metadata::project::data;

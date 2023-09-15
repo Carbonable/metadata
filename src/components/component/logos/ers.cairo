@@ -2,7 +2,6 @@ const NAME: felt252 = 'ERS.svg';
 
 #[starknet::contract]
 mod Component {
-    use array::ArrayTrait;
     use metadata::interfaces::component::IComponent;
     use metadata::components::configs::svg;
 

@@ -2,7 +2,6 @@ const NAME: felt252 = 'Farmer.jpeg.b64';
 
 #[starknet::contract]
 mod Component {
-    use array::ArrayTrait;
     use metadata::interfaces::component::IComponent;
 
     #[storage]

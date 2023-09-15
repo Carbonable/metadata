@@ -1,5 +1,3 @@
-use array::ArrayTrait;
-
 use metadata::interfaces::component_provider::{
     IComponentProviderDispatcher, IComponentProviderDispatcherTrait
 };

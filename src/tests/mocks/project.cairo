@@ -2,8 +2,6 @@
 mod ProjectMock {
     use starknet::ContractAddress;
     use starknet::get_caller_address;
-    use core::Into;
-    use array::ArrayTrait;
     use metadata::interfaces::project::IProject;
     use metadata::interfaces::erc3525::IERC3525;
     use metadata::interfaces::erc165::IERC165;

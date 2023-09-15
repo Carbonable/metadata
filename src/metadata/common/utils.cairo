@@ -1,4 +1,3 @@
-use array::{ArrayTrait, SpanTrait};
 use alexandria_ascii::interger::ToAsciiTrait;
 
 trait ToSpanOption {

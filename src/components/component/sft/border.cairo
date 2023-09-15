@@ -31,7 +31,6 @@ impl DefaultProperties of Default<Properties> {
 
 #[starknet::contract]
 mod Component {
-    use core::array::ArrayTrait;
     use alexandria_ascii::ToAsciiTrait;
 
     use metadata::metadata::common::utils::ArrayConcat;

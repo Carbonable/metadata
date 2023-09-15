@@ -1,7 +1,7 @@
 const NAME: felt252 = 'SFT.BadgeXS.svg';
+
 #[starknet::contract]
 mod Component {
-    use array::ArrayTrait;
     use metadata::interfaces::component::IComponent;
     use metadata::components::configs::svg;
 
