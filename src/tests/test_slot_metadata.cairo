@@ -6,7 +6,7 @@ use starknet::syscalls::deploy_syscall;
 
 use test::test_utils::assert_eq;
 
-use metadata::metadata::slots::banegas_farm::contract::BanegasFarmUri;
+use metadata::metadata::slots::banegasfarm::contract::BanegasFarmUri;
 use metadata::tests::mocks::project::ProjectMock;
 use metadata::interfaces::slot_metadata::{
     ISlotMetadataLibraryDispatcher, ISlotMetadataDispatcherTrait
