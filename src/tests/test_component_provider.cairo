@@ -1,11 +1,6 @@
 use debug::PrintTrait;
-use array::{ArrayTrait, SpanTrait};
-use result::ResultTrait;
 
-use starknet::{
-    contract_address_const, ContractAddress, Felt252TryIntoContractAddress, TryInto, Into,
-    OptionTrait, class_hash::Felt252TryIntoClassHash
-};
+use starknet::{contract_address_const, ContractAddress};
 use starknet::testing::{set_caller_address, set_contract_address};
 use starknet::syscalls::deploy_syscall;
 

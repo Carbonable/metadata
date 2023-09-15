@@ -3,9 +3,6 @@ const NAME: felt252 = 'Carbonable_Logo.svg';
 
 #[starknet::contract]
 mod Component {
-    use option::OptionTrait;
-    use array::ArrayTrait;
-
     use metadata::interfaces::component::IComponent;
     use metadata::components::configs::svg;
 

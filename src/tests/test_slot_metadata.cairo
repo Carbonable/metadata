@@ -6,7 +6,7 @@ use starknet::syscalls::deploy_syscall;
 
 use test::test_utils::assert_eq;
 
-use metadata::metadata::slots::banegasfarm::contract::BanegasFarmUri;
+use metadata::metadata::slots::banegas_farm::contract::BanegasFarmUri;
 use metadata::tests::mocks::project::ProjectMock;
 use metadata::interfaces::slot_metadata::{
     ISlotMetadataLibraryDispatcher, ISlotMetadataDispatcherTrait
@@ -100,13 +100,13 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
 }
 
 #[test]
-#[available_gas(4_000_000)]
+#[available_gas(10_000_000)]
 fn test__setup() {
     let (_, project_address, _) = setup();
 }
 
 #[test]
-#[available_gas(5_000_000)]
+#[available_gas(15_000_000)]
 fn test_construct_slot_uri() {
     let (_, project_address, _) = setup();
     let slot = 1_u256;

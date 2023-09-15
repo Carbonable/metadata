@@ -1,9 +1,4 @@
-use core::option::OptionTrait;
-use core::traits::TryInto;
-
 mod Description {
-    use array::ArrayTrait;
-
     #[inline(always)]
     fn get() -> Array<felt252> {
         let mut data = Default::default();
@@ -31,7 +26,6 @@ mod Description {
 
 mod SVG {
     use alexandria_data_structures::array_ext::ArrayTraitExt;
-    use array::ArrayTrait;
 
     use metadata::interfaces::component_provider::{
         IComponentProviderDispatcher, IComponentProviderDispatcherTrait
@@ -39,7 +33,6 @@ mod SVG {
     use metadata::interfaces::component::{IComponentLibraryDispatcher, IComponentDispatcherTrait};
     use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
     use metadata::metadata::common::data::get_provider;
-    // use metadata::metadata::common::utils::ArrayConcat;
 
     #[inline(always)]
     fn get_carbonable_logo() -> Span<felt252> {

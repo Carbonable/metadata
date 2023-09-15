@@ -1,4 +1,3 @@
-use array::SpanTrait;
 use debug::PrintTrait;
 
 fn print_felt_span(a: Span<felt252>) {

@@ -42,10 +42,6 @@ impl DefaultProperties of Default<Properties> {
 
 #[starknet::contract]
 mod Component {
-    use array::ArrayTrait;
-    use serde::Serde;
-    use option::OptionTrait;
-
     use alexandria_ascii::ToAsciiTrait;
 
     use metadata::interfaces::component::IComponent;
