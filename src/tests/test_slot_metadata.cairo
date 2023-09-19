@@ -6,10 +6,12 @@ use starknet::syscalls::deploy_syscall;
 
 use test::test_utils::assert_eq;
 
-use metadata::metadata::slots::banegasfarm::contract::BanegasFarmUri;
+use metadata::metadata::slots::banegas_farm::contract::BanegasFarmUri;
+use metadata::metadata::slots::las_delicias::contract::LasDeliciasUri;
+use metadata::metadata::slots::manjarisoa::contract::ManjarisoaUri;
 use metadata::tests::mocks::project::ProjectMock;
-use metadata::interfaces::slot_metadata::{
-    ISlotMetadataLibraryDispatcher, ISlotMetadataDispatcherTrait
+use metadata::interfaces::slot_descriptor::{
+    ISlotDescriptorLibraryDispatcher, ISlotDescriptorDispatcherTrait
 };
 use metadata::interfaces::component_provider::{
     IComponentProviderDispatcher, IComponentProviderDispatcherTrait
@@ -45,6 +47,9 @@ use metadata::components::component::sft::badges::badge_M::Component as SFTBadge
 use metadata::components::component::sft::badges::badge_S::Component as SFTBadgeS;
 use metadata::components::component::sft::badges::badge_XS::Component as SFTBadgeXS;
 use metadata::components::component::jpegs::farmer::Component as FarmerBackground;
+use metadata::components::component::jpegs::parrot::Component as ParrotBackground;
+use metadata::components::component::jpegs::swamp::Component as SwampBackground;
+use metadata::components::component::jpegs::monkey::Component as MonkeyBackground;
 use metadata::components::provider::ComponentProvider;
 
 use metadata::tests::utils;
@@ -61,7 +66,10 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
     let project_address = utils::contracts::deploy(ProjectMock::TEST_CLASS_HASH, ArrayTrait::new());
 
     provider.register('carbonable_logo', CarbonableLogo::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('Farmer.jpeg.b64', FarmerBackground::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('Farmer.jpg.b64', FarmerBackground::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('Swamp.jpg.b64', SwampBackground::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('Parrot.jpg.b64', ParrotBackground::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('Monkey.jpg.b64', MonkeyBackground::TEST_CLASS_HASH.try_into().unwrap());
     provider.register('ERS.svg', ERSLogo::TEST_CLASS_HASH.try_into().unwrap());
 
     provider.register('SDG01.svg', SDG01::TEST_CLASS_HASH.try_into().unwrap());
@@ -111,7 +119,7 @@ fn test_construct_slot_uri() {
     let (_, project_address, _) = setup();
     let slot = 1_u256;
 
-    let metadata = ISlotMetadataLibraryDispatcher {
+    let metadata = ISlotDescriptorLibraryDispatcher {
         class_hash: BanegasFarmUri::TEST_CLASS_HASH.try_into().unwrap()
     };
 
@@ -130,7 +138,7 @@ fn test_construct_token_uri() {
     let (_, project_address, _) = setup();
     let token_id = 1_u256;
 
-    let metadata = ISlotMetadataLibraryDispatcher {
+    let metadata = ISlotDescriptorLibraryDispatcher {
         class_hash: BanegasFarmUri::TEST_CLASS_HASH.try_into().unwrap()
     };
 
