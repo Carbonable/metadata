@@ -1,8 +1,8 @@
 mod interfaces {
     mod erc3525;
     mod project;
-    mod slot_metadata;
-    mod contract_metadata;
+    mod slot_descriptor;
+    mod contract_descriptor;
     mod erc165;
     mod component;
     mod component_provider;
@@ -11,6 +11,7 @@ mod interfaces {
 mod components {
     mod configs {
         mod svg;
+        mod b64jpg;
     }
     mod component {
         mod logos {
@@ -38,6 +39,9 @@ mod components {
         }
         mod jpegs {
             mod farmer;
+            mod parrot;
+            mod swamp;
+            mod monkey;
         }
 
         mod sft {
@@ -69,7 +73,15 @@ mod metadata {
         mod generator;
     }
     mod slots {
-        mod banegasfarm {
+        mod banegas_farm {
+            mod contract;
+            mod data;
+        }
+        mod las_delicias {
+            mod contract;
+            mod data;
+        }
+        mod manjarisoa {
             mod contract;
             mod data;
         }

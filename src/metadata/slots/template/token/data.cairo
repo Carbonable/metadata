@@ -9,7 +9,6 @@ use metadata::components::configs::svg;
 use metadata::components::component::sft;
 
 use alexandria_ascii::ToAsciiTrait;
-use alexandria_ascii::ToAsciiArrayTrait;
 
 //
 // Template components constants
@@ -19,7 +18,6 @@ const PROGRESS_BAR_COMP_ID: felt252 = 'SFT.ProgressBar.svg';
 const STATUS_COMP_ID: felt252 = 'SFT.Status.svg';
 const BADGE_COMP_ID: felt252 = 'SFT.Badge.svg';
 const BORDER_COMP_ID: felt252 = 'SFT.Border.svg';
-
 
 #[derive(Drop)]
 struct TemplateData {
@@ -131,7 +129,7 @@ fn generate_sdg_(id: u8, num_sdgs: usize, index: usize) -> String {
     }
 
     let x = 246 + (dx * (index % 4));
-    let y = 306 + (size * (index / 4)); // assuming max 2 rows
+    let y = 306 + (size * (index / 4));
 
     let size_str: felt252 = size.to_ascii();
     let x_str: felt252 = x.to_ascii();
@@ -215,7 +213,7 @@ fn get_asset_capacity_str_(storage: StorageData, static: ProjectStaticData) -> S
     // TODO: Compute and handle units
     let project_value = storage.project_value;
     let asset_value = storage.asset_value;
-    let project_capacity = static.projected_cu;
+    let project_capacity = static.projected_cu; // TODO
 
     if project_value.is_zero() {
         array!['N/A'].span()
@@ -252,7 +250,7 @@ fn get_progress_(storage: StorageData, static: ProjectStaticData) -> u8 {
     let project_cu = static.projected_cu;
     // let current_cu = storage_data.current_absorption;
     let current_cu: u256 = project_cu.into() * 63 / 100;
-    if !current_cu.is_zero() {
+    if !project_cu.is_zero() {
         let res = 100_u256 * current_cu / project_cu.into();
         // TODO: check result is < 100 ?
         let res: u8 = res.try_into().unwrap();
@@ -309,19 +307,19 @@ fn get_progress_bar_props_(
             Option::None
         ),
         ProjectStatus::Stopped => (
-            sft::progress_bar::Stroke::Gradient(array![('.4', '#A8C4EF'), ('1', '#0AF2AD')].span()),
-            Option::Some('.3'),
-            Option::None,
-            sft::progress_bar::Stroke::Gradient(array![('.4', '#A8C4EF'), ('1', '#0AF2AD')].span()),
-            Option::Some('.8'),
-            Option::None
-        ),
-        ProjectStatus::Ended => (
             sft::progress_bar::Stroke::Color('#f69a86'),
             Option::Some('.2'),
             Option::None,
             sft::progress_bar::Stroke::Color('#b44040'),
             Option::None,
+            Option::None
+        ),
+        ProjectStatus::Ended => (
+            sft::progress_bar::Stroke::Gradient(array![('.4', '#A8C4EF'), ('1', '#0AF2AD')].span()),
+            Option::Some('.3'),
+            Option::None,
+            sft::progress_bar::Stroke::Gradient(array![('.4', '#A8C4EF'), ('1', '#0AF2AD')].span()),
+            Option::Some('.8'),
             Option::Some('.5')
         ),
     };
@@ -395,7 +393,6 @@ fn get_status_props_(status: ProjectStatus) -> sft::status::Properties {
 
 fn generate_status_(storage: StorageData, static: ProjectStaticData) -> String {
     let mut data: Array<felt252> = Default::default();
-    // compute params
     let status = get_status_(storage);
     let props = get_status_props_(status);
 
