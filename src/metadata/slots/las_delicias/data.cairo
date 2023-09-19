@@ -1,26 +1,23 @@
-use array::ArrayTrait;
-
 use metadata::metadata::common::models::{ProjectStaticData, String, Shortstring};
 
-const NAME: Shortstring = 'Banegas Farm';
-const DEVELOPER: Shortstring = 'Corcovado Foundation';
-const CERTIFIER: Shortstring = 'ERS';
-const AREA: u32 = 25;
-const COUNTRY: Shortstring = 'Costa Rica';
-const END_YEAR: u32 = 2052; // get from project
+const NAME: Shortstring = 'Las Delicias';
+const DEVELOPER: Shortstring = 'Fundacion Naturaleza Panama';
+const CERTIFIER: Shortstring = 'Wildsense';
+const AREA: u32 = 18;
+const COUNTRY: Shortstring = 'Panama';
+const END_YEAR: u32 = 2042; // get from project
 const END_MONTH: u8 = 12; // get from project
-const DURATION_IN_YEARS: u32 = 30; // get from project
-const PROJECTED_CU: u128 = 1573; // get from project
-const COLOR: Shortstring = 'Green';
+const DURATION_IN_YEARS: u32 = consteval_int!(2042 - 2022); // get from project
+const PROJECTED_CU: u128 = 3603; // get from project
+const COLOR: Shortstring = 'Blue';
 const TYPE: Shortstring = 'ARR';
-const CATEGORY: Shortstring = 'Regeneration';
+const CATEGORY: Shortstring = 'Mangrove';
 const SOURCE: Shortstring = 'Carbonable';
+
 
 #[inline(always)]
 fn get_sdgs_() -> Span<u8> {
-    //array![13, 14, 15].span()
-    array![4, 9, 10, 13, 14, 15].span()
-// array![].span()
+    array![8, 13, 14, 15].span()
 }
 
 #[inline(always)]
@@ -41,8 +38,7 @@ fn get_static_data() -> ProjectStaticData {
         category: array![CATEGORY].span(),
         source: array![SOURCE].span(),
         sdgs: get_sdgs_(),
-        certifier_component: 'ERS.svg',
-        background_component: 'Farmer.jpeg.b64'
+        background_component: 'Swamp.jpg.b64'
     }
 }
 

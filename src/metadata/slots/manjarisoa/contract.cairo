@@ -1,19 +1,18 @@
 #[starknet::contract]
-mod BanegasFarmUri {
+mod ManjarisoaUri {
     use starknet::get_contract_address;
 
     use metadata::metadata::slots::template::slot::generate_slot_uri;
     use metadata::metadata::slots::template::token::generate::generate_token_uri;
-    use metadata::metadata::slots::banegasfarm::data::get_static_data;
+    use metadata::metadata::slots::manjarisoa::data::get_static_data;
 
-    use metadata::interfaces::slot_metadata::ISlotMetadata;
+    use metadata::interfaces::slot_descriptor::ISlotDescriptor;
 
     #[storage]
     struct Storage {}
 
-    #[generate_trait]
     #[external(v0)]
-    impl BanegasFarmMetadata of IBanegasFarmUri {
+    impl ManjarisoaMetadata of ISlotDescriptor<ContractState> {
         fn construct_slot_uri(self: @ContractState, slot: u256) -> Span<felt252> {
             let contract = get_contract_address();
             super::Assert::compatible(contract);
