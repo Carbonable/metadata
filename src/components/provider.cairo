@@ -2,29 +2,31 @@
 mod ComponentProvider {
     use starknet::class_hash::ClassHash;
     use metadata::interfaces::component::{IComponentDispatcherTrait, IComponentLibraryDispatcher};
-
+    use metadata::interfaces::component_provider::IComponentProvider;
     #[storage]
     struct Storage {
-        components: LegacyMap<felt252, IComponentLibraryDispatcher>,
+        components: LegacyMap<felt252, ClassHash>,
     }
 
     #[constructor]
     fn constructor(ref self: ContractState) {}
 
-    #[generate_trait]
     #[external(v0)]
-    impl ComponentProvider of IComponentProvider {
-        // TODO: handle component dependencies?
-        // Add possibility to add arguments
+    impl ComponentProvider of IComponentProvider<ContractState> {
         fn register(ref self: ContractState, id: felt252, implementation: ClassHash) {
-            // TODO checks
-            self.components.write(id, IComponentLibraryDispatcher { class_hash: implementation });
+            let component_class: ClassHash = self.components.read(id);
+            assert(component_class.is_zero(), 'Component already registered');
+
+            // Idea: get id from component not as parameter
+            // Check that implementation has the correct interface
+
+            self.components.write(id, implementation);
         }
 
         fn get(self: @ContractState, id: felt252) -> IComponentLibraryDispatcher {
-            let component: IComponentLibraryDispatcher = self.components.read(id);
-            // TODO: checks
-            component
+            let component_class: ClassHash = self.components.read(id);
+            assert(!component_class.is_zero(), 'Component not registered');
+            IComponentLibraryDispatcher { class_hash: component_class }
         }
     }
 }

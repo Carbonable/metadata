@@ -1,5 +1,4 @@
 use alexandria_ascii::ToAsciiTrait;
-use serde::Serde;
 
 #[derive(Drop, Serde)]
 struct Properties {
