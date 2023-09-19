@@ -90,5 +90,4 @@ struct ProjectStaticData {
     source: String, // Source
     sdgs: Span<u8>,
     background_component: Shortstring,
-    certifier_component: Shortstring
 }
