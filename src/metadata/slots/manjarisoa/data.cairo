@@ -50,6 +50,17 @@ fn get_description_() -> Span<felt252> {
 
 #[inline(always)]
 fn add_description_(ref data: Array<felt252>) {
-    data.append('TODO: Add description');
+    data.append('Carbonable\'s Manjarisoa NFTs:');
+    data.append(' Join the forest-saving brigade');
+    data.append(' in Madagascar! Step into Madag');
+    data.append('ascar\'s vibrant forest symphon');
+    data.append('y! Your NFT not only champions');
+    data.append(' a biodiversity-rich mission bu');
+    data.append('t also earns you top-tier carbo');
+    data.append('n credits. Get ready for nature');
+    data.append('\'s grand performance, starring');
+    data.append(' lemurs, birds, and frogs. Natu');
+    data.append('re\'s encore is calling-be there');
+    data.append('!');
 }
 

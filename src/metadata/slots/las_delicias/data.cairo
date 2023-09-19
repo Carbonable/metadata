@@ -51,6 +51,16 @@ fn get_description_() -> Span<felt252> {
 
 #[inline(always)]
 fn add_description_(ref data: Array<felt252>) {
-    data.append('TODO: Add description');
+    data.append('Carbonable\'s Las Delicias NFTs');
+    data.append(': Dive into Nature\'s VIP Club!');
+    data.append(' Unlock a world of green and bl');
+    data.append('ue with Panama\'s mangrove rest');
+    data.append('orers! By securing an NFT, you');
+    data.append('\'re not only backing an eco-mi');
+    data.append('ssion, but you\'re also claimin');
+    data.append('g prime carbon credits. Stay ah');
+    data.append('ead, make waves, and grab yours');
+    data.append(' now. Nature\'s red carpet is r');
+    data.append('olling out!');
 }
 
