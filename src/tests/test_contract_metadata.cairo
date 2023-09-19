@@ -9,9 +9,9 @@ use metadata::components::component::logos::carbonable::Component as CarbonableL
 use metadata::tests::mocks::project::ProjectMock;
 use metadata::components::provider::ComponentProvider;
 
-use metadata::interfaces::contract_metadata::{
-    IContractMetadataDispatcher, IContractMetadataDispatcherTrait,
-    IContractMetadataLibraryDispatcher
+use metadata::interfaces::contract_descriptor::{
+    IContractDescriptorDispatcher, IContractDescriptorDispatcherTrait,
+    IContractDescriptorLibraryDispatcher
 };
 use metadata::interfaces::component_provider::{
     IComponentProviderDispatcher, IComponentProviderDispatcherTrait
@@ -42,7 +42,7 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
 fn test_construct_contract_uri() {
     let (components, project_address, account) = setup();
 
-    let metadata = IContractMetadataLibraryDispatcher {
+    let metadata = IContractDescriptorLibraryDispatcher {
         class_hash: ContractMetadata::TEST_CLASS_HASH.try_into().unwrap()
     };
 
