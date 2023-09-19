@@ -1109,7 +1109,7 @@ mod test {
         let args_props: Option<Span<felt252>> = Option::None;
         args_props.serialize(ref calldata);
         let data: Span<felt252> = Component::__external::render(calldata.span());
-        data.len().print();
+
         assert_eq(@data.len(), @0x424_u32, 'Couldn\'t get data');
         let mut arr: Array<felt252> = ArrayTrait::new();
     }
