@@ -147,7 +147,7 @@ fn test_construct_token_uri() {
     let uri: Span<felt252> = metadata.construct_token_uri(token_id);
     let mut uri_span = uri;
 
-    utils::tests::print_felt_span(uri_span);
+    // utils::tests::print_felt_span(uri_span);
 
     let first = uri_span.pop_front().unwrap();
     assert_eq(first, @'data:application/json,', 'Failed to fetch token uri');
