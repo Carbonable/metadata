@@ -1,6 +1,6 @@
 mod interfaces {
+    mod absorber;
     mod erc3525;
-    mod project;
     mod slot_descriptor;
     mod contract_descriptor;
     mod erc165;
@@ -37,11 +37,11 @@ mod components {
             mod sdg16;
             mod sdg17;
         }
-        mod jpegs {
+        mod backgrounds {
             mod farmer;
-            mod parrot;
-            mod swamp;
-            mod monkey;
+            mod bg_banegas_farm;
+            mod bg_las_delicias;
+            mod bg_manjarisoa;
         }
 
         mod sft {
