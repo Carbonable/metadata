@@ -1,4 +1,4 @@
-const NAME: felt252 = 'Swamp.jpg.b64';
+const NAME: felt252 = 'bg.LasDelicias.jpg.b64';
 
 #[starknet::contract]
 mod Component {
@@ -4777,9 +4777,7 @@ mod Component {
 
 #[cfg(test)]
 mod test {
-    use array::{ArrayTrait, SpanTrait};
     use debug::PrintTrait;
-    use traits::Into;
 
     use test::test_utils::assert_eq;
 
@@ -4802,6 +4800,5 @@ mod test {
         let data: Span<felt252> = Component::__external::render(calldata.span());
 
         assert_eq(@data.len(), @0x128f_u32, 'Couldn\'t get data');
-        let mut arr: Array<felt252> = ArrayTrait::new();
     }
 }
