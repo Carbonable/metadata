@@ -16,7 +16,7 @@ use metadata::interfaces::contract_descriptor::{
 use metadata::interfaces::component_provider::{
     IComponentProviderDispatcher, IComponentProviderDispatcherTrait
 };
-use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
+use metadata::interfaces::component_provider::{IProviderExtDispatcher, IProviderExtDispatcherTrait};
 use metadata::tests::utils;
 
 fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
@@ -30,8 +30,8 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
     };
     let project_address = utils::contracts::deploy(ProjectMock::TEST_CLASS_HASH, ArrayTrait::new());
 
-    provider.register('carbonable_logo', CarbonableLogo::TEST_CLASS_HASH.try_into().unwrap());
-    let project = IProjectDispatcher { contract_address: project_address };
+    provider.register('logo.Carbonable.svg', CarbonableLogo::TEST_CLASS_HASH.try_into().unwrap());
+    let project = IProviderExtDispatcher { contract_address: project_address };
     project.set_component_provider(provider.contract_address);
 
     (provider, project_address, account)

@@ -1,7 +1,7 @@
 use debug::PrintTrait;
 
 use starknet::{contract_address_const, ContractAddress};
-use starknet::testing::{set_caller_address, set_contract_address};
+use starknet::testing::{set_caller_address, set_contract_address, set_block_timestamp};
 use starknet::syscalls::deploy_syscall;
 
 use test::test_utils::assert_eq;
@@ -16,7 +16,7 @@ use metadata::interfaces::slot_descriptor::{
 use metadata::interfaces::component_provider::{
     IComponentProviderDispatcher, IComponentProviderDispatcherTrait
 };
-use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
+use metadata::interfaces::component_provider::{IProviderExtDispatcher, IProviderExtDispatcherTrait};
 
 use metadata::components::component::logos::carbonable::Component as CarbonableLogo;
 use metadata::components::component::logos::ers::Component as ERSLogo;
@@ -46,13 +46,17 @@ use metadata::components::component::sft::badges::badge_L::Component as SFTBadge
 use metadata::components::component::sft::badges::badge_M::Component as SFTBadgeM;
 use metadata::components::component::sft::badges::badge_S::Component as SFTBadgeS;
 use metadata::components::component::sft::badges::badge_XS::Component as SFTBadgeXS;
-use metadata::components::component::jpegs::farmer::Component as FarmerBackground;
-use metadata::components::component::jpegs::parrot::Component as ParrotBackground;
-use metadata::components::component::jpegs::swamp::Component as SwampBackground;
-use metadata::components::component::jpegs::monkey::Component as MonkeyBackground;
+use metadata::components::component::backgrounds::bg_banegas_farm::Component as ParrotBackground;
+use metadata::components::component::backgrounds::bg_las_delicias::Component as SwampBackground;
+use metadata::components::component::backgrounds::bg_manjarisoa::Component as MonkeyBackground;
 use metadata::components::provider::ComponentProvider;
 
 use metadata::tests::utils;
+use starknet::ClassHash;
+
+fn as_class(class: felt252) -> ClassHash {
+    class.try_into().unwrap()
+}
 
 fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
     let account: ContractAddress = contract_address_const::<1>();
@@ -65,43 +69,41 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
     };
     let project_address = utils::contracts::deploy(ProjectMock::TEST_CLASS_HASH, ArrayTrait::new());
 
-    provider.register('carbonable_logo', CarbonableLogo::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('Farmer.jpg.b64', FarmerBackground::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('Swamp.jpg.b64', SwampBackground::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('Parrot.jpg.b64', ParrotBackground::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('Monkey.jpg.b64', MonkeyBackground::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('ERS.svg', ERSLogo::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('logo.Carbonable.svg', as_class(CarbonableLogo::TEST_CLASS_HASH));
+    provider.register('bg.LasDelicias.jpg.b64', as_class(SwampBackground::TEST_CLASS_HASH));
+    provider.register('bg.BanegasFarm.jpg.b64', as_class(ParrotBackground::TEST_CLASS_HASH));
+    provider.register('bg.Manjarisoa.jpg.b64', as_class(MonkeyBackground::TEST_CLASS_HASH));
 
-    provider.register('SDG01.svg', SDG01::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG02.svg', SDG02::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG03.svg', SDG03::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG04.svg', SDG04::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG05.svg', SDG05::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG06.svg', SDG06::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG07.svg', SDG07::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG08.svg', SDG08::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG09.svg', SDG09::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG10.svg', SDG10::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG11.svg', SDG11::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG12.svg', SDG12::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG13.svg', SDG13::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG14.svg', SDG14::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG15.svg', SDG15::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG16.svg', SDG16::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SDG17.svg', SDG17::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('SDG01.svg', as_class(SDG01::TEST_CLASS_HASH));
+    provider.register('SDG02.svg', as_class(SDG02::TEST_CLASS_HASH));
+    provider.register('SDG03.svg', as_class(SDG03::TEST_CLASS_HASH));
+    provider.register('SDG04.svg', as_class(SDG04::TEST_CLASS_HASH));
+    provider.register('SDG05.svg', as_class(SDG05::TEST_CLASS_HASH));
+    provider.register('SDG06.svg', as_class(SDG06::TEST_CLASS_HASH));
+    provider.register('SDG07.svg', as_class(SDG07::TEST_CLASS_HASH));
+    provider.register('SDG08.svg', as_class(SDG08::TEST_CLASS_HASH));
+    provider.register('SDG09.svg', as_class(SDG09::TEST_CLASS_HASH));
+    provider.register('SDG10.svg', as_class(SDG10::TEST_CLASS_HASH));
+    provider.register('SDG11.svg', as_class(SDG11::TEST_CLASS_HASH));
+    provider.register('SDG12.svg', as_class(SDG12::TEST_CLASS_HASH));
+    provider.register('SDG13.svg', as_class(SDG13::TEST_CLASS_HASH));
+    provider.register('SDG14.svg', as_class(SDG14::TEST_CLASS_HASH));
+    provider.register('SDG15.svg', as_class(SDG15::TEST_CLASS_HASH));
+    provider.register('SDG16.svg', as_class(SDG16::TEST_CLASS_HASH));
+    provider.register('SDG17.svg', as_class(SDG17::TEST_CLASS_HASH));
 
-    provider.register('SFT.ProgressBar.svg', SFTProgressBar::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SFT.Status.svg', SFTStatus::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SFT.Border.svg', SFTBorder::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('SFT.ProgressBar.svg', as_class(SFTProgressBar::TEST_CLASS_HASH));
+    provider.register('SFT.Status.svg', as_class(SFTStatus::TEST_CLASS_HASH));
+    provider.register('SFT.Border.svg', as_class(SFTBorder::TEST_CLASS_HASH));
 
-    provider.register('SFT.BadgeInfty.svg', SFTBadgeInfty::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SFT.BadgeXL.svg', SFTBadgeXL::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SFT.BadgeL.svg', SFTBadgeL::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SFT.BadgeM.svg', SFTBadgeM::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SFT.BadgeS.svg', SFTBadgeS::TEST_CLASS_HASH.try_into().unwrap());
-    provider.register('SFT.BadgeXS.svg', SFTBadgeXS::TEST_CLASS_HASH.try_into().unwrap());
+    provider.register('SFT.BadgeInfty.svg', as_class(SFTBadgeInfty::TEST_CLASS_HASH));
+    provider.register('SFT.BadgeXL.svg', as_class(SFTBadgeXL::TEST_CLASS_HASH));
+    provider.register('SFT.BadgeL.svg', as_class(SFTBadgeL::TEST_CLASS_HASH));
+    provider.register('SFT.BadgeM.svg', as_class(SFTBadgeM::TEST_CLASS_HASH));
+    provider.register('SFT.BadgeS.svg', as_class(SFTBadgeS::TEST_CLASS_HASH));
+    provider.register('SFT.BadgeXS.svg', as_class(SFTBadgeXS::TEST_CLASS_HASH));
 
-    let project = IProjectDispatcher { contract_address: project_address };
+    let project = IProviderExtDispatcher { contract_address: project_address };
     project.set_component_provider(provider.contract_address);
 
     (provider, project_address, account)
@@ -139,10 +141,11 @@ fn test_construct_token_uri() {
     let token_id = 1_u256;
 
     let metadata = ISlotDescriptorLibraryDispatcher {
-        class_hash: BanegasFarmUri::TEST_CLASS_HASH.try_into().unwrap()
+        class_hash: LasDeliciasUri::TEST_CLASS_HASH.try_into().unwrap()
     };
 
     set_contract_address(project_address);
+    set_block_timestamp(1710425366);
 
     let uri: Span<felt252> = metadata.construct_token_uri(token_id);
     let mut uri_span = uri;
