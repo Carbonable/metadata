@@ -10,7 +10,7 @@ mod ContractMetadata {
     #[external(v0)]
     impl ContractMetadata of IContractDescriptor<ContractState> {
         fn construct_contract_uri(self: @ContractState) -> Span<felt252> {
-            generate_contract_uri()
+            generate_contract_uri(starknet::get_contract_address())
         }
     }
 }

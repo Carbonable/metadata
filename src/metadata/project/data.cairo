@@ -25,22 +25,20 @@ mod Description {
 }
 
 mod SVG {
+    use starknet::ContractAddress;
     use alexandria_data_structures::array_ext::ArrayTraitExt;
-
     use metadata::interfaces::component_provider::{
         IComponentProviderDispatcher, IComponentProviderDispatcherTrait
     };
     use metadata::interfaces::component::{IComponentLibraryDispatcher, IComponentDispatcherTrait};
-    use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
     use metadata::metadata::common::data::get_provider;
 
     #[inline(always)]
-    fn get_carbonable_logo() -> Span<felt252> {
-        // TODO: contract_address in params
-        let provider = get_provider(); // add contract address?
-        let logo_component = provider.get('carbonable_logo');
+    fn get_carbonable_logo(instance: ContractAddress) -> Span<felt252> {
+        let provider = get_provider(instance);
+        let logo_component = provider.get('logo.Carbonable.svg');
         let mut logo: Array<felt252> = array!['data:image/svg+xml,'];
-        let image: Array<felt252> = logo_component.render(Option::None);
+        let image: Array<felt252> = logo_component.unwrap().render(Option::None);
         logo.concat(@image);
 
         logo.span()
@@ -48,20 +46,19 @@ mod SVG {
 }
 
 mod Starknet {
-    use starknet::get_contract_address;
-    use array::{ArrayTrait, SpanTrait};
-    use metadata::interfaces::erc3525::{IERC3525Dispatcher, IERC3525DispatcherTrait};
-    use core::Into;
+    use starknet::{get_contract_address, ContractAddress};
+    use metadata::interfaces::erc3525::{
+        IERC3525Dispatcher, IERC3525DispatcherTrait, IERC3525SlotEnumerableDispatcher,
+        IERC3525SlotEnumerableDispatcherTrait
+    };
+    use alexandria_ascii::ToAsciiTrait;
 
     #[inline(always)]
-    fn get_project_count() -> Span<felt252> {
-        // TODO: contract_address in params
-        let project = IERC3525Dispatcher { contract_address: get_contract_address() };
-        let mut result: Array<felt252> = ArrayTrait::new();
-        let count: u256 = project.slotCount();
-        // TODO: to_ascii?
-        result.append(count.high.into());
-        result.append(count.low.into());
+    fn get_project_count(instance: ContractAddress) -> Span<felt252> {
+        let project = IERC3525SlotEnumerableDispatcher { contract_address: instance };
+        let mut result: Array<felt252> = Default::default();
+        let count: felt252 = project.slot_count().low.to_ascii();
+        result.append(count);
         result.span()
     }
 }
