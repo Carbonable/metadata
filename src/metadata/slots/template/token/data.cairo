@@ -33,7 +33,7 @@ struct TemplateData {
     asset_capacity: String,
     asset_area: String,
     // SVG specific data
-    // progress_u8: u8,
+    asset_area_formatted: String,
     progress: String,
     sdg_components: String,
     sdg_count: String,
@@ -53,6 +53,7 @@ fn generate(static: ProjectStaticData, storage: StorageData) -> TemplateData {
     let status: ProjectStatus = get_status_(storage);
     let size: AssetSize = get_asset_size_(static, storage);
     let null = array![''].span();
+
     TemplateData {
         project: static,
         token_name,
@@ -64,38 +65,53 @@ fn generate(static: ProjectStaticData, storage: StorageData) -> TemplateData {
         end_year: array![static.end_year.to_ascii()].span(),
         project_capacity: array![static.projected_cu.to_ascii()].span(),
         asset_capacity: get_asset_capacity_str_(storage, static),
+        asset_area_formatted: get_asset_area_formatted_str_(storage, static),
         asset_area: get_asset_area_str_(storage, static),
         progress: get_progress_str_(storage, static),
-        sdg_components: generate_sdgs_rows_(static.sdgs),
+        sdg_components: generate_sdgs_rows_(storage, static.sdgs),
         sdg_count: array![static.sdgs.len().to_ascii()].span(),
         badge_size: get_asset_size_(static, storage).to_string(),
-        background_image: get_background_image_(static),
+        background_image: get_background_image_(storage, static),
         progress_bar_component: generate_progress_bar_(storage, static),
         status_component: generate_status_(storage, static),
-        badge_component: generate_badge_(size),
-        border_component: generate_border_(size),
+        badge_component: generate_badge_(storage, size),
+        border_component: generate_border_(storage, size),
     }
 }
 
 #[inline(always)]
 fn get_status_(storage: StorageData) -> ProjectStatus {
-    // TODO
-
-    ProjectStatus::Stopped
+    let mut status: ProjectStatus = ProjectStatus::Upcoming;
+    if storage.timestamp < storage.start_time {
+        status = ProjectStatus::Upcoming;
+    } else if storage.timestamp < storage.final_time {
+        status = ProjectStatus::Live;
+    } else if storage.timestamp > storage.final_time {
+        status = ProjectStatus::Ended;
+    }
+    status
 }
 
 #[inline(always)]
 fn get_asset_size_(static: ProjectStaticData, storage: StorageData) -> AssetSize {
-    // TODO
-    AssetSize::L
+    // TODO: To compute when used
+    AssetSize::XL
 }
 
+use metadata::interfaces::component_provider::IComponentProviderDispatcher;
 #[inline(always)]
-fn get_component_instance(id: felt252, arg_props: Option<Span<felt252>>) -> String {
-    let provider = common_data::get_provider();
-    // TODO: handle error
+fn get_component_instance(
+    provider: IComponentProviderDispatcher, id: felt252, arg_props: Option<Span<felt252>>
+) -> String {
     let component = provider.get(id);
-    component.render(arg_props).span()
+    match component {
+        Option::Some(c) => {
+            c.render(arg_props).span()
+        },
+        Option::None => {
+            array![].span()
+        },
+    }
 }
 
 //
@@ -115,7 +131,9 @@ fn get_sdg_component_id_(num: u8) -> felt252 {
 }
 
 #[inline(always)]
-fn generate_sdg_(id: u8, num_sdgs: usize, index: usize) -> String {
+fn generate_sdg_(
+    provider: IComponentProviderDispatcher, id: u8, num_sdgs: usize, index: usize
+) -> String {
     // Draw at most 4 per row
     let mut data: Array<felt252> = Default::default();
 
@@ -123,9 +141,9 @@ fn generate_sdg_(id: u8, num_sdgs: usize, index: usize) -> String {
     let size: usize = 30 / n_rows;
     let mut dx: usize = 0;
     if n_rows > 1 {
-        dx = (46 - size) / 4;
+        dx = (46 - size) / 4 + 1;
     } else if num_sdgs > 1 {
-        dx = (46 - size) / (num_sdgs - 1);
+        dx = (46 - size) / (num_sdgs - 1) + 1;
     }
 
     let x = 246 + (dx * (index % 4));
@@ -176,7 +194,7 @@ fn generate_sdg_(id: u8, num_sdgs: usize, index: usize) -> String {
     let mut args: Array<felt252> = Default::default();
     props.serialize(ref args);
     let component_id = get_sdg_component_id_(id);
-    let image = get_component_instance(component_id, Option::Some(args.span()));
+    let image = get_component_instance(provider, component_id, Option::Some(args.span()));
 
     data.concat(image);
     data.append('</g>');
@@ -184,7 +202,7 @@ fn generate_sdg_(id: u8, num_sdgs: usize, index: usize) -> String {
     data.span()
 }
 
-fn generate_sdgs_rows_(sdgs: Span<u8>) -> String {
+fn generate_sdgs_rows_(storage: StorageData, sdgs: Span<u8>) -> String {
     let mut data: Array<felt252> = Default::default();
     let mut sdgs = sdgs;
     let size = sdgs.len();
@@ -192,7 +210,7 @@ fn generate_sdgs_rows_(sdgs: Span<u8>) -> String {
     loop {
         match sdgs.pop_front() {
             Option::Some(sdg_num) => {
-                let sdg_str = generate_sdg_(*sdg_num, size, i);
+                let sdg_str = generate_sdg_(storage.component_provider, *sdg_num, size, i);
                 data.concat(sdg_str);
             },
             Option::None => {
@@ -210,34 +228,51 @@ fn generate_sdgs_rows_(sdgs: Span<u8>) -> String {
 
 #[inline(always)]
 fn get_asset_capacity_str_(storage: StorageData, static: ProjectStaticData) -> String {
-    // TODO: Compute and handle units
     let project_value = storage.project_value;
     let asset_value = storage.asset_value;
-    let project_capacity = static.projected_cu; // TODO
+    let project_capacity: u256 = storage.final_absorption.into();
 
     if project_value.is_zero() {
         array!['N/A'].span()
     } else {
         let asset_capacity = (asset_value * project_capacity.into()) / project_value;
-        //  let asset_capacity = 123_u256;
-        // TODO: Handle decimals and units
         asset_capacity.to_ascii().span()
     }
 }
 
 #[inline(always)]
 fn get_asset_area_str_(storage: StorageData, static: ProjectStaticData) -> String {
-    // TODO: Compute and handle units
     let project_value = storage.project_value;
     let asset_value = storage.asset_value;
-    let project_area = static.area;
+    let project_area: u128 = static.area.into() * common_data::ONE_HA_IN_M2;
 
     if project_value.is_zero() {
         array!['N/A'].span()
     } else {
         let asset_area = (asset_value * project_area.into()) / project_value;
-        // TODO: Handle decimals and units
-        asset_area.to_ascii().span()
+        let asset_area: u128 = asset_area.try_into().unwrap();
+        array![asset_area.to_ascii()].span()
+    }
+}
+
+
+#[inline(always)]
+fn get_asset_area_formatted_str_(storage: StorageData, static: ProjectStaticData) -> String {
+    let project_value = storage.project_value;
+    let asset_value = storage.asset_value;
+    let project_area: u128 = static.area.into() * common_data::ONE_HA_IN_M2;
+
+    if project_value.is_zero() {
+        array!['N/A'].span()
+    } else {
+        let asset_area = (asset_value * project_area.into()) / project_value;
+        let asset_area: u128 = asset_area.try_into().unwrap();
+        if asset_area > common_data::ONE_HA_IN_M2 {
+            let asset_area = asset_area / common_data::ONE_HA_IN_M2;
+            array![asset_area.to_ascii(), 'ha'].span()
+        } else {
+            array![asset_area.to_ascii(), 'm&#xb2;'].span()
+        }
     }
 }
 
@@ -246,13 +281,10 @@ fn get_asset_area_str_(storage: StorageData, static: ProjectStaticData) -> Strin
 //
 #[inline(always)]
 fn get_progress_(storage: StorageData, static: ProjectStaticData) -> u8 {
-    // TODO: fetch from contract ???
-    let project_cu = static.projected_cu;
-    // let current_cu = storage_data.current_absorption;
-    let current_cu: u256 = project_cu.into() * 63 / 100;
-    if !project_cu.is_zero() {
-        let res = 100_u256 * current_cu / project_cu.into();
-        // TODO: check result is < 100 ?
+    let project_capacity = storage.final_absorption;
+    let current_capacity = storage.current_absorption;
+    if !project_capacity.is_zero() {
+        let res = 100_u256 * current_capacity.into() / project_capacity.into();
         let res: u8 = res.try_into().unwrap();
         res
     } else {
@@ -345,7 +377,9 @@ fn generate_progress_bar_(storage: StorageData, static: ProjectStaticData) -> St
 
     let mut args: Array<felt252> = Default::default();
     props.serialize(ref args);
-    let image = get_component_instance(PROGRESS_BAR_COMP_ID, Option::Some(args.span()));
+    let image = get_component_instance(
+        storage.component_provider, PROGRESS_BAR_COMP_ID, Option::Some(args.span())
+    );
 
     data.concat(image);
 
@@ -398,13 +432,13 @@ fn generate_status_(storage: StorageData, static: ProjectStaticData) -> String {
 
     data.append('<defs><clipPath id=\\"status_bl');
     data.append('ur_clip\\"><rect width=\\"');
-    data.append(props.r1_width.to_ascii());
+    data.append((props.r1_width - 2).to_ascii());
     data.append('\\"');
     data.append(' height=\\"20\\"');
     match props.x {
         Option::Some(x) => {
             data.append(' x=\\"');
-            data.append(x.to_ascii());
+            data.append((x + 1).to_ascii());
             data.append('\\"');
         },
         Option::None => (),
@@ -412,7 +446,7 @@ fn generate_status_(storage: StorageData, static: ProjectStaticData) -> String {
     match props.y {
         Option::Some(y) => {
             data.append(' y=\\"');
-            data.append(y.to_ascii());
+            data.append((y + 1).to_ascii());
             data.append('\\"');
         },
         Option::None => (),
@@ -459,7 +493,9 @@ fn generate_status_(storage: StorageData, static: ProjectStaticData) -> String {
 
     let mut args: Array<felt252> = Default::default();
     props.serialize(ref args);
-    let image = get_component_instance(STATUS_COMP_ID, Option::Some(args.span()));
+    let image = get_component_instance(
+        storage.component_provider, STATUS_COMP_ID, Option::Some(args.span())
+    );
 
     data.concat(image);
 
@@ -471,7 +507,7 @@ fn generate_status_(storage: StorageData, static: ProjectStaticData) -> String {
 // 
 
 #[inline(always)]
-fn generate_badge_(size: AssetSize) -> String {
+fn generate_badge_(storage: StorageData, size: AssetSize) -> String {
     let x = 20;
     let y = 104;
     let props: svg::Properties = svg::Properties {
@@ -488,7 +524,9 @@ fn generate_badge_(size: AssetSize) -> String {
         AssetSize::XL => 'SFT.BadgeXL.svg',
         AssetSize::Infinite => 'SFT.BadgeInfty.svg',
     };
-    let image = get_component_instance(badge_id, Option::Some(args.span()));
+    let image = get_component_instance(
+        storage.component_provider, badge_id, Option::Some(args.span())
+    );
 
     image
 }
@@ -563,19 +601,23 @@ fn get_border_props_(size: AssetSize) -> sft::border::Properties {
 }
 
 #[inline(always)]
-fn generate_border_(size: AssetSize) -> String {
+fn generate_border_(storage: StorageData, size: AssetSize) -> String {
     let mut args: Array<felt252> = Default::default();
     let props = get_border_props_(size);
     props.serialize(ref args);
-    let image = get_component_instance(BORDER_COMP_ID, Option::Some(args.span()));
+    let image = get_component_instance(
+        storage.component_provider, BORDER_COMP_ID, Option::Some(args.span())
+    );
 
     image
 }
 
 // Background Image
-fn get_background_image_(static: ProjectStaticData) -> String {
+fn get_background_image_(storage: StorageData, static: ProjectStaticData) -> String {
     let args: Option<Span<felt252>> = Option::None;
-    let image = get_component_instance(static.background_component, args);
+    let image = get_component_instance(
+        storage.component_provider, static.background_component, args
+    );
 
     image
 }
