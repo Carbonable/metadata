@@ -23,10 +23,13 @@ mod ComponentProvider {
             self.components.write(id, implementation);
         }
 
-        fn get(self: @ContractState, id: felt252) -> IComponentLibraryDispatcher {
+        fn get(self: @ContractState, id: felt252) -> Option<IComponentLibraryDispatcher> {
             let component_class: ClassHash = self.components.read(id);
-            assert(!component_class.is_zero(), 'Component not registered');
-            IComponentLibraryDispatcher { class_hash: component_class }
+            if component_class.is_zero() {
+                return Option::None;
+            } else {
+                return Option::Some(IComponentLibraryDispatcher { class_hash: component_class });
+            }
         }
     }
 }
