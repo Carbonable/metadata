@@ -37,7 +37,7 @@ fn get_static_data() -> ProjectStaticData {
         category: array![CATEGORY].span(),
         source: array![SOURCE].span(),
         sdgs: get_sdgs_(),
-        background_component: 'Monkey.jpg.b64'
+        background_component: 'bg.Manjarisoa.jpg.b64'
     }
 }
 
