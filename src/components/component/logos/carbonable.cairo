@@ -1,5 +1,4 @@
-const NAME: felt252 = 'Carbonable_Logo.svg';
-
+const NAME: felt252 = 'logo.Carbonable.svg';
 
 #[starknet::contract]
 mod Component {
@@ -88,9 +87,7 @@ mod Component {
 
 #[cfg(test)]
 mod test {
-    use array::{ArrayTrait, SpanTrait};
     use debug::PrintTrait;
-    use traits::Into;
 
     use test::test_utils::assert_eq;
 
@@ -118,6 +115,5 @@ mod test {
         let data: Span<felt252> = Component::__external::render(calldata.span());
 
         assert_eq(@data.len(), @61_u32, 'Couldn\'t get data');
-        let mut arr: Array<felt252> = ArrayTrait::new();
     }
 }

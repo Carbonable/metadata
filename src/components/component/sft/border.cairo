@@ -145,9 +145,7 @@ mod Component {
 
 #[cfg(test)]
 mod test {
-    use array::{ArrayTrait, SpanTrait};
     use debug::PrintTrait;
-    use traits::Into;
 
     use test::test_utils::assert_eq;
 
@@ -177,6 +175,5 @@ mod test {
         // utils::tests::print_felt_span(data);
 
         assert_eq(@data.len(), @0x1a_u32, 'Couldn\'t get data');
-        let mut arr: Array<felt252> = ArrayTrait::new();
     }
 }
