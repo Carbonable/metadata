@@ -1,9 +1,11 @@
 #[starknet::contract]
 mod ProjectMock {
     use starknet::ContractAddress;
-    use starknet::get_caller_address;
-    use metadata::interfaces::project::IProject;
+    use starknet::{get_caller_address, get_block_timestamp};
+    use metadata::interfaces::absorber::IAbsorber;
+    use metadata::interfaces::component_provider::IProviderExt;
     use metadata::interfaces::erc3525::IERC3525;
+    use metadata::interfaces::erc3525::IERC3525SlotEnumerable;
     use metadata::interfaces::erc165::IERC165;
     use metadata::metadata::common::data::{
         IERC165_ID, IERC3525_ID, IERC3525_METADATA_ID, IERC721_ID, IERC721_METADATA_ID
@@ -15,11 +17,7 @@ mod ProjectMock {
     }
 
     #[external(v0)]
-    impl ProjectMockImpl of IProject<ContractState> {
-        fn getProjectValue(self: @ContractState, slot: u256) -> u256 {
-            31337_000000_u256
-        }
-
+    impl MockProviderImpl of IProviderExt<ContractState> {
         fn get_component_provider(self: @ContractState) -> ContractAddress {
             self.provider.read()
         }
@@ -28,6 +26,49 @@ mod ProjectMock {
             self.provider.write(provider)
         }
     }
+
+    #[external(v0)]
+    impl MockAbsorberImpl of IAbsorber<ContractState> {
+        fn get_start_time(self: @ContractState, slot: u256) -> u64 {
+            1693284726
+        }
+        fn get_final_time(self: @ContractState, slot: u256) -> u64 {
+            1793289203
+        }
+        fn get_times(self: @ContractState, slot: u256) -> Span<u64> {
+            Default::default().span()
+        }
+        fn get_absorptions(self: @ContractState, slot: u256) -> Span<u64> {
+            Default::default().span()
+        }
+        fn get_absorption(self: @ContractState, slot: u256, time: u64) -> u64 {
+            100
+        }
+        fn get_current_absorption(self: @ContractState, slot: u256) -> u64 {
+            778
+        }
+        fn get_final_absorption(self: @ContractState, slot: u256) -> u64 {
+            4096
+        }
+        fn get_project_value(self: @ContractState, slot: u256) -> u256 {
+            42_000 * 1_000_000
+        }
+        fn get_ton_equivalent(self: @ContractState, slot: u256) -> u64 {
+            1_000_000
+        }
+        fn is_setup(self: @ContractState, slot: u256) -> bool {
+            true
+        }
+        fn set_absorptions(
+            ref self: ContractState,
+            slot: u256,
+            times: Span<u64>,
+            absorptions: Span<u64>,
+            ton_equivalent: u64
+        ) {}
+        fn set_project_value(ref self: ContractState, slot: u256, project_value: u256) {}
+    }
+
 
     #[external(v0)]
     impl ERC165Impl of IERC165<ContractState> {
@@ -42,34 +83,68 @@ mod ProjectMock {
 
     #[external(v0)]
     impl ERC3525Impl of IERC3525<ContractState> {
-        fn valueDecimals(self: @ContractState) -> felt252 {
+        fn value_decimals(self: @ContractState) -> u8 {
             6
         }
 
-        fn valueOf(self: @ContractState, tokenId: u256) -> u256 {
-            42_u256
+        fn value_of(self: @ContractState, token_id: u256) -> u256 {
+            1337 * 1_000_000
         }
 
-        fn slotOf(self: @ContractState, tokenId: u256) -> u256 {
+        fn slot_of(self: @ContractState, token_id: u256) -> u256 {
             1_u256
         }
 
-        fn approveValue(ref self: ContractState, tokenId: u256, operator: felt252, value: u256) {}
+        fn approve_value(
+            ref self: ContractState, token_id: u256, operator: ContractAddress, value: u256
+        ) {}
 
-        fn allowance(self: @ContractState, tokenId: u256, operator: felt252) -> u256 {
+        fn allowance(self: @ContractState, token_id: u256, operator: ContractAddress) -> u256 {
             10000000000000000000_u256
         }
 
-        fn transferValueFrom(
-            ref self: ContractState, fromTokenId: u256, toTokenId: u256, to: felt252, value: u256
+        fn transfer_value_from(
+            ref self: ContractState,
+            from_token_id: u256,
+            to_token_id: u256,
+            to: ContractAddress,
+            value: u256
         ) -> u256 {
             1_u256
         }
+    }
 
-        //
-        // 721 Enumerable
-        //
 
+    //
+    // Slot Enumerable
+    //
+    #[external(v0)]
+    impl MockSlotEnumImpl of IERC3525SlotEnumerable<ContractState> {
+        fn slot_count(self: @ContractState) -> u256 {
+            1_u256
+        }
+
+        fn slot_by_index(self: @ContractState, index: u256) -> u256 {
+            index
+        }
+
+        fn token_supply_in_slot(self: @ContractState, slot: u256) -> u256 {
+            10_u256
+        }
+
+        fn token_in_slot_by_index(self: @ContractState, slot: u256, index: u256) -> u256 {
+            index + slot
+        }
+    }
+
+
+    //
+    // Others
+    //
+
+    #[generate_trait]
+    #[external(v0)]
+    impl MockImpl of OtherTrait {
         fn name(self: @ContractState) -> felt252 {
             'mock project'
         }
@@ -121,7 +196,6 @@ mod ProjectMock {
         }
 
         fn tokenURI(self: @ContractState, tokenId: u256) -> Span<felt252> {
-            // TODO
             Default::default().span()
         }
 
@@ -130,12 +204,10 @@ mod ProjectMock {
         //
 
         fn contractURI(self: @ContractState,) -> Span<felt252> {
-            // TODO
             Default::default().span()
         }
 
         fn slotURI(self: @ContractState, slot: u256) -> Span<felt252> {
-            // TODO
             Default::default().span()
         }
 
@@ -206,7 +278,7 @@ mod ProjectMock {
         fn merge(ref self: ContractState, tokenIds: Array<u256>) {}
 
         fn totalValue(ref self: ContractState, slot: u256) -> u256 {
-            self.getProjectValue(slot)
+            4096
         }
     }
 }
