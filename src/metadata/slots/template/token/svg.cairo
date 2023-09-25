@@ -83,8 +83,8 @@ fn print_surface_details(ref svg: Array<felt252>, data: @Data) {
     svg.append('\\"#EBECF0\\" font-size=\\"14\\');
     svg.append('" font-weight=\\"bold\\"><tspan');
     svg.append(' x=\\"24\\" y=\\"333.091\\">');
-    svg.concat(*data.asset_area);
-    svg.append('m&#xb2;</tspan></text></g>');
+    svg.concat(*data.asset_area_formatted);
+    svg.append('</tspan></text></g>');
 }
 #[inline(always)]
 fn print_type_details(ref svg: Array<felt252>, data: @Data) {
@@ -269,7 +269,6 @@ fn print_head_sft(ref svg: Array<felt252>, data: @Data) {
     print_status_component(ref svg, data);
 
     print_head_main_info(ref svg, data);
-    svg.concat(*data.badge_component);
     svg.append('</g>');
 }
 
