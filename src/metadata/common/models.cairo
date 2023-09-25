@@ -1,14 +1,22 @@
 use alexandria_ascii::ToAsciiArrayTrait;
 
+use metadata::interfaces::component_provider::IComponentProviderDispatcher;
+
 type Shortstring = felt252;
 type String = Span<Shortstring>;
 
 #[derive(Copy, Drop)]
 struct StorageData {
+    component_provider: IComponentProviderDispatcher,
     asset_value: u256,
-    total_value: u256,
     project_value: u256,
     slot: u256,
+    current_absorption: u64,
+    final_absorption: u64,
+    ton_equivalent: u64,
+    start_time: u64,
+    final_time: u64,
+    timestamp: u64,
 }
 
 #[derive(Copy, Drop)]
@@ -83,7 +91,6 @@ struct ProjectStaticData {
     end_month: u8, // TODO: remove and dynamize
     duration_in_years: u32, // TODO: remove and dynamize
     projected_cu: u128, // TODO: remove and dynamize
-    // status: ProjectStatus, // TODO: remove and dynamize
     color: String, // Color
     type_: String, // Type
     category: String, // Category

@@ -1,24 +1,42 @@
 use starknet::ContractAddress;
 use metadata::metadata::common::models::StorageData;
 use metadata::interfaces::erc3525::{IERC3525Dispatcher, IERC3525DispatcherTrait};
-use metadata::interfaces::project::{IProjectDispatcher, IProjectDispatcherTrait};
+use metadata::interfaces::absorber::{IAbsorberDispatcher, IAbsorberDispatcherTrait};
+use metadata::interfaces::component_provider::{
+    IProviderExtDispatcher, IProviderExtDispatcherTrait, IComponentProviderDispatcher
+};
 
 #[inline(always)]
 fn fetch_data(contract_address: ContractAddress, token_id: u256) -> StorageData {
     let erc3525 = IERC3525Dispatcher { contract_address };
-    let project = IProjectDispatcher { contract_address };
-    let slot = erc3525.slotOf(token_id);
-    let total_value = erc3525.totalValue(slot);
-    let mut asset_value = erc3525.valueOf(token_id);
-    let project_value = project.getProjectValue(slot);
+    let slot = erc3525.slot_of(token_id);
+    let mut asset_value = erc3525.value_of(token_id);
 
-    // TODO: Remove this (only for testing)
-    asset_value = project_value * 19 / 100000000;
+    let absorber = IAbsorberDispatcher { contract_address };
+    let project_value = absorber.get_project_value(slot);
+    let current_absorption = absorber.get_current_absorption(slot);
+    let final_absorption = absorber.get_final_absorption(slot);
+    let ton_equivalent = absorber.get_ton_equivalent(slot);
+    let start_time = absorber.get_start_time(slot);
+    let final_time = absorber.get_final_time(slot);
 
-    // let current_absorption = project.getCurrentAbsorption(slot);
-    // let final_absorption = project.get_final_absorption(slot);
-    // let ton_equivalent = project.get_ton_equivalent(slot);
-    // let status = project.get_status(slot);
+    let timestamp = starknet::get_block_timestamp();
 
-    StorageData { asset_value, total_value, project_value, slot }
+    let project = IProviderExtDispatcher { contract_address };
+    let component_provider = IComponentProviderDispatcher {
+        contract_address: project.get_component_provider()
+    };
+
+    StorageData {
+        component_provider,
+        asset_value,
+        project_value,
+        slot,
+        current_absorption,
+        final_absorption,
+        ton_equivalent,
+        start_time,
+        final_time,
+        timestamp
+    }
 }
