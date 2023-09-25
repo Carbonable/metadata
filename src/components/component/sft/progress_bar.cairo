@@ -2,15 +2,14 @@ const NAME: felt252 = 'SFT.ProgressBar.svg';
 
 use metadata::metadata::common::models::Shortstring;
 
-// TODO: generalize
+// Could be generalized
 #[derive(Serde, Drop, Default, Copy)]
 enum Stroke {
     #[default]
     Color: felt252,
     Gradient: Span<(felt252, felt252)>
 }
-// TODO: Generalize component
-// add width, height, ...
+
 #[derive(Serde, Drop, Copy)]
 struct Properties {
     x: Option<usize>,
@@ -214,9 +213,7 @@ mod Component {
 
 #[cfg(test)]
 mod test {
-    use array::{ArrayTrait, SpanTrait};
     use debug::PrintTrait;
-    use traits::Into;
 
     use test::test_utils::assert_eq;
 
@@ -246,6 +243,5 @@ mod test {
         // utils::tests::print_felt_span(data);
 
         assert_eq(@data.len(), @0x15_u32, 'Couldn\'t get data');
-        let mut arr: Array<felt252> = ArrayTrait::new();
     }
 }
