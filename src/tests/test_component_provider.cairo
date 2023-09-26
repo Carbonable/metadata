@@ -19,10 +19,12 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress) {
     let account: ContractAddress = contract_address_const::<1>();
     set_caller_address(account);
 
+    let mut calldata: Array<felt252> = Default::default();
+    let owner = utils::contracts::owner();
+    owner.serialize(ref calldata);
+
     let provider = IComponentProviderDispatcher {
-        contract_address: utils::contracts::deploy(
-            ComponentProvider::TEST_CLASS_HASH, ArrayTrait::new()
-        )
+        contract_address: utils::contracts::deploy(ComponentProvider::TEST_CLASS_HASH, calldata)
     };
 
     (provider, account)
@@ -32,7 +34,9 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress) {
 #[available_gas(2500000)]
 fn test_component_provider() {
     let (provider, account) = setup();
-    provider.register('logo.Carbonable.svg', CarbonableLogo::TEST_CLASS_HASH.try_into().unwrap());
+
+    set_contract_address(utils::contracts::owner());
+    provider.register(CarbonableLogo::TEST_CLASS_HASH.try_into().unwrap());
 
     let logo_component: IComponentLibraryDispatcher = provider.get('logo.Carbonable.svg').unwrap();
     let logo: Span<felt252> = logo_component.render(Option::None).span();
