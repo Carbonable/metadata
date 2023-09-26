@@ -4,7 +4,7 @@ use metadata::interfaces::component::IComponentLibraryDispatcher;
 
 #[starknet::interface]
 trait IComponentProvider<T> {
-    fn register(ref self: T, id: felt252, implementation: ClassHash);
+    fn register(ref self: T, implementation: ClassHash);
     fn get(self: @T, id: felt252) -> Option<IComponentLibraryDispatcher>;
 }
 
