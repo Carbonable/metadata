@@ -1,4 +1,3 @@
-use array::ArrayTrait;
 use starknet::ContractAddress;
 use metadata::metadata::common::models::ProjectStaticData;
 
