@@ -7,11 +7,6 @@ use metadata::interfaces::component_provider::{IProviderExtDispatcher, IProvider
 
 const ONE_HA_IN_M2: u128 = 10000;
 
-const IERC165_ID: u32 = 0x01ffc9a7;
-const IERC3525_ID: u32 = 0x0d912442;
-const IERC3525_METADATA_ID: u32 = 0x0e89341c;
-const IERC721_ID: u32 = 0x80ac58cd;
-const IERC721_METADATA_ID: u32 = 0x5b5e139f;
 
 #[inline(always)]
 fn get_external_url() -> Span<felt252> {
