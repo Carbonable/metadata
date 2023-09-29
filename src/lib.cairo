@@ -1,9 +1,7 @@
 mod interfaces {
     mod absorber;
-    mod erc3525;
     mod slot_descriptor;
     mod contract_descriptor;
-    mod erc165;
     mod component;
     mod component_provider;
 }
@@ -63,6 +61,7 @@ mod components {
 
 mod metadata {
     mod common {
+        mod assert_helper;
         mod data;
         mod models;
         mod utils;
