@@ -38,7 +38,9 @@ fn add_metadata_attributes_(ref metadata: JsonMetadata, data: @TemplateData) {
     metadata.add_attribute(Number, 'Total Carbon Units'.to_span(), *data.project_capacity);
 
     // Token attributes
-    metadata.add_attribute(Number, 'Asset avg. annual capacity'.to_span(), *data.asset_capacity);
+    //metadata.add_attribute(Number, 'Asset avg. annual capacity'.to_span(), *data.asset_capacity);
+
+    // TODO: Add Projected and Audited?
     let attr_name = ('Asset area (m' * 0x100 + 0xB2) * 0x100 + ')';
     metadata.add_attribute(Number, attr_name.to_span(), *data.asset_area);
 }
