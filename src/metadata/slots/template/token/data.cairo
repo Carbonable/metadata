@@ -64,7 +64,7 @@ fn generate(static: ProjectStaticData, storage: StorageData) -> TemplateData {
         project_area: array![static.area.to_ascii()].span(),
         end_year: array![static.end_year.to_ascii()].span(),
         project_capacity: array![static.projected_cu.to_ascii()].span(),
-        asset_capacity: get_asset_capacity_str_(storage, static),
+        asset_capacity: get_asset_capacity_formatted_str_(storage, static),
         asset_area_formatted: get_asset_area_formatted_str_(storage, static),
         asset_area: get_asset_area_str_(storage, static),
         progress: get_progress_str_(storage, static),
@@ -222,9 +222,26 @@ fn generate_sdgs_rows_(storage: StorageData, sdgs: Span<u8>) -> String {
     data.span()
 }
 
-//
-// Json data
-//
+#[inline(always)]
+fn get_asset_capacity_formatted_str_(storage: StorageData, static: ProjectStaticData) -> String {
+    let project_value = storage.project_value;
+    let asset_value = storage.asset_value;
+    let project_capacity: u256 = storage.final_absorption.into();
+
+    if project_value.is_zero() {
+        array!['N/A'].span()
+    } else {
+        let asset_capacity = (asset_value * project_capacity.into()) / project_value;
+        let asset_capacity: u128 = asset_capacity.try_into().unwrap();
+        if asset_capacity < 1000 {
+            array![asset_capacity.to_ascii(), 'g'].span()
+        } else if asset_capacity < 1000000 {
+            array![(asset_capacity / 1000).to_ascii(), 'kg'].span()
+        } else {
+            array![(asset_capacity / 1_000_000).to_ascii(), 't'].span()
+        }
+    }
+}
 
 #[inline(always)]
 fn get_asset_capacity_str_(storage: StorageData, static: ProjectStaticData) -> String {
