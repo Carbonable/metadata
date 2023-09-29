@@ -4,16 +4,30 @@ mod ProjectMock {
     use starknet::{get_caller_address, get_block_timestamp};
     use metadata::interfaces::absorber::IAbsorber;
     use metadata::interfaces::component_provider::IProviderExt;
-    use metadata::interfaces::erc3525::IERC3525;
-    use metadata::interfaces::erc3525::IERC3525SlotEnumerable;
-    use metadata::interfaces::erc165::IERC165;
-    use metadata::metadata::common::data::{
-        IERC165_ID, IERC3525_ID, IERC3525_METADATA_ID, IERC721_ID, IERC721_METADATA_ID
+
+    use cairo_erc_3525::interface::IERC3525;
+    use cairo_erc_3525::extensions::slotenumerable::interface::{
+        IERC3525SlotEnumerable, IERC3525_SLOT_ENUMERABLE_ID
     };
+    use cairo_erc_3525::extensions::metadata::interface::IERC3525_METADATA_ID;
+    use cairo_erc_3525::interface::IERC3525_ID;
+
+    use openzeppelin::token::erc721::interface::{IERC721_ID, IERC721_METADATA_ID};
+    use openzeppelin::introspection::interface::{ISRC5, ISRC5Camel};
+    use openzeppelin::introspection::src5::SRC5;
 
     #[storage]
     struct Storage {
         provider: ContractAddress,
+    }
+    #[constructor]
+    fn constructor(ref self: ContractState,) {
+        let mut unsafe_state = SRC5::unsafe_new_contract_state();
+        SRC5::InternalImpl::register_interface(ref unsafe_state, IERC721_ID);
+        SRC5::InternalImpl::register_interface(ref unsafe_state, IERC721_METADATA_ID);
+        SRC5::InternalImpl::register_interface(ref unsafe_state, IERC3525_ID);
+        SRC5::InternalImpl::register_interface(ref unsafe_state, IERC3525_METADATA_ID);
+        SRC5::InternalImpl::register_interface(ref unsafe_state, IERC3525_SLOT_ENUMERABLE_ID);
     }
 
     #[external(v0)]
@@ -42,13 +56,13 @@ mod ProjectMock {
             Default::default().span()
         }
         fn get_absorption(self: @ContractState, slot: u256, time: u64) -> u64 {
-            100
+            100 * 1_000_000
         }
         fn get_current_absorption(self: @ContractState, slot: u256) -> u64 {
-            778
+            778 * 1_000_000
         }
         fn get_final_absorption(self: @ContractState, slot: u256) -> u64 {
-            4096
+            4096 * 1_000_000
         }
         fn get_project_value(self: @ContractState, slot: u256) -> u256 {
             42_000 * 1_000_000
@@ -69,17 +83,31 @@ mod ProjectMock {
         fn set_project_value(ref self: ContractState, slot: u256, project_value: u256) {}
     }
 
-
     #[external(v0)]
-    impl ERC165Impl of IERC165<ContractState> {
-        fn supportsInterface(self: @ContractState, interface_id: u32) -> bool {
-            interface_id == IERC165_ID
-                || interface_id == IERC721_ID
-                || interface_id == IERC721_METADATA_ID
-                || interface_id == IERC3525_ID
-                || interface_id == IERC3525_METADATA_ID
+    impl SRC5Impl of ISRC5<ContractState> {
+        fn supports_interface(self: @ContractState, interface_id: felt252) -> bool {
+            let unsafe_state = SRC5::unsafe_new_contract_state();
+            SRC5::SRC5Impl::supports_interface(@unsafe_state, interface_id)
         }
     }
+
+    #[external(v0)]
+    impl SRC5CamelImpl of ISRC5Camel<ContractState> {
+        fn supportsInterface(self: @ContractState, interfaceId: felt252) -> bool {
+            self.supports_interface(interfaceId)
+        }
+    }
+
+    // #[external(v0)]
+    // impl ERC165Impl of IERC165<ContractState> {
+    //     fn supportsInterface(self: @ContractState, interface_id: u32) -> bool {
+    //         interface_id == IERC165_ID
+    //             || interface_id == IERC721_ID
+    //             || interface_id == IERC721_METADATA_ID
+    //             || interface_id == IERC3525_ID
+    //             || interface_id == IERC3525_METADATA_ID
+    //     }
+    // }
 
     #[external(v0)]
     impl ERC3525Impl of IERC3525<ContractState> {
@@ -88,7 +116,7 @@ mod ProjectMock {
         }
 
         fn value_of(self: @ContractState, token_id: u256) -> u256 {
-            1337 * 1_000_000
+            369 * 1_000_000
         }
 
         fn slot_of(self: @ContractState, token_id: u256) -> u256 {

@@ -1,10 +1,11 @@
 use starknet::ContractAddress;
 use metadata::metadata::common::models::StorageData;
-use metadata::interfaces::erc3525::{IERC3525Dispatcher, IERC3525DispatcherTrait};
 use metadata::interfaces::absorber::{IAbsorberDispatcher, IAbsorberDispatcherTrait};
 use metadata::interfaces::component_provider::{
     IProviderExtDispatcher, IProviderExtDispatcherTrait, IComponentProviderDispatcher
 };
+
+use cairo_erc_3525::interface::{IERC3525Dispatcher, IERC3525DispatcherTrait};
 
 #[inline(always)]
 fn fetch_data(contract_address: ContractAddress, token_id: u256) -> StorageData {
