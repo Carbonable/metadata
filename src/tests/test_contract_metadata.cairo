@@ -54,5 +54,7 @@ fn test_construct_contract_uri() {
     let uri: Span<felt252> = metadata.construct_contract_uri();
     let mut uri_span = uri;
 
+    utils::tests::print_felt_span(uri);
+
     assert_eq(uri_span.pop_back().unwrap(), @'}', 'Failed to fetch contract uri');
 }
