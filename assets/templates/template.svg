@@ -1,0 +1,157 @@
+<svg id="sft_template" viewBox="0 0 316 360" fill="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        @import url(https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700);
+        @import url(https://fonts.googleapis.com/css2?family=Inter:wght@700&display=block&text=%E2%88%9E);
+
+        svg text {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+            font-family: Inter;
+        }
+    </style>
+
+    <g id="sft" style="white-space: pre">
+        <g id="card">
+            <g id="card_container" filter="url(#filter0_d)" clip-path="url(#clip0)">
+                <g id="background_image" transform="matrix(-1 0 0 1 312 3)">
+                    <rect width="308" height="353" rx="8" fill="url(#pattern0)" />
+                    <rect width="308" height="353" rx="8" fill="url(#paint0_linear)" />
+                </g>
+                <g id="card_content">
+                    <rect x="12" y="231" width="292" height="55" rx="8" fill="#0D0D0D" fill-opacity="0.7" />
+                    <g id="card_row" letter-spacing="0em">
+                        <text fill="#D0D1D6" fill-opacity="0.8" font-size="11" font-weight="500">
+                            <tspan x="28" y="252.5">Carbon units</tspan>
+                        </text>
+                        <text fill="#EBECF0" font-size="14" font-weight="bold">
+                            <tspan x="28" y="272.091">@@asset_total_capacity@@</tspan>
+                        </text>
+                        <text fill="#D0D1D6" fill-opacity="0.8" font-size="11" font-weight="500">
+                            <tspan x="117.5" y="252.5">Ends in</tspan>
+                        </text>
+                        <text fill="#EBECF0" font-size="14" font-weight="bold">
+                            <tspan x="117.5" y="272.1" dynamic="var_name">@@end_year@@</tspan>
+                        </text>
+                    </g>
+                    <g id="card_progress">
+                        <text fill="#EFECEA" font-size="14" font-weight="600" letter-spacing="0em">
+                            <tspan x="287" y="256.1" text-anchor="end">@@progress@@%</tspan>
+                        </text>
+                        @@progress_bar_component@@
+                    </g>
+                    <rect x="12.5" y="231.5" width="291" height="54" rx="7.5" stroke="#D0D1D6" stroke-opacity="0.1" />
+                </g>
+                <g id="bottom">
+                    <g id="details" letter-spacing="0em">
+                        <g id="surface_details">
+                            <text fill="#D0D1D6" fill-opacity="0.8" font-size="10" font-weight="500">
+                                <tspan x="24" y="315.636">Surface</tspan>
+                            </text>
+                            <text fill="#EBECF0" font-size="14" font-weight="bold">
+                                <tspan x="24" y="333.091">@@asset_area@@m&#xb2;</tspan>
+                            </text>
+                        </g>
+                        <g id="type_details">
+                            <text fill="#D0D1D6" fill-opacity="0.8" font-size="10" font-weight="500">
+                                <tspan x="117" y="315.636">Type</tspan>
+                            </text>
+                            <text fill="#EFECEA" font-size="14" font-weight="bold">
+                                <tspan x="117" y="333.091">@@project.type_@@</tspan>
+                            </text>
+                        </g>
+                    </g>
+                    <g id="sdg">
+                        <g id="sdg_details" letter-spacing="0em">
+                            <text fill="#D0D1D6" fill-opacity="0.8" font-size="10" font-weight="500">
+                                <tspan x="233" y="315.636" text-anchor="end">Impact on</tspan>
+                            </text>
+                            <text fill="#EFECEA" font-size="14" font-weight="bold">
+                                <tspan x="233" y="333.091" text-anchor="end">@@sdg_count@@ SDG&#x2019;s</tspan>
+                            </text>
+                        </g>
+                        <g id="sdg_components">
+                            @@sdg_components@@
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+
+        <g id="status_component" filter="url(#filter1_b)">
+            @@status_component@@
+        </g>
+
+        <g id="main_info">
+            <g id="column1" letter-spacing="0em">
+                <text fill="#EFECEA" font-size="21" font-weight="bold" letter-spacing="-0.03em">
+                    <tspan x="20" y="176.136">@@project.name@@</tspan>
+                </text>
+
+                <text fill="#D0D1D6" fill-opacity="0.8" font-size="10">
+                    <tspan x="20.4258" y="195.636">Based in </tspan>
+                </text>
+                <text fill="#D0D1D6" font-size="10" font-weight="600">
+                    <tspan x="63.668" y="195.636">@@project.country@@</tspan>
+                </text>
+
+                <text fill="#D0D1D6" fill-opacity="0.8" font-size="10">
+                    <tspan x="20" y="209.636">By </tspan>
+                </text>
+                <text fill="#D0D1D6" font-size="10" font-weight="600">
+                    <tspan x="34.8828" y="209.636">@@project.developer@@</tspan>
+                </text>
+            </g>
+            <g id="column2" letter-spacing="0em">
+                <text fill="#D0D1D6" fill-opacity="0.8" font-size="10">
+                    <tspan x="295" y="195.636" text-anchor="end">Certified by</tspan>
+                </text>
+
+                <text fill="#EFECEA" font-size="11" font-weight="600">
+                    <tspan x="295" y="209.5" text-anchor="end">@@project.certifier@@</tspan>
+                </text>
+            </g>
+
+            <g id="card_border">
+                @@border_component@@
+            </g>
+        </g>
+
+        @@badge_component@@
+    </g>
+    <defs id="defs">
+        <filter id="filter0_d" x="3" y="3" width="310" height="354" filterUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                result="hardAlpha" />
+            <feMorphology radius="1" operator="dilate" in="SourceAlpha" result="effect1_dropShadow" />
+            <feOffset />
+            <feColorMatrix type="matrix" values="0 0 0 0 0.321569 0 0 0 0 0.337255 0 0 0 0 0.380392 0 0 0 0.4 0" />
+            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow" />
+            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape" />
+        </filter>
+        <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+            <use href="#image0" transform="matrix(0.000944072 0 0 0.000823723 -0.365242 0)" />
+        </pattern>
+        <filter id="filter1_b" x="191" y="0" width="125" height="62" filterUnits="userSpaceOnUse"
+            color-interpolation-filters="sRGB">
+            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <feGaussianBlur in="BackgroundImageFix" stdDeviation="10" />
+            <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur" />
+            <feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur" result="shape" />
+        </filter>
+
+        <linearGradient id="paint0_linear" x1="231" y1="51.5" x2="310.644" y2="330.956" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#0B0D13" stop-opacity="0.3" />
+            <stop offset="0.293778" stop-color="#0B0D13" stop-opacity="0.7006" />
+            <stop offset="0.799813" stop-color="#0B0D13" stop-opacity="0.84" />
+        </linearGradient>
+        <clipPath id="clip0">
+            <rect x="4" y="4" width="308" height="352" rx="12" fill="white" />
+        </clipPath>
+        <image id="image0" width="1833" height="1214" href="data:image/jpeg;base64,@@background_image@@" />
+    </defs>
+</svg>
