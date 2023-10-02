@@ -23,7 +23,7 @@ fn add_metadata_attributes_(ref metadata: JsonMetadata, data: @TemplateData) {
 
     // Project attributes
     metadata.add_attribute(Null, 'Status'.to_span(), *data.status);
-    metadata.add_attribute(Null, 'Project developer'.to_span(), *data.project.developer);
+    metadata.add_attribute(Null, 'Project Developer'.to_span(), *data.project.developer);
     metadata.add_attribute(Null, 'Certifier'.to_span(), *data.project.certifier);
     metadata.add_attribute(Null, 'Country'.to_span(), *data.project.country);
     metadata.add_attribute(Null, 'Project Color'.to_span(), *data.project.color);
@@ -35,13 +35,20 @@ fn add_metadata_attributes_(ref metadata: JsonMetadata, data: @TemplateData) {
     metadata.add_attribute(Number, 'End year'.to_span(), *data.end_year);
     // TODO: Mutable and DisplayType::Date
     // metadata.add_attribute(DisplayType::Date, 'End year'.to_span(), *data.end_year);
-    metadata.add_attribute(Number, 'Total Carbon Units'.to_span(), *data.project_capacity);
 
-    // Token attributes
-    //metadata.add_attribute(Number, 'Asset avg. annual capacity'.to_span(), *data.asset_capacity);
+    metadata.add_attribute(Number, 'Total Carbon Units'.to_span(), *data.total_capacity);
+    metadata.add_attribute(Number, 'Projected Carbon Units'.to_span(), *data.projected_capacity);
+    metadata.add_attribute(Number, 'Audited Carbon Units'.to_span(), *data.audited_capacity);
+    metadata
+        .add_attribute(
+            Number, 'Asset Projected Carbon Units'.to_span(), *data.asset_projected_capacity
+        );
+    metadata
+        .add_attribute(
+            Number, 'Asset Audited Carbon Units'.to_span(), *data.asset_audited_capacity
+        );
 
-    // TODO: Add Projected and Audited?
-    let attr_name = ('Asset area (m' * 0x100 + 0xB2) * 0x100 + ')';
+    let attr_name = ('Asset Area (m' * 0x100 + 0xB2) * 0x100 + ')';
     metadata.add_attribute(Number, attr_name.to_span(), *data.asset_area);
 }
 

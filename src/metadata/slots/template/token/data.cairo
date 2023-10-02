@@ -29,8 +29,12 @@ struct TemplateData {
     status: String,
     project_area: String,
     end_year: String,
-    project_capacity: String,
-    asset_capacity: String,
+    total_capacity: String,
+    projected_capacity: String,
+    audited_capacity: String,
+    asset_total_capacity: String,
+    asset_projected_capacity: String,
+    asset_audited_capacity: String,
     asset_area: String,
     // SVG specific data
     asset_area_formatted: String,
@@ -53,6 +57,7 @@ fn generate(static: ProjectStaticData, storage: StorageData) -> TemplateData {
     let status: ProjectStatus = get_status_(storage);
     let size: AssetSize = get_asset_size_(static, storage);
     let null = array![''].span();
+    let audited_capacity = static.projected_cu - static.projected_cu;
 
     TemplateData {
         project: static,
@@ -63,8 +68,18 @@ fn generate(static: ProjectStaticData, storage: StorageData) -> TemplateData {
         status: status.to_string(),
         project_area: array![static.area.to_ascii()].span(),
         end_year: array![static.end_year.to_ascii()].span(),
-        project_capacity: array![static.projected_cu.to_ascii()].span(),
-        asset_capacity: get_asset_capacity_formatted_str_(storage, static),
+        total_capacity: array![static.projected_cu.to_ascii()].span(),
+        projected_capacity: array![static.projected_cu.to_ascii()].span(),
+        audited_capacity: array![audited_capacity.to_ascii()].span(),
+        asset_total_capacity: get_asset_capacity_formatted_str_(
+            storage, storage.final_absorption.into()
+        ),
+        asset_projected_capacity: get_asset_capacity_str_(
+            storage, (static.projected_cu * storage.ton_equivalent).into()
+        ),
+        asset_audited_capacity: get_asset_capacity_str_(
+            storage, (audited_capacity * storage.ton_equivalent).into()
+        ),
         asset_area_formatted: get_asset_area_formatted_str_(storage, static),
         asset_area: get_asset_area_str_(storage, static),
         progress: get_progress_str_(storage, static),
@@ -222,39 +237,55 @@ fn generate_sdgs_rows_(storage: StorageData, sdgs: Span<u8>) -> String {
     data.span()
 }
 
-#[inline(always)]
-fn get_asset_capacity_formatted_str_(storage: StorageData, static: ProjectStaticData) -> String {
+fn format_capacity_(capacity: u256) -> String {
+    if capacity < 1000 {
+        let mut res = capacity.to_ascii();
+        res.append('g');
+        res.span()
+    } else if capacity < 1000000 {
+        let mut res = (capacity / 1000).to_ascii();
+        res.append('kg');
+        res.span()
+    } else {
+        let mut res = (capacity / 1_000_000).to_ascii();
+        res.append('t');
+        res.span()
+    }
+}
+
+fn get_asset_capacity_(storage: StorageData, project_capacity: u256) -> u256 {
     let project_value = storage.project_value;
     let asset_value = storage.asset_value;
-    let project_capacity: u256 = storage.final_absorption.into();
 
     if project_value.is_zero() {
-        array!['N/A'].span()
+        0_u256
     } else {
         let asset_capacity = (asset_value * project_capacity.into()) / project_value;
-        let asset_capacity: u128 = asset_capacity.try_into().unwrap();
-        if asset_capacity < 1000 {
-            array![asset_capacity.to_ascii(), 'g'].span()
-        } else if asset_capacity < 1000000 {
-            array![(asset_capacity / 1000).to_ascii(), 'kg'].span()
-        } else {
-            array![(asset_capacity / 1_000_000).to_ascii(), 't'].span()
-        }
+        asset_capacity
     }
 }
 
 #[inline(always)]
-fn get_asset_capacity_str_(storage: StorageData, static: ProjectStaticData) -> String {
+fn get_asset_capacity_formatted_str_(storage: StorageData, project_capacity: u256) -> String {
     let project_value = storage.project_value;
     let asset_value = storage.asset_value;
-    let project_capacity: u256 = storage.final_absorption.into();
 
-    if project_value.is_zero() {
-        array!['N/A'].span()
+    let capacity = get_asset_capacity_(storage, project_capacity);
+
+    if capacity.is_zero() {
+        array!['0'].span()
     } else {
-        let asset_capacity = (asset_value * project_capacity.into()) / project_value;
-        asset_capacity.to_ascii().span()
+        format_capacity_(capacity)
     }
+}
+
+#[inline(always)]
+fn get_asset_capacity_str_(storage: StorageData, project_capacity: u256) -> String {
+    let project_value = storage.project_value;
+    let asset_value = storage.asset_value;
+
+    let capacity = get_asset_capacity_(storage, project_capacity);
+    (capacity / storage.ton_equivalent.into()).to_ascii().span()
 }
 
 #[inline(always)]
