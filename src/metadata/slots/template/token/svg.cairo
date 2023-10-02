@@ -27,7 +27,7 @@ fn print_card_row(ref svg: Array<felt252>, data: @Data) {
     svg.append('" font-size=\\"14\\" font-weigh');
     svg.append('t=\\"bold\\"><tspan x=\\"28\\"');
     svg.append(' y=\\"272.091\\">');
-    svg.concat(*data.asset_capacity);
+    svg.concat(*data.asset_total_capacity);
     svg.append('</tspan></text><text fill=\\"#D');
     svg.append('0D1D6\\" fill-opacity=\\"0.8\\"');
     svg.append(' font-size=\\"11\\" font-weight');
