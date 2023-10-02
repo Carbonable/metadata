@@ -90,7 +90,8 @@ struct ProjectStaticData {
     end_year: u32, // TODO: remove and dynamize
     end_month: u8, // TODO: remove and dynamize
     duration_in_years: u32, // TODO: remove and dynamize
-    projected_cu: u128, // TODO: remove and dynamize
+    total_cu: u64, // TODO: remove and dynamize
+    projected_cu: u64, // TODO: remove and dynamize
     color: String, // Color
     type_: String, // Type
     category: String, // Category

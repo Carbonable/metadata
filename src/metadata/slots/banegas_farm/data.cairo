@@ -8,7 +8,8 @@ const COUNTRY: Shortstring = 'Costa Rica';
 const END_YEAR: u32 = 2052; // get from project
 const END_MONTH: u8 = 12; // get from project
 const DURATION_IN_YEARS: u32 = consteval_int!(2052 - 2022); // get from project
-const PROJECTED_CU: u128 = 1573; // get from project
+const TOTAL_CU: u64 = 1573; // get from project
+const PROJECTED_CU: u64 = 1573; // get from project
 const COLOR: Shortstring = 'Green';
 const TYPE: Shortstring = 'ARR';
 const CATEGORY: Shortstring = 'Forest';
@@ -31,6 +32,7 @@ fn get_static_data() -> ProjectStaticData {
         end_year: END_YEAR,
         end_month: END_MONTH,
         duration_in_years: DURATION_IN_YEARS,
+        total_cu: TOTAL_CU,
         projected_cu: PROJECTED_CU,
         color: array![COLOR].span(),
         type_: array![TYPE].span(),
