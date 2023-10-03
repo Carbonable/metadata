@@ -2,11 +2,11 @@
 mod ManjarisoaUri {
     use starknet::get_contract_address;
 
-    use metadata::metadata::common::assert_helper;
     use metadata::interfaces::slot_descriptor::ISlotDescriptor;
-    use metadata::metadata::slots::template::slot::generate_slot_uri;
-    use metadata::metadata::slots::template::token::generate::generate_token_uri;
-    use metadata::metadata::slots::las_delicias::data::get_static_data;
+    use metadata::metadata::common::assert_helper;
+    use metadata::metadata::slots::template::generate_slot::generate_slot_uri;
+    use metadata::metadata::slots::template::generate_token::generate_token_uri;
+    use metadata::metadata::slots::manjarisoa::data::get_static_data;
 
     #[storage]
     struct Storage {}
