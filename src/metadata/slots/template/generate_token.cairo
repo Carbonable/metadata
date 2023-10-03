@@ -12,7 +12,7 @@ use cairo_json::json_metadata::{JsonMetadata, JsonMetadataTrait, DisplayType};
 use alexandria_ascii::ToAsciiTrait;
 
 fn add_metadata_members_(ref metadata: JsonMetadata, data: @TemplateData) {
-    metadata.add_member('name', *data.project.description);
+    metadata.add_member('name', *data.token_name);
     metadata.add_member('description', *data.token_description);
     metadata.add_member('external_url', common_data::get_external_url());
     metadata.add_member('youtube_url', common_data::get_youtube_url());
@@ -83,15 +83,14 @@ fn generate_token_uri(
     uri.span()
 }
 
-
 #[inline(always)]
 fn generate_data(static: ProjectStaticData, storage: StorageData) -> TemplateData {
     let token_name: String = static.name;
     let token_description: String = static.description;
     let status: ProjectStatus = template_data::get_status_(storage);
     let size: AssetSize = template_data::get_asset_size_(static, storage);
-    let empty = array![''].span();
-    let audited_capacity = static.total_cu - static.projected_cu;
+    let null = array![''].span();
+    let audited_capacity = static.projected_cu - static.projected_cu;
 
     TemplateData {
         project: static,
@@ -102,14 +101,20 @@ fn generate_data(static: ProjectStaticData, storage: StorageData) -> TemplateDat
         status: status.to_string(),
         project_area: array![static.area.to_ascii()].span(),
         end_year: array![static.end_year.to_ascii()].span(),
-        total_capacity: array![static.total_cu.to_ascii()].span(),
+        total_capacity: array![static.projected_cu.to_ascii()].span(),
         projected_capacity: array![static.projected_cu.to_ascii()].span(),
         audited_capacity: array![audited_capacity.to_ascii()].span(),
-        asset_total_capacity: array![static.total_cu.to_ascii()].span(),
-        asset_projected_capacity: empty,
-        asset_audited_capacity: empty,
-        asset_area_formatted: array![static.area.to_ascii(), 'ha'].span(),
-        asset_area: empty,
+        asset_total_capacity: template_data::get_asset_capacity_formatted_str_(
+            storage, storage.final_absorption.into()
+        ),
+        asset_projected_capacity: template_data::get_asset_capacity_str_(
+            storage, (static.projected_cu * storage.ton_equivalent).into()
+        ),
+        asset_audited_capacity: template_data::get_asset_capacity_str_(
+            storage, (audited_capacity * storage.ton_equivalent).into()
+        ),
+        asset_area_formatted: template_data::get_asset_area_formatted_str_(storage, static),
+        asset_area: template_data::get_asset_area_str_(storage, static),
         progress: template_data::get_progress_str_(storage, static),
         sdg_components: template_data::generate_sdgs_rows_(storage, static.sdgs),
         sdg_count: array![static.sdgs.len().to_ascii()].span(),

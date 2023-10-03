@@ -13,7 +13,7 @@ use cairo_json::json_metadata::{JsonMetadata, JsonMetadataTrait, DisplayType};
 use alexandria_ascii::ToAsciiTrait;
 
 fn add_metadata_members_(ref metadata: JsonMetadata, data: @TemplateData) {
-    metadata.add_member('name', *data.project.description);
+    metadata.add_member('name', *data.token_name);
     metadata.add_member('description', *data.token_description);
     metadata.add_member('image', svg::generate(data));
     metadata
