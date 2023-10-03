@@ -7,7 +7,6 @@ use metadata::interfaces::component::IComponentDispatcherTrait;
 use metadata::interfaces::component_provider::IComponentProviderDispatcherTrait;
 use metadata::components::configs::svg;
 use metadata::components::component::sft;
-
 use alexandria_ascii::ToAsciiTrait;
 
 //
@@ -18,6 +17,7 @@ const PROGRESS_BAR_COMP_ID: felt252 = 'SFT.ProgressBar.svg';
 const STATUS_COMP_ID: felt252 = 'SFT.Status.svg';
 const BADGE_COMP_ID: felt252 = 'SFT.Badge.svg';
 const BORDER_COMP_ID: felt252 = 'SFT.Border.svg';
+
 
 #[derive(Drop)]
 struct TemplateData {
@@ -48,50 +48,6 @@ struct TemplateData {
     status_component: String,
     badge_component: String,
     border_component: String,
-}
-
-#[inline(always)]
-fn generate(static: ProjectStaticData, storage: StorageData) -> TemplateData {
-    let token_name: String = static.name;
-    let token_description: String = static.description;
-    let status: ProjectStatus = get_status_(storage);
-    let size: AssetSize = get_asset_size_(static, storage);
-    let null = array![''].span();
-    let audited_capacity = static.projected_cu - static.projected_cu;
-
-    TemplateData {
-        project: static,
-        token_name,
-        token_description,
-        external_url: common_data::get_external_url(),
-        youtube_url: common_data::get_youtube_url(),
-        status: status.to_string(),
-        project_area: array![static.area.to_ascii()].span(),
-        end_year: array![static.end_year.to_ascii()].span(),
-        total_capacity: array![static.projected_cu.to_ascii()].span(),
-        projected_capacity: array![static.projected_cu.to_ascii()].span(),
-        audited_capacity: array![audited_capacity.to_ascii()].span(),
-        asset_total_capacity: get_asset_capacity_formatted_str_(
-            storage, storage.final_absorption.into()
-        ),
-        asset_projected_capacity: get_asset_capacity_str_(
-            storage, (static.projected_cu * storage.ton_equivalent).into()
-        ),
-        asset_audited_capacity: get_asset_capacity_str_(
-            storage, (audited_capacity * storage.ton_equivalent).into()
-        ),
-        asset_area_formatted: get_asset_area_formatted_str_(storage, static),
-        asset_area: get_asset_area_str_(storage, static),
-        progress: get_progress_str_(storage, static),
-        sdg_components: generate_sdgs_rows_(storage, static.sdgs),
-        sdg_count: array![static.sdgs.len().to_ascii()].span(),
-        badge_size: get_asset_size_(static, storage).to_string(),
-        background_image: get_background_image_(storage, static),
-        progress_bar_component: generate_progress_bar_(storage, static),
-        status_component: generate_status_(storage, static),
-        badge_component: generate_badge_(storage, size),
-        border_component: generate_border_(storage, size),
-    }
 }
 
 #[inline(always)]

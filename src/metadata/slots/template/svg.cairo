@@ -1,5 +1,5 @@
 use metadata::metadata::common::utils::ArrayConcat;
-use metadata::metadata::slots::template::token::data::TemplateData;
+use metadata::metadata::slots::template::data::TemplateData;
 
 
 fn generate(data: @TemplateData) -> Span<felt252> {
