@@ -85,13 +85,11 @@ mod metadata {
             mod data;
         }
         mod template {
-            mod slot;
-            mod token {
-                mod data;
-                mod generate;
-                mod storage;
-                mod svg;
-            }
+            mod data;
+            mod svg;
+            mod storage;
+            mod generate_slot;
+            mod generate_token;
         }
     }
 }
