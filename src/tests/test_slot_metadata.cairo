@@ -119,7 +119,7 @@ fn test__setup() {
 }
 
 #[test]
-#[available_gas(15_000_000)]
+#[available_gas(250_000_000)]
 fn test_construct_slot_uri() {
     let (_, project_address, _) = setup();
     let slot = 1_u256;
@@ -132,9 +132,10 @@ fn test_construct_slot_uri() {
     let uri: Span<felt252> = metadata.construct_slot_uri(slot);
     let mut uri_span = uri;
 
-    // utils::tests::print_felt_span(uri_span);
+    utils::tests::print_felt_span(uri_span);
 
-    assert_eq(uri_span.pop_back().unwrap(), @'example.com/', 'Failed to fetch slot uri');
+    let first = uri_span.pop_front().unwrap();
+    assert_eq(first, @'data:application/json,', 'Failed to fetch slot uri');
 }
 
 #[test]
@@ -144,7 +145,7 @@ fn test_construct_token_uri() {
     let token_id = 1_u256;
 
     let metadata = ISlotDescriptorLibraryDispatcher {
-        class_hash: as_class(BanegasFarmUri::TEST_CLASS_HASH)
+        class_hash: as_class(LasDeliciasUri::TEST_CLASS_HASH)
     };
 
     set_contract_address(project_address);
