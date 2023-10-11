@@ -39,7 +39,7 @@ use metadata::components::component::sdgs::sdg16::Component as SDG16;
 use metadata::components::component::sdgs::sdg17::Component as SDG17;
 use metadata::components::component::sft::progress_bar::Component as SFTProgressBar;
 use metadata::components::component::sft::status::Component as SFTStatus;
-use metadata::components::component::sft::border::Component as SFTBorder;
+use metadata::components::component::sft::border_v2::Component as SFTBorder;
 use metadata::components::component::sft::badges::badge_Infty::Component as SFTBadgeInfty;
 use metadata::components::component::sft::badges::badge_XL::Component as SFTBadgeXL;
 use metadata::components::component::sft::badges::badge_L::Component as SFTBadgeL;
@@ -113,7 +113,7 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
 }
 
 #[test]
-#[available_gas(10_000_000)]
+#[available_gas(20_000_000)]
 fn test__setup() {
     let (_, project_address, _) = setup();
 }
@@ -145,7 +145,7 @@ fn test_construct_token_uri() {
     let token_id = 1_u256;
 
     let metadata = ISlotDescriptorLibraryDispatcher {
-        class_hash: as_class(LasDeliciasUri::TEST_CLASS_HASH)
+        class_hash: as_class(BanegasFarmUri::TEST_CLASS_HASH)
     };
 
     set_contract_address(project_address);
