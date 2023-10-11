@@ -12,6 +12,7 @@ use metadata::metadata::slots::template::data::TemplateData;
 use cairo_json::json_metadata::{JsonMetadata, JsonMetadataTrait, DisplayType};
 use alexandria_ascii::ToAsciiTrait;
 
+#[inline(always)]
 fn add_metadata_members_(ref metadata: JsonMetadata, data: @TemplateData) {
     metadata.add_member('name', *data.token_name);
     metadata.add_member('description', *data.token_description);
@@ -26,6 +27,7 @@ fn add_metadata_members_(ref metadata: JsonMetadata, data: @TemplateData) {
     metadata.add_member('youtube_url', common_data::get_youtube_url());
 }
 
+#[inline(always)]
 fn add_metadata_attributes_(ref metadata: JsonMetadata, data: @TemplateData) {
     let Null = DisplayType::Null;
     let Number = DisplayType::Number;
@@ -46,6 +48,7 @@ fn add_metadata_attributes_(ref metadata: JsonMetadata, data: @TemplateData) {
     metadata.add_attribute(Number, 'Audited Carbon Units'.to_span(), *data.audited_capacity);
 }
 
+#[inline(always)]
 fn generate_json_(data: @TemplateData) -> JsonMetadata {
     let mut metadata: JsonMetadata = JsonMetadata {
         members: Default::default(), attributes: Default::default()
@@ -60,13 +63,14 @@ fn generate_json_(data: @TemplateData) -> JsonMetadata {
     metadata
 }
 
+#[inline(always)]
 fn generate_slot_uri(
-    contract_address: ContractAddress, token_id: u256, static_data: ProjectStaticData
+    contract_address: ContractAddress, slot: u256, static_data: ProjectStaticData
 ) -> Span<felt252> {
     let mut uri: Array<felt252> = Default::default();
     uri.append('data:application/json,');
 
-    let starknet_data = storage::fetch_data(contract_address, token_id);
+    let starknet_data = storage::fetch_slot_data(contract_address, slot);
     let template_data = generate_data(static_data, starknet_data);
     let metadata: JsonMetadata = generate_json_(@template_data);
 
@@ -78,6 +82,7 @@ fn generate_slot_uri(
 
 #[inline(always)]
 fn generate_data(static: ProjectStaticData, storage: StorageData) -> TemplateData {
+    // Reusing the token template
     let token_name: String = static.name;
     let token_description: String = static.description;
     let status: ProjectStatus = template_data::get_status_(storage);
