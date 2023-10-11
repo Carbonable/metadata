@@ -20,14 +20,52 @@
                     <rect width="308" height="353" rx="8" fill="url(#pattern0)" />
                     <rect width="308" height="353" rx="8" fill="url(#paint0_linear)" />
                 </g>
-                <g id="card_content">
-                    <rect x="12" y="231" width="292" height="55" rx="8" fill="#0D0D0D" fill-opacity="0.7" />
+
+                <!-- Update transparent card -->
+                <mask id="card_mask" width="292" height="55" x="12" y="231" maskUnits="userSpaceOnUse"
+                    style="mask-type:alpha">
+                    <rect width="292" height="55" fill="url(#pattern0)" rx="8" transform="matrix(-1 0 0 1 304 231)" />
+                    <rect width="291" height="54" x="-.5" y=".5" stroke="#D0D1D6" stroke-opacity=".1" rx="7.5"
+                        transform="matrix(-1 0 0 1 303 231)" />
+                </mask>
+                <g filter="url(#card_blur)" mask="url(#card_mask)" transform="matrix(-1 0 0 1 312 3)">
+                    <rect width="308" height="353" fill="url(#pattern1)" rx="8" />
+                    <rect width="308" height="353" fill="url(#paint0_linear)" rx="8" />
+                </g>
+
+                <defs>
+                    <pattern id="pattern1" width="1" height="1" patternContentUnits="objectBoundingBox">
+                        <use href="#image0" transform="matrix(.00094 0 0 .00082 -.37 0)" />
+                    </pattern>
+
+                    <filter id="card_blur" width="316" height="361" x="0" y="-1" color-interpolation-filters="sRGB"
+                        filterUnits="userSpaceOnUse">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                        <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                        <feGaussianBlur result="effect1_foregroundBlur_3613_174521" stdDeviation="2" />
+                    </filter>
+                    <filter id="card_lighting" width="292" height="57" x="12" y="231" color-interpolation-filters="sRGB"
+                        filterUnits="userSpaceOnUse">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                        <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                        <feColorMatrix in="SourceAlpha" result="hardAlpha"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" />
+                        <feOffset dy="2" />
+                        <feGaussianBlur stdDeviation="4" />
+                        <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic" />
+                        <feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0" />
+                        <feBlend in2="shape" result="effect1_innerShadow_3707_20087" />
+                    </filter>
+                </defs>
+
+                <g id="card_content" filter="url(#card_lighting)">
+                    <rect width="292" height="55" x="12" y="231" fill="#C8C8C8" fill-opacity=".05" rx="8" />
                     <g id="card_row" letter-spacing="0em">
                         <text fill="#D0D1D6" fill-opacity="0.8" font-size="11" font-weight="500">
                             <tspan x="28" y="252.5">Carbon units</tspan>
                         </text>
                         <text fill="#EBECF0" font-size="14" font-weight="bold">
-                            <tspan x="28" y="272.091">@@asset_total_capacity@@</tspan>
+                            <tspan id="asset_capacity" x="28" y="272.091">@@asset_total_capacity@@</tspan>
                         </text>
                         <text fill="#D0D1D6" fill-opacity="0.8" font-size="11" font-weight="500">
                             <tspan x="117.5" y="252.5">Ends in</tspan>
@@ -42,7 +80,7 @@
                         </text>
                         @@progress_bar_component@@
                     </g>
-                    <rect x="12.5" y="231.5" width="291" height="54" rx="7.5" stroke="#D0D1D6" stroke-opacity="0.1" />
+                    <rect width="291" height="54" x="12.5" y="231.5" stroke="#D0D1D6" stroke-opacity=".1" rx="7.5" />
                 </g>
                 <g id="bottom">
                     <g id="details" letter-spacing="0em">
@@ -51,7 +89,7 @@
                                 <tspan x="24" y="315.636">Surface</tspan>
                             </text>
                             <text fill="#EBECF0" font-size="14" font-weight="bold">
-                                <tspan x="24" y="333.091">@@asset_area@@m&#xb2;</tspan>
+                                <tspan id="asset_area" x="24" y="333.091">@@asset_area@@m&#xb2;</tspan>
                             </text>
                         </g>
                         <g id="type_details">
@@ -113,13 +151,10 @@
                     <tspan x="295" y="209.5" text-anchor="end">@@project.certifier@@</tspan>
                 </text>
             </g>
-
             <g id="card_border">
                 @@border_component@@
             </g>
         </g>
-
-        @@badge_component@@
     </g>
     <defs id="defs">
         <filter id="filter0_d" x="3" y="3" width="310" height="354" filterUnits="userSpaceOnUse"
