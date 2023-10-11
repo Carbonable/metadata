@@ -13,7 +13,66 @@ type Data = TemplateData;
 ////////////////////////////////////////
 //            SVGenerated             //
 ////////////////////////////////////////
-// source file: tmp/template-test.svg
+// source file: assets/templates/template.svg
+
+#[inline(always)]
+fn print_card_blur(ref svg: Array<felt252>, data: @Data) {
+    svg.append('<filter id=\\"card_blur\\" widt');
+    svg.append('h=\\"316\\" height=\\"361\\" x=');
+    svg.append('\\"0\\" y=\\"-1\\" color-interp');
+    svg.append('olation-filters=\\"sRGB\\" filt');
+    svg.append('erUnits=\\"userSpaceOnUse\\"><f');
+    svg.append('eFlood flood-opacity=\\"0\\" re');
+    svg.append('sult=\\"BackgroundImageFix\\" /');
+    svg.append('><feBlend in=\\"SourceGraphic\\');
+    svg.append('" in2=\\"BackgroundImageFix\\"');
+    svg.append(' result=\\"shape\\" /><feGaussi');
+    svg.append('anBlur result=\\"effect1_foregr');
+    svg.append('oundBlur_3613_174521\\" stdDevi');
+    svg.append('ation=\\"2\\" /></filter>');
+}
+#[inline(always)]
+fn print_card_lighting(ref svg: Array<felt252>, data: @Data) {
+    svg.append('<filter id=\\"card_lighting\\"');
+    svg.append(' width=\\"292\\" height=\\"57\\');
+    svg.append('" x=\\"12\\" y=\\"231\\" color-');
+    svg.append('interpolation-filters=\\"sRGB\\');
+    svg.append('" filterUnits=\\"userSpaceOnUse');
+    svg.append('\\"><feFlood flood-opacity=\\"0');
+    svg.append('\\" result=\\"BackgroundImageFi');
+    svg.append('x\\" /><feBlend in=\\"SourceGra');
+    svg.append('phic\\" in2=\\"BackgroundImageF');
+    svg.append('ix\\" result=\\"shape\\" /><feC');
+    svg.append('olorMatrix in=\\"SourceAlpha\\"');
+    svg.append(' result=\\"hardAlpha\\" values=');
+    svg.append('\\"0 0 0 0 0 0 0 0 0 0 0 0 0 0');
+    svg.append(' 0 0 0 0 127 0\\" /><feOffset d');
+    svg.append('y=\\"2\\" /><feGaussianBlur std');
+    svg.append('Deviation=\\"4\\" /><feComposit');
+    svg.append('e in2=\\"hardAlpha\\" k2=\\"-1');
+    svg.append('\\" k3=\\"1\\" operator=\\"arit');
+    svg.append('hmetic\\" /><feColorMatrix valu');
+    svg.append('es=\\"0 0 0 0 1 0 0 0 0 1 0 0 0');
+    svg.append(' 0 1 0 0 0 0.25 0\\" /><feBlend');
+    svg.append(' in2=\\"shape\\" result=\\"effe');
+    svg.append('ct1_innerShadow_3707_20087\\" /');
+    svg.append('></filter>');
+}
+
+#[inline(always)]
+fn print_head_13778(ref svg: Array<felt252>, data: @Data) {
+    svg.append('<defs><pattern id=\\"pattern1\\');
+    svg.append('" width=\\"1\\" height=\\"1\\"');
+    svg.append(' patternContentUnits=\\"objectB');
+    svg.append('oundingBox\\"><use href=\\"#ima');
+    svg.append('ge0\\" transform=\\"matrix(.000');
+    svg.append('94 0 0 .00082 -.37 0)\\" /></pa');
+    svg.append('ttern>');
+    print_card_blur(ref svg, data);
+
+    print_card_lighting(ref svg, data);
+    svg.append('</defs>');
+}
 
 #[inline(always)]
 fn print_card_row(ref svg: Array<felt252>, data: @Data) {
@@ -25,8 +84,9 @@ fn print_card_row(ref svg: Array<felt252>, data: @Data) {
     svg.append('\\"252.5\\">Carbon units</tspan');
     svg.append('></text><text fill=\\"#EBECF0\\');
     svg.append('" font-size=\\"14\\" font-weigh');
-    svg.append('t=\\"bold\\"><tspan x=\\"28\\"');
-    svg.append(' y=\\"272.091\\">');
+    svg.append('t=\\"bold\\"><tspan id=\\"asset');
+    svg.append('_capacity\\" x=\\"28\\" y=\\"27');
+    svg.append('2.091\\">');
     svg.concat(*data.asset_total_capacity);
     svg.append('</tspan></text><text fill=\\"#D');
     svg.append('0D1D6\\" fill-opacity=\\"0.8\\"');
@@ -57,18 +117,19 @@ fn print_card_progress(ref svg: Array<felt252>, data: @Data) {
 
 #[inline(always)]
 fn print_head_card_content(ref svg: Array<felt252>, data: @Data) {
-    svg.append('<g id=\\"card_content\\"><rect');
-    svg.append(' x=\\"12\\" y=\\"231\\" width=');
-    svg.append('\\"292\\" height=\\"55\\" rx=\\');
-    svg.append('"8\\" fill=\\"#0D0D0D\\" fill-o');
-    svg.append('pacity=\\"0.7\\" />');
+    svg.append('<g id=\\"card_content\\" filter');
+    svg.append('=\\"url(#card_lighting)\\"><rec');
+    svg.append('t width=\\"292\\" height=\\"55');
+    svg.append('\\" x=\\"12\\" y=\\"231\\" fill');
+    svg.append('=\\"#C8C8C8\\" fill-opacity=\\"');
+    svg.append('.05\\" rx=\\"8\\" />');
     print_card_row(ref svg, data);
 
     print_card_progress(ref svg, data);
-    svg.append('<rect x=\\"12.5\\" y=\\"231.5\\');
-    svg.append('" width=\\"291\\" height=\\"54');
-    svg.append('\\" rx=\\"7.5\\" stroke=\\"#D0D');
-    svg.append('1D6\\" stroke-opacity=\\"0.1\\"');
+    svg.append('<rect width=\\"291\\" height=\\');
+    svg.append('"54\\" x=\\"12.5\\" y=\\"231.5');
+    svg.append('\\" stroke=\\"#D0D1D6\\" stroke');
+    svg.append('-opacity=\\".1\\" rx=\\"7.5\\"');
     svg.append(' /></g>');
 }
 
@@ -82,9 +143,10 @@ fn print_surface_details(ref svg: Array<felt252>, data: @Data) {
     svg.append('face</tspan></text><text fill=');
     svg.append('\\"#EBECF0\\" font-size=\\"14\\');
     svg.append('" font-weight=\\"bold\\"><tspan');
-    svg.append(' x=\\"24\\" y=\\"333.091\\">');
-    svg.concat(*data.asset_area_formatted);
-    svg.append('</tspan></text></g>');
+    svg.append(' id=\\"asset_area\\" x=\\"24\\"');
+    svg.append(' y=\\"333.091\\">');
+    svg.concat(*data.asset_area);
+    svg.append('m&#xb2;</tspan></text></g>');
 }
 #[inline(always)]
 fn print_type_details(ref svg: Array<felt252>, data: @Data) {
@@ -166,6 +228,18 @@ fn print_background_image(ref svg: Array<felt252>, data: @Data) {
     svg.append(' rx=\\"8\\" fill=\\"url(#paint0');
     svg.append('_linear)\\" /></g>');
 }
+#[inline(always)]
+fn print_33627(ref svg: Array<felt252>, data: @Data) {
+    svg.append('<g filter=\\"url(#card_blur)\\"');
+    svg.append(' mask=\\"url(#card_mask)\\" tra');
+    svg.append('nsform=\\"matrix(-1 0 0 1 312 3');
+    svg.append(')\\"><rect width=\\"308\\" heig');
+    svg.append('ht=\\"353\\" fill=\\"url(#patte');
+    svg.append('rn1)\\" rx=\\"8\\" /><rect widt');
+    svg.append('h=\\"308\\" height=\\"353\\" fi');
+    svg.append('ll=\\"url(#paint0_linear)\\" rx');
+    svg.append('=\\"8\\" /></g>');
+}
 
 #[inline(always)]
 fn print_head_card_container(ref svg: Array<felt252>, data: @Data) {
@@ -173,6 +247,24 @@ fn print_head_card_container(ref svg: Array<felt252>, data: @Data) {
     svg.append('er=\\"url(#filter0_d)\\" clip-p');
     svg.append('ath=\\"url(#clip0)\\">');
     print_background_image(ref svg, data);
+    svg.append('<!-- Update transparent card --');
+    svg.append('><mask id=\\"card_mask\\" width');
+    svg.append('=\\"292\\" height=\\"55\\" x=\\');
+    svg.append('"12\\" y=\\"231\\" maskUnits=\\');
+    svg.append('"userSpaceOnUse\\" style=\\"mas');
+    svg.append('k-type:alpha\\"><rect width=\\"');
+    svg.append('292\\" height=\\"55\\" fill=\\"');
+    svg.append('url(#pattern0)\\" rx=\\"8\\" tr');
+    svg.append('ansform=\\"matrix(-1 0 0 1 304');
+    svg.append(' 231)\\" /><rect width=\\"291\\');
+    svg.append('" height=\\"54\\" x=\\"-.5\\" y');
+    svg.append('=\\".5\\" stroke=\\"#D0D1D6\\"');
+    svg.append(' stroke-opacity=\\".1\\" rx=\\"');
+    svg.append('7.5\\" transform=\\"matrix(-1 0');
+    svg.append(' 0 1 303 231)\\" /></mask>');
+    print_33627(ref svg, data);
+
+    print_head_13778(ref svg, data);
 
     print_head_card_content(ref svg, data);
 
