@@ -46,6 +46,7 @@ mod components {
             mod progress_bar;
             mod status;
             mod border;
+            mod border_v2;
             mod badges {
                 mod badge_Infty;
                 mod badge_L;
