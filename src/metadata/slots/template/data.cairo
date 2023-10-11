@@ -4,7 +4,9 @@ use metadata::metadata::common::models::{
 };
 use metadata::metadata::common::utils::{ToSpanOption, ArrayConcat};
 use metadata::interfaces::component::IComponentDispatcherTrait;
-use metadata::interfaces::component_provider::IComponentProviderDispatcherTrait;
+use metadata::interfaces::component_provider::{
+    IComponentProviderDispatcher, IComponentProviderDispatcherTrait
+};
 use metadata::components::configs::svg;
 use metadata::components::component::sft;
 use alexandria_ascii::ToAsciiTrait;
@@ -16,7 +18,7 @@ use alexandria_ascii::ToAsciiTrait;
 const PROGRESS_BAR_COMP_ID: felt252 = 'SFT.ProgressBar.svg';
 const STATUS_COMP_ID: felt252 = 'SFT.Status.svg';
 const BADGE_COMP_ID: felt252 = 'SFT.Badge.svg';
-const BORDER_COMP_ID: felt252 = 'SFT.Border.svg';
+const BORDER_COMP_ID: felt252 = 'SFT.Border.v2.svg';
 
 
 #[derive(Drop)]
@@ -66,10 +68,9 @@ fn get_status_(storage: StorageData) -> ProjectStatus {
 #[inline(always)]
 fn get_asset_size_(static: ProjectStaticData, storage: StorageData) -> AssetSize {
     // TODO: To compute when used
-    AssetSize::XL
+    AssetSize::Infinite
 }
 
-use metadata::interfaces::component_provider::IComponentProviderDispatcher;
 #[inline(always)]
 fn get_component_instance(
     provider: IComponentProviderDispatcher, id: felt252, arg_props: Option<Span<felt252>>
@@ -193,6 +194,7 @@ fn generate_sdgs_rows_(storage: StorageData, sdgs: Span<u8>) -> String {
     data.span()
 }
 
+#[inline(always)]
 fn format_capacity_(capacity: u256) -> String {
     if capacity < 1000 {
         let mut res = capacity.to_ascii();
@@ -209,6 +211,7 @@ fn format_capacity_(capacity: u256) -> String {
     }
 }
 
+#[inline(always)]
 fn get_asset_capacity_(storage: StorageData, project_capacity: u256) -> u256 {
     let project_value = storage.project_value;
     let asset_value = storage.asset_value;
@@ -429,6 +432,7 @@ fn get_status_props_(status: ProjectStatus) -> sft::status::Properties {
     }
 }
 
+#[inline(always)]
 fn generate_status_(storage: StorageData, static: ProjectStaticData) -> String {
     let mut data: Array<felt252> = Default::default();
     let status = get_status_(storage);
@@ -538,35 +542,42 @@ fn generate_badge_(storage: StorageData, size: AssetSize) -> String {
 //
 // Border generation
 // 
-
-fn get_border_props_(size: AssetSize) -> sft::border::Properties {
-    let (stops, stroke, stroke_opacity) = match size {
+#[inline(always)]
+fn get_border_props_(size: AssetSize) -> sft::border_v2::Properties {
+    let (x1, x2, y1, y2, stops, stroke_opacity) = match size {
         AssetSize::XS => (
-            array![('0', '#60EFFF'), ('1', '#00FF87')].span(), sft::border::Gradient::Linear, '0.5'
+            '4', '312', '180', '180', array![('0', '#60EFFF'), ('1', '#00FF87')].span(), '0.5'
         ),
         AssetSize::S => (
-            array![('0', '#FFEDBC'), ('1', '#ED4264')].span(), sft::border::Gradient::Linear, '0.6'
+            '4', '312', '180', '180', array![('0', '#FFEDBC'), ('1', '#ED4264')].span(), '0.6'
         ),
         AssetSize::M => (
-            array![('0', '#AB4883'), ('1', '#8785FF')].span(), sft::border::Gradient::Linear, '0.7'
+            '4', '312', '180', '180', array![('0', '#AB4883'), ('1', '#8785FF')].span(), '0.7'
         ),
         AssetSize::L => (
+            '61.5',
+            '234.5',
+            '4',
+            '356',
             array![
                 ('.08', '#DEB69C'),
-                ('.23', '#FFECE0'),
+                ('.19', '#55372C'),
                 ('.4', '#FFECE0'),
                 ('.51', '#F0CAB2'),
                 ('.57', '#775C50'),
-                ('.6', '#55372C'),
-                ('.71', '#7A5843'),
-                ('.8', '#F0CAB2'),
-                ('.92', '#54372B')
+                ('.62', '#55372C'),
+                ('.79', '#7A5843'),
+                ('.91', '#F0CAB2'),
+                ('1', '#FFECE0'),
             ]
                 .span(),
-            sft::border::Gradient::Radial,
-            '0.8'
+            '0.86'
         ),
         AssetSize::XL => (
+            '40',
+            '252',
+            '15.5',
+            '356',
             array![
                 ('.07', '#FBFBFD'),
                 ('.24', '#C8D4DA'),
@@ -579,10 +590,13 @@ fn get_border_props_(size: AssetSize) -> sft::border::Properties {
                 ('.92', '#A7C1D0'),
             ]
                 .span(),
-            sft::border::Gradient::Radial,
             '0.9'
         ),
         AssetSize::Infinite => (
+            '71.5',
+            '209',
+            '4',
+            '361',
             array![
                 ('.07', '#E1B950'),
                 ('.24', '#F6F3A6'),
@@ -596,12 +610,13 @@ fn get_border_props_(size: AssetSize) -> sft::border::Properties {
                 ('.92', '#675102'),
             ]
                 .span(),
-            sft::border::Gradient::Radial,
             '0.8'
         ),
     };
 
-    sft::border::Properties { x: Option::None, y: Option::None, stroke, stroke_opacity, stops }
+    sft::border_v2::Properties {
+        x: Option::None, y: Option::None, x1, x2, y1, y2, stroke_opacity, stops
+    }
 }
 
 #[inline(always)]
@@ -617,6 +632,7 @@ fn generate_border_(storage: StorageData, size: AssetSize) -> String {
 }
 
 // Background Image
+#[inline(always)]
 fn get_background_image_(storage: StorageData, static: ProjectStaticData) -> String {
     let args: Option<Span<felt252>> = Option::None;
     let image = get_component_instance(
