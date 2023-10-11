@@ -11,6 +11,7 @@ use metadata::metadata::slots::template::data::TemplateData;
 use cairo_json::json_metadata::{JsonMetadata, JsonMetadataTrait, DisplayType};
 use alexandria_ascii::ToAsciiTrait;
 
+#[inline(always)]
 fn add_metadata_members_(ref metadata: JsonMetadata, data: @TemplateData) {
     metadata.add_member('name', *data.token_name);
     metadata.add_member('description', *data.token_description);
@@ -19,6 +20,7 @@ fn add_metadata_members_(ref metadata: JsonMetadata, data: @TemplateData) {
     metadata.add_member('image', svg::generate(data));
 }
 
+#[inline(always)]
 fn add_metadata_attributes_(ref metadata: JsonMetadata, data: @TemplateData) {
     let Null = DisplayType::Null;
     let Number = DisplayType::Number;
@@ -54,6 +56,7 @@ fn add_metadata_attributes_(ref metadata: JsonMetadata, data: @TemplateData) {
     metadata.add_attribute(Number, attr_name.to_span(), *data.asset_area);
 }
 
+#[inline(always)]
 fn generate_json_(data: @TemplateData) -> JsonMetadata {
     let mut metadata: JsonMetadata = JsonMetadata {
         members: Default::default(), attributes: Default::default()
@@ -68,6 +71,7 @@ fn generate_json_(data: @TemplateData) -> JsonMetadata {
     metadata
 }
 
+#[inline(always)]
 fn generate_token_uri(
     contract_address: ContractAddress, token_id: u256, static_data: ProjectStaticData
 ) -> Span<felt252> {
