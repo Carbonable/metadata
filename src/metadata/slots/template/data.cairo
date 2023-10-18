@@ -68,7 +68,7 @@ fn get_status_(storage: StorageData) -> ProjectStatus {
 #[inline(always)]
 fn get_asset_size_(static: ProjectStaticData, storage: StorageData) -> AssetSize {
     // TODO: To compute when used
-    AssetSize::Infinite
+    AssetSize::XS
 }
 
 #[inline(always)]
@@ -151,7 +151,7 @@ fn generate_sdg_(
     data.append(y_str);
     data.append('\\" rx=\\"2\\"/></clipPath></de');
     data.append('fs><g fill=\\"url(#h)\\" fill-o');
-    data.append('pacity=\\".6\\" rx=\\"2\\" clip');
+    data.append('pacity=\\".6\\" clip');
     data.append('-path=\\"url(#clip-sdg-');
     data.append(index_str);
     data.append(')\\">');
@@ -484,13 +484,14 @@ fn generate_status_(storage: StorageData, static: ProjectStaticData) -> String {
     data.append('filters=\\"sRGB\\" filterUnits=');
     data.append('\\"userSpaceOnUse\\"><feGaussia');
     data.append('nBlur in=\\"SourceGraphic\\" st');
-    data.append('dDeviation=\\"10\\"/><feBlend /');
+    data.append('dDeviation=\\"10\\" result=\\"bl');
+    data.append('ur\\"/><feBlend in2=\\"blur\\"/');
     data.append('></filter></defs><g filter=\\"u');
     data.append('rl(#status_blur)\\" clip-path=');
     data.append('\\"url(#status_blur_clip)\\"><g');
     data.append(' filter=\\"url(#filter0_d)\\" c');
-    data.append('lip-path=\\"url(#clip0)\\"><g i');
-    data.append('d=\\"background_image\\" transf');
+    data.append('lip-path=\\"url(#clip0)\\"><g');
+    data.append(' transf');
     data.append('orm=\\"matrix(-1 0 0 1 312 3)\\');
     data.append('"><rect width=\\"308\\" height=');
     data.append('\\"353\\" rx=\\"8\\" fill=\\"ur');
