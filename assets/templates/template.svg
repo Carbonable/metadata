@@ -1,7 +1,6 @@
 <svg id="sft_template" viewBox="0 0 316 360" fill="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
     <style>
         @import url(https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700);
-        @import url(https://fonts.googleapis.com/css2?family=Inter:wght@700&display=block&text=%E2%88%9E);
 
         svg text {
             -webkit-user-select: none;
@@ -71,7 +70,7 @@
                             <tspan x="117.5" y="252.5">Ends in</tspan>
                         </text>
                         <text fill="#EBECF0" font-size="14" font-weight="bold">
-                            <tspan x="117.5" y="272.1" dynamic="var_name">@@end_year@@</tspan>
+                            <tspan x="117.5" y="272.1">@@end_year@@</tspan>
                         </text>
                     </g>
                     <g id="card_progress">
@@ -89,7 +88,7 @@
                                 <tspan x="24" y="315.636">Surface</tspan>
                             </text>
                             <text fill="#EBECF0" font-size="14" font-weight="bold">
-                                <tspan id="asset_area" x="24" y="333.091">@@asset_area@@m&#xb2;</tspan>
+                                <tspan id="asset_area" x="24" y="333.091">@@asset_area_formatted@@</tspan>
                             </text>
                         </g>
                         <g id="type_details">
