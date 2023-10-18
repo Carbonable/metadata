@@ -4,6 +4,7 @@ use metadata::metadata::slots::template::data::TemplateData;
 
 fn generate(data: @TemplateData) -> Span<felt252> {
     let mut svg: Array<felt252> = Default::default();
+    svg.append('data:image/svg+xml,');
     print_head_sft_template(ref svg, data);
     svg.span()
 }
@@ -60,7 +61,7 @@ fn print_card_lighting(ref svg: Array<felt252>, data: @Data) {
 }
 
 #[inline(always)]
-fn print_head_13778(ref svg: Array<felt252>, data: @Data) {
+fn print_head_21636(ref svg: Array<felt252>, data: @Data) {
     svg.append('<defs><pattern id=\\"pattern1\\');
     svg.append('" width=\\"1\\" height=\\"1\\"');
     svg.append(' patternContentUnits=\\"objectB');
@@ -96,8 +97,7 @@ fn print_card_row(ref svg: Array<felt252>, data: @Data) {
     svg.append('/text><text fill=\\"#EBECF0\\"');
     svg.append(' font-size=\\"14\\" font-weight');
     svg.append('=\\"bold\\"><tspan x=\\"117.5\\');
-    svg.append('" y=\\"272.1\\" dynamic=\\"var_');
-    svg.append('name\\">');
+    svg.append('" y=\\"272.1\\">');
     svg.concat(*data.end_year);
     svg.append('</tspan></text></g>');
 }
@@ -145,8 +145,8 @@ fn print_surface_details(ref svg: Array<felt252>, data: @Data) {
     svg.append('" font-weight=\\"bold\\"><tspan');
     svg.append(' id=\\"asset_area\\" x=\\"24\\"');
     svg.append(' y=\\"333.091\\">');
-    svg.concat(*data.asset_area);
-    svg.append('m&#xb2;</tspan></text></g>');
+    svg.concat(*data.asset_area_formatted);
+    svg.append('</tspan></text></g>');
 }
 #[inline(always)]
 fn print_type_details(ref svg: Array<felt252>, data: @Data) {
@@ -229,7 +229,7 @@ fn print_background_image(ref svg: Array<felt252>, data: @Data) {
     svg.append('_linear)\\" /></g>');
 }
 #[inline(always)]
-fn print_33627(ref svg: Array<felt252>, data: @Data) {
+fn print_91116(ref svg: Array<felt252>, data: @Data) {
     svg.append('<g filter=\\"url(#card_blur)\\"');
     svg.append(' mask=\\"url(#card_mask)\\" tra');
     svg.append('nsform=\\"matrix(-1 0 0 1 312 3');
@@ -262,9 +262,9 @@ fn print_head_card_container(ref svg: Array<felt252>, data: @Data) {
     svg.append(' stroke-opacity=\\".1\\" rx=\\"');
     svg.append('7.5\\" transform=\\"matrix(-1 0');
     svg.append(' 0 1 303 231)\\" /></mask>');
-    print_33627(ref svg, data);
+    print_91116(ref svg, data);
 
-    print_head_13778(ref svg, data);
+    print_head_21636(ref svg, data);
 
     print_head_card_content(ref svg, data);
 
@@ -457,17 +457,13 @@ fn print_head_sft_template(ref svg: Array<felt252>, data: @Data) {
     svg.append('\\"http://www.w3.org/2000/svg\\');
     svg.append('"><style>@import url(https://fo');
     svg.append('nts.googleapis.com/css2?family=');
-    svg.append('Inter:wght@400;500;600;700); @i');
-    svg.append('mport url(https://fonts.googlea');
-    svg.append('pis.com/css2?family=Inter:wght@');
-    svg.append('700&display=block&text=%E2%88%9');
-    svg.append('E); svg text { -webkit-user-sel');
-    svg.append('ect: none; -moz-user-select: no');
-    svg.append('ne; -ms-user-select: none; user');
-    svg.append('-select: none; -webkit-tap-high');
-    svg.append('light-color: rgba(255, 255, 255');
-    svg.append(', 0); font-family: Inter; } </s');
-    svg.append('tyle>');
+    svg.append('Inter:wght@400;500;600;700); sv');
+    svg.append('g text { -webkit-user-select: n');
+    svg.append('one; -moz-user-select: none; -m');
+    svg.append('s-user-select: none; user-selec');
+    svg.append('t: none; -webkit-tap-highlight-');
+    svg.append('color: rgba(255, 255, 255, 0);');
+    svg.append(' font-family: Inter; } </style>');
     print_head_sft(ref svg, data);
 
     print_head_defs(ref svg, data);
