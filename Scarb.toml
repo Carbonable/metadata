@@ -15,9 +15,8 @@ name = "compiled"
 [dependencies]
 starknet = ">=2.2.0"
 cairo_json = { git = "https://github.com/carbonable-labs/cairo-json.git", tag = "v0.1.0" }
-alexandria_ascii = { git = "https://github.com/keep-starknet-strange/alexandria.git", tag = "cairo-v2.1.0" }
-openzeppelin = { git = "https://github.com/OpenZeppelin/cairo-contracts.git", rev="fcdd6d1b02306f18f1089656f15b87d1701ffde3" }
-cairo_erc_3525 = { git = "https://github.com/carbonable-labs/cairo-erc-3525", tag = "2.0.8" }
+alexandria_ascii = { git = "https://github.com/keep-starknet-strange/alexandria.git", tag = "cairo-v2.2.0" }
+cairo_erc_3525 = { git = "https://github.com/carbonable-labs/cairo-erc-3525", tag = "2.0.10" }
 
 [cairo]
 sierra-replace-ids = true
