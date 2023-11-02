@@ -291,7 +291,7 @@ fn get_progress_(storage: StorageData, static: ProjectStaticData) -> u8 {
     let project_capacity = storage.final_absorption;
     let current_capacity = storage.current_absorption;
     if !project_capacity.is_zero() {
-        let res = 100_u256 * current_capacity.into() / project_capacity.into();
+        let res = (100_u256 * current_capacity.into()) / project_capacity.into();
         let res: u8 = res.try_into().unwrap();
         res
     } else {

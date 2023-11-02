@@ -92,6 +92,8 @@ mod metadata {
             mod generate_slot;
             mod generate_token;
         }
+
+        mod ipfs;
     }
 }
 
