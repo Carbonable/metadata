@@ -1,4 +1,5 @@
-<svg id="sft_template" viewBox="0 0 316 360" fill="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<svg id="sft_template" width="316" height="360" viewBox="0 0 316 360" fill="none" version="1.1"
+    xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
     <style>
         @import url(https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700);
 
@@ -12,7 +13,7 @@
         }
     </style>
 
-    <g id="sft" style="white-space: pre">
+    <g id="sft">
         <g id="card">
             <g id="card_container" filter="url(#filter0_d)" clip-path="url(#clip0)">
                 <g id="background_image" transform="matrix(-1 0 0 1 312 3)">
@@ -59,7 +60,7 @@
 
                 <g id="card_content" filter="url(#card_lighting)">
                     <rect width="292" height="55" x="12" y="231" fill="#C8C8C8" fill-opacity=".05" rx="8" />
-                    <g id="card_row" letter-spacing="0em">
+                    <g id="card_row">
                         <text fill="#D0D1D6" fill-opacity="0.8" font-size="11" font-weight="500">
                             <tspan x="28" y="252.5">Carbon units</tspan>
                         </text>
@@ -74,7 +75,7 @@
                         </text>
                     </g>
                     <g id="card_progress">
-                        <text fill="#EFECEA" font-size="14" font-weight="600" letter-spacing="0em">
+                        <text fill="#EFECEA" font-size="14" font-weight="600">
                             <tspan x="287" y="256.1" text-anchor="end">@@progress@@%</tspan>
                         </text>
                         @@progress_bar_component@@
@@ -82,7 +83,7 @@
                     <rect width="291" height="54" x="12.5" y="231.5" stroke="#D0D1D6" stroke-opacity=".1" rx="7.5" />
                 </g>
                 <g id="bottom">
-                    <g id="details" letter-spacing="0em">
+                    <g id="details">
                         <g id="surface_details">
                             <text fill="#D0D1D6" fill-opacity="0.8" font-size="10" font-weight="500">
                                 <tspan x="24" y="315.636">Surface</tspan>
@@ -101,7 +102,7 @@
                         </g>
                     </g>
                     <g id="sdg">
-                        <g id="sdg_details" letter-spacing="0em">
+                        <g id="sdg_details">
                             <text fill="#D0D1D6" fill-opacity="0.8" font-size="10" font-weight="500">
                                 <tspan x="233" y="315.636" text-anchor="end">Impact on</tspan>
                             </text>
@@ -122,7 +123,7 @@
         </g>
 
         <g id="main_info">
-            <g id="column1" letter-spacing="0em">
+            <g id="column1">
                 <text fill="#EFECEA" font-size="21" font-weight="bold" letter-spacing="-0.03em">
                     <tspan x="20" y="176.136">@@project.name@@</tspan>
                 </text>
@@ -141,7 +142,7 @@
                     <tspan x="34.8828" y="209.636">@@project.developer@@</tspan>
                 </text>
             </g>
-            <g id="column2" letter-spacing="0em">
+            <g id="column2">
                 <text fill="#D0D1D6" fill-opacity="0.8" font-size="10">
                     <tspan x="295" y="195.636" text-anchor="end">Certified by</tspan>
                 </text>
