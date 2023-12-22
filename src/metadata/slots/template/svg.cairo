@@ -61,7 +61,7 @@ fn print_card_lighting(ref svg: Array<felt252>, data: @Data) {
 }
 
 #[inline(always)]
-fn print_head_90180(ref svg: Array<felt252>, data: @Data) {
+fn print_head_22249(ref svg: Array<felt252>, data: @Data) {
     svg.append('<defs><pattern id=\\"pattern1\\');
     svg.append('" width=\\"1\\" height=\\"1\\"');
     svg.append(' patternContentUnits=\\"objectB');
@@ -225,7 +225,7 @@ fn print_background_image(ref svg: Array<felt252>, data: @Data) {
     svg.append('aint0_linear)\\" /></g>');
 }
 #[inline(always)]
-fn print_15780(ref svg: Array<felt252>, data: @Data) {
+fn print_67403(ref svg: Array<felt252>, data: @Data) {
     svg.append('<g filter=\\"url(%23card_blur)');
     svg.append('\\" mask=\\"url(%23card_mask)\\');
     svg.append('" transform=\\"matrix(-1 0 0 1');
@@ -258,9 +258,9 @@ fn print_head_card_container(ref svg: Array<felt252>, data: @Data) {
     svg.append('\\" stroke-opacity=\\".1\\" rx=');
     svg.append('\\"7.5\\" transform=\\"matrix(-');
     svg.append('1 0 0 1 303 231)\\" /></mask>');
-    print_15780(ref svg, data);
+    print_67403(ref svg, data);
 
-    print_head_90180(ref svg, data);
+    print_head_22249(ref svg, data);
 
     print_head_card_content(ref svg, data);
 
@@ -459,8 +459,8 @@ fn print_head_sft_template(ref svg: Array<felt252>, data: @Data) {
     svg.append('t: none; -ms-user-select: none;');
     svg.append(' user-select: none; -webkit-tap');
     svg.append('-highlight-color: rgba(255, 255');
-    svg.append(', 255, 0); font-family: Inter;');
-    svg.append(' } </style>');
+    svg.append(', 255, 0); font-family: Inter, ');
+    svg.append('Helvetica; } </style>');
     print_head_sft(ref svg, data);
 
     print_head_defs(ref svg, data);
