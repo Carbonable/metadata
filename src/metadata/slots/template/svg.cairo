@@ -61,7 +61,7 @@ fn print_card_lighting(ref svg: Array<felt252>, data: @Data) {
 }
 
 #[inline(always)]
-fn print_head_22249(ref svg: Array<felt252>, data: @Data) {
+fn print_head_72313(ref svg: Array<felt252>, data: @Data) {
     svg.append('<defs><pattern id=\\"pattern1\\');
     svg.append('" width=\\"1\\" height=\\"1\\"');
     svg.append(' patternContentUnits=\\"objectB');
@@ -225,7 +225,7 @@ fn print_background_image(ref svg: Array<felt252>, data: @Data) {
     svg.append('aint0_linear)\\" /></g>');
 }
 #[inline(always)]
-fn print_67403(ref svg: Array<felt252>, data: @Data) {
+fn print_22368(ref svg: Array<felt252>, data: @Data) {
     svg.append('<g filter=\\"url(%23card_blur)');
     svg.append('\\" mask=\\"url(%23card_mask)\\');
     svg.append('" transform=\\"matrix(-1 0 0 1');
@@ -258,9 +258,9 @@ fn print_head_card_container(ref svg: Array<felt252>, data: @Data) {
     svg.append('\\" stroke-opacity=\\".1\\" rx=');
     svg.append('\\"7.5\\" transform=\\"matrix(-');
     svg.append('1 0 0 1 303 231)\\" /></mask>');
-    print_67403(ref svg, data);
+    print_22368(ref svg, data);
 
-    print_head_22249(ref svg, data);
+    print_head_72313(ref svg, data);
 
     print_head_card_content(ref svg, data);
 
@@ -445,22 +445,21 @@ fn print_head_defs(ref svg: Array<felt252>, data: @Data) {
 
 #[inline(always)]
 fn print_head_sft_template(ref svg: Array<felt252>, data: @Data) {
-    svg.append('<svg id=\\"sft_template\\" widt');
-    svg.append('h=\\"316\\" height=\\"360\\" vi');
-    svg.append('ewBox=\\"0 0 316 360\\" fill=\\');
-    svg.append('"none\\" version=\\"1.1\\" xmln');
-    svg.append('s=\\"http://www.w3.org/2000/svg');
-    svg.append('\\" preserveAspectRatio=\\"xMid');
-    svg.append('YMid meet\\"><style>@import url');
-    svg.append('(https://fonts.googleapis.com/c');
-    svg.append('ss2?family=Inter:wght@400;500;6');
-    svg.append('00;700); svg text { -webkit-use');
-    svg.append('r-select: none; -moz-user-selec');
-    svg.append('t: none; -ms-user-select: none;');
-    svg.append(' user-select: none; -webkit-tap');
-    svg.append('-highlight-color: rgba(255, 255');
-    svg.append(', 255, 0); font-family: Inter, ');
-    svg.append('Helvetica; } </style>');
+    svg.append('<svg id=\\"sft_template\\" view');
+    svg.append('Box=\\"0 0 316 360\\" fill=\\"n');
+    svg.append('one\\" version=\\"1.1\\" xmlns=');
+    svg.append('\\"http://www.w3.org/2000/svg\\');
+    svg.append('" preserveAspectRatio=\\"xMidYM');
+    svg.append('id meet\\"><style>@import url(h');
+    svg.append('ttps://fonts.googleapis.com/css');
+    svg.append('2?family=Inter:wght@400;500;600');
+    svg.append(';700); svg text { -webkit-user-');
+    svg.append('select: none; -moz-user-select:');
+    svg.append(' none; -ms-user-select: none; u');
+    svg.append('ser-select: none; -webkit-tap-h');
+    svg.append('ighlight-color: rgba(255, 255,');
+    svg.append(' 255, 0); font-family: Inter, H');
+    svg.append('elvetica; } </style>');
     print_head_sft(ref svg, data);
 
     print_head_defs(ref svg, data);
