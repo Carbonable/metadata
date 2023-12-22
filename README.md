@@ -13,13 +13,13 @@
 
 ## About
 
-This repository contains all the relevants ressource to sotre and generate Carbonable metadata assets.
+This repository contains all the relevants assets for on-chain generation of Carbonable metadata.
 
 ## Project setup
 
 ### 📦 Requirements
 
-- [scarb](https://docs.swmansion.com/scarb/download.html#install-via-asdf)
+- [scarb 0.7.0](https://docs.swmansion.com/scarb/download.html#install-via-asdf)
 
 ### ⛏️ Compile
 
@@ -32,6 +32,14 @@ scarb build
 ```bash
 scarb test
 ```
+
+## 📚 Deployment
+
+Instructions for deployment
+
+1. Declare the Metadata implementations: `bash scripts/declare_contracts.sh`
+2. Declare the components: `bash scripts/deploy_components.sh` (stop before the 1 minute pause)
+3. Deploy and configure the provider: `bash scripts/deploy_components.sh`
 
 ## 📄 License
 
