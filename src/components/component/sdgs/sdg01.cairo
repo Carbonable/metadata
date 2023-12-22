@@ -22,9 +22,9 @@ mod Component {
 
             data.append(' id=\\"SDG1\\" xmlns=\\"http://w');
             data.append('ww.w3.org/2000/svg\\" viewBox=');
-            data.append('\\"0 0 62 62\\"><rect fill=\\"#');
+            data.append('\\"0 0 62 62\\"><rect fill=\\"%23');
             data.append('ea1d2d\\" width=\\"62\\" height');
-            data.append('=\\"62\\"/><g fill=\\"#fff\\"><');
+            data.append('=\\"62\\"/><g fill=\\"%23fff\\"><');
             data.append('path d=\\"M5.46,7.83c-.11.06-.4');
             data.append('2.18-.94.37s-.68.23-.79.28V6.78');
             data.append('A10.81,10.81,0,0,0,5,6.19a3.93,');
