@@ -71,7 +71,7 @@ mod Component {
 
             data.append('><rect width=\\"312\\" height=\\');
             data.append('"356\\" x=\\"2\\" y=\\"2\\" str');
-            data.append('oke=\\"url(#border_gradient)\\"');
+            data.append('oke=\\"url(%23border_gradient)\\"');
             data.append(' stroke-linejoin=\\"round\\" st');
             data.append('roke-opacity=\\"');
             data.append(props.stroke_opacity);

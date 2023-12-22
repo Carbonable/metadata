@@ -76,7 +76,7 @@ mod Component {
                     data.append(color);
                 },
                 Stroke::Gradient(gradient) => {
-                    data.append('url(#a)');
+                    data.append('url(%23a)');
                     need_defs = true;
                 },
             }
@@ -104,7 +104,7 @@ mod Component {
                     data.append(color);
                 },
                 Stroke::Gradient(gradient) => {
-                    data.append('url(#b)');
+                    data.append('url(%23b)');
                     need_defs = true;
                 },
             }
