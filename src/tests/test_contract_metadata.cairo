@@ -42,6 +42,12 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
 }
 
 #[test]
+#[available_gas(2_400_000)]
+fn test_contract_uri_setup() {
+    let (components, project_address, account) = setup();
+}
+
+#[test]
 #[available_gas(4400000)]
 fn test_construct_contract_uri() {
     let (components, project_address, account) = setup();
