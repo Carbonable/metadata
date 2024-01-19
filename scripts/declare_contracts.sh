@@ -20,7 +20,7 @@ declare() {
         exit 1
     fi
 
-    address=$(echo "$output" | grep -oP '0x[0-9a-fA-F]+ ')
+    address=$(echo "$output" | grep -oP '0x[0-9a-fA-F]+')
     echo $address
 }
 
@@ -33,7 +33,7 @@ Jaguar="./target/dev/compiled_JaguarIpfsUri.sierra.json"
 BORDER="./target/dev/compiled_metadata_components_component_sft_border_v2_Component.sierra.json"
 
 contracts=( $BanegasFarm $LasDelicias $Manjarisoa $ERC3525Contract )
-#contracts=( $Jaguar )
+# contracts=( $Manjarisoa )
 
 declare_all() {
     for contract in ${contracts[@]};
