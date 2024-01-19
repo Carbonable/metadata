@@ -46,10 +46,7 @@ fn get_static_data() -> ProjectStaticData {
 
 #[inline(always)]
 fn get_external_url_() -> Span<felt252> {
-    array![
-        'https://app.carbonable.io/', 'launchpad/', 'forest-regeneration-', 'madagascar'
-    ]
-        .span()
+    array!['https://app.carbonable.io/', 'launchpad/', 'forest-regeneration-', 'madagascar'].span()
 }
 
 #[inline(always)]
