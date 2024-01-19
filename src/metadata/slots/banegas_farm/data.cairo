@@ -39,8 +39,20 @@ fn get_static_data() -> ProjectStaticData {
         category: array![CATEGORY].span(),
         source: array![SOURCE].span(),
         sdgs: get_sdgs_(),
-        background_component: 'bg.BanegasFarm.jpg.b64'
+        background_component: 'bg.BanegasFarm.jpg.b64',
+        external_url: get_external_url_(),
     }
+}
+
+#[inline(always)]
+fn get_external_url_() -> Span<felt252> {
+    array![
+        'https://app.carbonable.io/',
+        'launchpad/',
+        'forest-regeneration-banegas',
+        '-farm-costa-rica'
+    ]
+        .span()
 }
 
 #[inline(always)]
