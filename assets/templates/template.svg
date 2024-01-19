@@ -21,7 +21,6 @@
                     <rect width="308" height="353" rx="8" fill="url(#paint0_linear)" />
                 </g>
 
-                <!-- Update transparent card -->
                 <mask id="card_mask" width="292" height="55" x="12" y="231" maskUnits="userSpaceOnUse"
                     style="mask-type:alpha">
                     <rect width="292" height="55" fill="url(#pattern0)" rx="8" transform="matrix(-1 0 0 1 304 231)" />
