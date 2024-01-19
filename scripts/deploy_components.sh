@@ -13,7 +13,7 @@ build() {
 
 # declare the contract
 declare() {
-    output=$(starkli declare $SIERRA_FILE --keystore-password $KEYSTORE_PASSWORD --watch 2>&1)
+    output=$(starkli declare $SIERRA_FILE --keystore-password $KEYSTORE_PASSWORD --rpc $STARKNET_RPC --watch 2>&1)
 
     if [[ $output == *"Error"* ]]; then
         echo "Error: $output"
@@ -27,7 +27,7 @@ declare() {
 deploy_provider() {
     OWNER=$DEPLOYER_ADDRESS
 
-    output=$(starkli deploy $PROVIDER_CLASS "$OWNER" --keystore-password $KEYSTORE_PASSWORD --watch 2>&1)
+    output=$(starkli deploy $PROVIDER_CLASS "$OWNER" --keystore-password $KEYSTORE_PASSWORD --rpc $STARKNET_RPC --watch 2>&1)
 
     if [[ $output == *"Error"* ]]; then
         echo "Error: $output"
@@ -39,7 +39,7 @@ deploy_provider() {
 }
 
 add_component() {
-    output=$(starkli invoke $PROVIDER_ADDRESS register $COMPONENT_CLASS --keystore-password $KEYSTORE_PASSWORD --watch 2>&1)
+    output=$(starkli invoke $PROVIDER_ADDRESS register $COMPONENT_CLASS --keystore-password $KEYSTORE_PASSWORD --rpc $STARKNET_RPC --watch 2>&1)
 
     if [[ $output == *"Error"* ]]; then
         echo "Error: $output"
@@ -64,6 +64,7 @@ declare_components() {
         echo "Declaring: " $SIERRA_FILE
 
         class_hash=$(declare | tail -n 1)
+        echo "at" $class_hash
         component_classes+=( $class_hash )
     done
 }
@@ -104,8 +105,8 @@ make() {
     setup_provider
 }
 
-# make
+make
 
-SIERRA_FILE="./target/dev/compiled_metadata_components_component_logos_carbonable_Component.sierra.json"
-class_hash=$(declare | tail -n 1)
-echo $class_hash
+# SIERRA_FILE="./target/dev/compiled_metadata_components_component_logos_carbonable_Component.sierra.json"
+# class_hash=$(declare | tail -n 1)
+# echo $class_hash
