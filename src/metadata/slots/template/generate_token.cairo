@@ -15,8 +15,8 @@ use alexandria_ascii::ToAsciiTrait;
 fn add_metadata_members_(ref metadata: JsonMetadata, data: @TemplateData) {
     metadata.add_member('name', *data.token_name);
     metadata.add_member('description', *data.token_description);
-    metadata.add_member('external_url', common_data::get_external_url());
-    metadata.add_member('youtube_url', common_data::get_youtube_url());
+    metadata.add_member('external_url', *data.external_url);
+    metadata.add_member('youtube_url', *data.youtube_url);
     metadata.add_member('image', svg::generate(data));
 }
 
@@ -100,7 +100,7 @@ fn generate_data(static: ProjectStaticData, storage: StorageData) -> TemplateDat
         project: static,
         token_name,
         token_description,
-        external_url: common_data::get_external_url(),
+        external_url: static.external_url,
         youtube_url: common_data::get_youtube_url(),
         status: status.to_string(),
         project_area: array![static.area.to_ascii()].span(),
