@@ -46,7 +46,8 @@ fn get_static_data() -> ProjectStaticData {
 
 #[inline(always)]
 fn get_external_url_() -> Span<felt252> {
-    array!['https://app.carbonable.io/', 'launchpad/', 'mangroves-regeneration-', 'karathuru'].span()
+    array!['https://app.carbonable.io/', 'launchpad/', 'mangroves-regeneration-', 'karathuru']
+        .span()
 }
 
 #[inline(always)]
@@ -70,5 +71,4 @@ fn add_description_(ref data: Array<felt252>) {
     data.append('reserved for investors and the ');
     data.append('other half to local communities');
 }
-
 
