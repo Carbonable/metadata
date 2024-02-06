@@ -85,6 +85,10 @@ mod metadata {
             mod contract;
             mod data;
         }
+        mod karathuru {
+            mod contract;
+            mod data;
+        }
         mod template {
             mod data;
             mod svg;
