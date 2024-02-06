@@ -37,8 +37,8 @@ scarb test
 
 Instructions for deployment
 
-1. Declare the Metadata implementations: `bash scripts/declare_contracts.sh`
-2. Declare the components: `bash scripts/deploy_components.sh` (stop before the 1 minute pause)
+1. Declare the components: `bash scripts/deploy_components.sh` (stop before the 1 minute pause) TODO : Need to write scrip with multi-call for register components
+2. Declare the Metadata implementations: `bash scripts/declare_contracts.sh`
 3. Deploy and configure the provider: `bash scripts/deploy_components.sh`
 
 ## 📄 License

@@ -100,7 +100,7 @@ make() {
     echo ${#component_classes[@]}" Components to register"
     echo "Waiting a minute.."
 
-    sleep 60
+    sleep 10
 
     setup_provider
 }
