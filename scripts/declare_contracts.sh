@@ -27,12 +27,13 @@ declare() {
 BanegasFarm="./target/dev/compiled_BanegasFarmUri.sierra.json"
 LasDelicias="./target/dev/compiled_LasDeliciasUri.sierra.json"
 Manjarisoa="./target/dev/compiled_ManjarisoaUri.sierra.json"
+Karathuru="./target/dev/compiled_KarathuruUri.sierra.json"
 ERC3525Contract="./target/dev/compiled_ContractMetadata.sierra.json"
 Jaguar="./target/dev/compiled_JaguarIpfsUri.sierra.json"
 
 BORDER="./target/dev/compiled_metadata_components_component_sft_border_v2_Component.sierra.json"
 
-contracts=( $BanegasFarm $LasDelicias $Manjarisoa $ERC3525Contract )
+contracts=( $BanegasFarm $LasDelicias $Manjarisoa $Karathuru $ERC3525Contract )
 # contracts=( $Manjarisoa )
 
 declare_all() {

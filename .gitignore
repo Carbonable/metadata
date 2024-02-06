@@ -1,3 +1,21 @@
-target/
-tmp/
-.env
+# IDE
+.vscode
+account.json
+keystore.json
+
+# starknet 
+node.json
+*.deployments.txt
+artifacts
+target
+Scarb.lock
+
+# nile
+127.0.0.1.*
+
+.DS_Store
+
+tmp
+.tmp*
+scripts/*.log
+.env*
