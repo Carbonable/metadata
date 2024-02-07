@@ -1,4 +1,4 @@
-const NAME: felt252 = 'bg.water.jpg.b64';
+const NAME: felt252 = 'bg.Karathuru.jpg.b64';
 
 #[starknet::contract]
 mod Component {
