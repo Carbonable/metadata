@@ -9,6 +9,7 @@ use test::test_utils::assert_eq;
 use metadata::metadata::slots::banegas_farm::contract::BanegasFarmUri;
 use metadata::metadata::slots::las_delicias::contract::LasDeliciasUri;
 use metadata::metadata::slots::manjarisoa::contract::ManjarisoaUri;
+use metadata::metadata::slots::lorem_ipsum::contract::LoremIpsumUri;
 use metadata::tests::mocks::project::ProjectMock;
 use metadata::interfaces::slot_descriptor::{
     ISlotDescriptorLibraryDispatcher, ISlotDescriptorDispatcherTrait
@@ -49,6 +50,7 @@ use metadata::components::component::sft::badges::badge_XS::Component as SFTBadg
 use metadata::components::component::backgrounds::bg_banegas_farm::Component as ParrotBackground;
 use metadata::components::component::backgrounds::bg_las_delicias::Component as SwampBackground;
 use metadata::components::component::backgrounds::bg_manjarisoa::Component as MonkeyBackground;
+use metadata::components::component::backgrounds::bg_water::Component as WaterBackground;
 use metadata::components::provider::ComponentProvider;
 
 use metadata::tests::utils;
@@ -76,6 +78,7 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
     provider.register(as_class(SwampBackground::TEST_CLASS_HASH));
     provider.register(as_class(ParrotBackground::TEST_CLASS_HASH));
     provider.register(as_class(MonkeyBackground::TEST_CLASS_HASH));
+    provider.register(as_class(WaterBackground::TEST_CLASS_HASH));
 
     provider.register(as_class(SDG01::TEST_CLASS_HASH));
     provider.register(as_class(SDG02::TEST_CLASS_HASH));
@@ -145,7 +148,7 @@ fn test_construct_token_uri() {
     let token_id = 1_u256;
 
     let metadata = ISlotDescriptorLibraryDispatcher {
-        class_hash: as_class(BanegasFarmUri::TEST_CLASS_HASH)
+        class_hash: as_class(LoremIpsumUri::TEST_CLASS_HASH)
     };
 
     set_contract_address(project_address);
