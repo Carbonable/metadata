@@ -17,7 +17,7 @@ fn add_metadata_members_(ref metadata: JsonMetadata, data: @TemplateData) {
     metadata.add_member('description', *data.token_description);
     metadata.add_member('external_url', *data.external_url);
     metadata.add_member('youtube_url', *data.youtube_url);
-    metadata.add_member('image', svg::generate(data));
+    metadata.add_member('image_data', svg::generate(data));
 }
 
 #[inline(always)]
@@ -35,21 +35,13 @@ fn add_metadata_attributes_(ref metadata: JsonMetadata, data: @TemplateData) {
     metadata.add_attribute(Null, 'Project Category'.to_span(), *data.project.category);
     metadata.add_attribute(Null, 'Source'.to_span(), *data.project.source);
     metadata.add_attribute(Number, 'Project Area (ha)'.to_span(), *data.project_area);
-
     metadata.add_attribute(Number, 'End year'.to_span(), *data.end_year);
     // TODO: Mutable and DisplayType::Date
     // metadata.add_attribute(DisplayType::Date, 'End year'.to_span(), *data.end_year);
-
-    metadata.add_attribute(Number, 'Total Carbon Units'.to_span(), *data.total_capacity);
-    metadata.add_attribute(Number, 'Projected Carbon Units'.to_span(), *data.projected_capacity);
-    metadata.add_attribute(Number, 'Audited Carbon Units'.to_span(), *data.audited_capacity);
+    metadata.add_attribute(Number, 'Project Carbon Units'.to_span(), *data.project_carbon_units);
     metadata
         .add_attribute(
-            Number, 'Asset Projected Carbon Units'.to_span(), *data.asset_projected_capacity
-        );
-    metadata
-        .add_attribute(
-            Number, 'Asset Audited Carbon Units'.to_span(), *data.asset_audited_capacity
+            Number, 'Lifetime Asset Carbon Units'.to_span(), *data.lifetime_asset_carbon_units
         );
 
     let attr_name = ('Asset Area (m' * 0x100 + 0xB2) * 0x100 + ')';
@@ -94,7 +86,9 @@ fn generate_data(static: ProjectStaticData, storage: StorageData) -> TemplateDat
     let status: ProjectStatus = template_data::get_status_(storage);
     let size: AssetSize = template_data::get_asset_size_(static, storage);
     let null = array![''].span();
-    let audited_capacity = static.projected_cu - static.projected_cu;
+    let total_project_cu = storage.final_absorption / storage.ton_equivalent;
+    let project_remaining_cu = (storage.final_absorption - storage.current_absorption)
+        / storage.ton_equivalent;
 
     TemplateData {
         project: static,
@@ -105,17 +99,12 @@ fn generate_data(static: ProjectStaticData, storage: StorageData) -> TemplateDat
         status: status.to_string(),
         project_area: array![static.area.to_ascii()].span(),
         end_year: array![static.end_year.to_ascii()].span(),
-        total_capacity: array![static.projected_cu.to_ascii()].span(),
-        projected_capacity: array![static.projected_cu.to_ascii()].span(),
-        audited_capacity: array![audited_capacity.to_ascii()].span(),
-        asset_total_capacity: template_data::get_asset_capacity_formatted_str_(
+        project_carbon_units: array![project_remaining_cu.to_ascii()].span(),
+        asset_carbon_units: template_data::get_asset_capacity_formatted_str_(
+            storage, project_remaining_cu.into()
+        ),
+        lifetime_asset_carbon_units: template_data::get_asset_capacity_str_(
             storage, storage.final_absorption.into()
-        ),
-        asset_projected_capacity: template_data::get_asset_capacity_str_(
-            storage, (static.projected_cu * storage.ton_equivalent).into()
-        ),
-        asset_audited_capacity: template_data::get_asset_capacity_str_(
-            storage, (audited_capacity * storage.ton_equivalent).into()
         ),
         asset_area_formatted: template_data::get_asset_area_formatted_str_(storage, static),
         asset_area: template_data::get_asset_area_str_(storage, static),
