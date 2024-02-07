@@ -40,6 +40,7 @@ mod components {
             mod bg_banegas_farm;
             mod bg_las_delicias;
             mod bg_manjarisoa;
+            mod bg_water;
         }
 
         mod sft {
@@ -78,6 +79,10 @@ mod metadata {
             mod data;
         }
         mod las_delicias {
+            mod contract;
+            mod data;
+        }
+        mod lorem_ipsum {
             mod contract;
             mod data;
         }
