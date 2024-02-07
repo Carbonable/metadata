@@ -22,10 +22,10 @@ impl DefaultProperties of Default<Properties> {
             y: Option::None,
             status: array!['Upcoming'].span(),
             r1_width: 85,
-            c_fill: '%238CA5FF',
+            c_fill: '#8CA5FF',
             c_opacity: '.9',
-            t_fill: '%2397ACFA',
-            r2_stroke: '%238994F5',
+            t_fill: '#97ACFA',
+            r2_stroke: '#8994F5',
             r2_stroke_opacity: '.3',
         }
     }
@@ -75,7 +75,7 @@ mod Component {
             data.append('h=\\"');
             data.append(props.r1_width.to_ascii());
             data.append('\\" height=\\"22\\" fill');
-            data.append('=\\"%231F2128\\" fill-opacity=\\"');
+            data.append('=\\"#1F2128\\" fill-opacity=\\"');
             data.append('.2\\" rx=\\"11\\"/><circle cx=');
             data.append('\\"10\\" cy=\\"11\\" r=\\"3\\"');
             data.append(' fill=\\"');
