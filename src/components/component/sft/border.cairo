@@ -71,8 +71,8 @@ mod Component {
 
             data.append(' ><rect width=\\"');
             data.append('312\\" height=\\"356\\" x=\\"2');
-            data.append('\\" y=\\"2\\" stroke=\\"url(%23bord');
-            data.append('er)\\" stroke-linejoin=\\"round\\"');
+            data.append('\\" y=\\"2\\" stroke=\\"url(#border');
+            data.append(')\\" stroke-linejoin=\\"round\\"');
             data.append(' stroke-opacity=\\"');
             data.append(props.stroke_opacity);
             data.append('\\" stroke');
