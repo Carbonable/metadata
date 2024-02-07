@@ -97,7 +97,8 @@ make() {
 
     declare_all
 
-    echo ${#component_classes[@]}" Components to register"
+    echo ${#component_classes[@]}" Components to register:"
+    echo ${component_classes[*]}
     echo "Waiting a minute.."
 
     sleep 60
