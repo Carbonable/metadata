@@ -2,16 +2,8 @@ use alexandria_ascii::ToAsciiArrayTrait;
 
 use metadata::interfaces::component_provider::IComponentProviderDispatcher;
 
-#[derive(Default, Copy, Drop)]
 type Shortstring = felt252;
-#[derive(Default, Copy, Drop)]
 type String = Span<Shortstring>;
-
-impl DefaultSpan<T, impl D: Default<T>, impl D: Drop<T>> of Default<Span<T>> {
-    fn default() -> Span<T> {
-        array![].span()
-    }
-}
 
 #[derive(Copy, Drop)]
 struct StorageData {
@@ -87,7 +79,7 @@ impl AssetSizeToStringImpl of ToString<AssetSize> {
     }
 }
 
-#[derive(Copy, Drop, Default)]
+#[derive(Copy, Drop)]
 struct ProjectStaticData {
     name: String,
     description: String,
