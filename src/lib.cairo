@@ -40,7 +40,7 @@ mod components {
             mod bg_banegas_farm;
             mod bg_las_delicias;
             mod bg_manjarisoa;
-            mod bg_water;
+            mod bg_karathuru;
         }
 
         mod sft {
