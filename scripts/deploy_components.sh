@@ -1,6 +1,28 @@
 #!/bin/bash
 source .env
 
+# Check if --debug parameter is passed
+debug=0
+declare=0
+setup=0
+
+TEMP=$(getopt -o cpd --long components,provider,debug -- "$@")
+
+eval set -- "$TEMP"
+
+while true ; do
+    case "$1" in
+        -c|--components)
+            declare=1 ; shift ;;
+        -p|--provider)
+            setup=1 ; shift ;;
+        -d|--debug)
+            debug=1 ; shift ;;
+        --) shift ; break ;;
+        *) echo "Internal error!" ; exit 1 ;;
+    esac
+done
+
 # build the project
 build() {
     output=$(scarb build 2>&1)
@@ -11,8 +33,10 @@ build() {
     fi
 }
 
-# declare the contract
 declare() {
+    if [ $debug -eq 1 ]; then
+        printf "starkli declare %s --keystore-password KEYSTORE_PASSWORD --rpc %s --watch \n" "$SIERRA_FILE" "$STARKNET_RPC" > ./scripts/debug_declare_components.log
+    fi
     output=$(starkli declare $SIERRA_FILE --keystore-password $KEYSTORE_PASSWORD --rpc $STARKNET_RPC --watch 2>&1)
 
     if [[ $output == *"Error"* ]]; then
@@ -24,21 +48,10 @@ declare() {
     echo $address
 }
 
-deploy_provider() {
-    OWNER=$DEPLOYER_ADDRESS
-
-    output=$(starkli deploy $PROVIDER_CLASS "$OWNER" --keystore-password $KEYSTORE_PASSWORD --rpc $STARKNET_RPC --watch 2>&1)
-
-    if [[ $output == *"Error"* ]]; then
-        echo "Error: $output"
-        exit 1
-    fi
-
-    address=$(echo "$output" | grep -oP '0x[0-9a-fA-F]+' | tail -n 1) 
-    echo $address
-}
-
 add_component() {
+    if [ $debug -eq 1 ]; then
+        printf "starkli invoke %s register %s --keystore-password KEYSTORE_PASSWORD --rpc %s --watch \n" "$PROVIDER_ADDRESS" $COMPONENT_CLASS "$STARKNET_RPC" >> ./scripts/debug_setup_provider.log
+    fi
     output=$(starkli invoke $PROVIDER_ADDRESS register $COMPONENT_CLASS --keystore-password $KEYSTORE_PASSWORD --rpc $STARKNET_RPC --watch 2>&1)
 
     if [[ $output == *"Error"* ]]; then
@@ -69,19 +82,6 @@ declare_components() {
     done
 }
 
-setup_provider() {
-    contract=$(deploy_provider)
-    PROVIDER_ADDRESS=$contract
-    echo "Provider deployed at:"$PROVIDER_ADDRESS
-
-    for class_hash in ${component_classes[@]};
-    do
-        COMPONENT_CLASS=$class_hash
-        add_component
-    done
-}
-
-
 declare_all() {
     # build
     SIERRA_FILE="./target/dev/compiled_ComponentProvider.sierra.json"
@@ -89,25 +89,57 @@ declare_all() {
     PROVIDER_CLASS=$class_hash
     echo "PROVIDER_CLASS="$PROVIDER_CLASS
 
+    echo "$PROVIDER_CLASS" > .tmp.addr.provider
+
     declare_components
+
+    echo "${component_classes[@]}" > .tmp.addr.component_classes
+
+    echo ${#component_classes[@]}" Components to register"
 }
 
-make() {
-    echo "Declaring all contracts"
+deploy_provider() {
+    OWNER=$DEPLOYER_ADDRESS
 
+    PROVIDER_CLASS=$(cat .tmp.addr.provider)
+    printf "Logs : Provider class : %s \n" "$PROVIDER_CLASS" > ./scripts/debug_setup_provider.log
+    
+    if [ $debug -eq 1 ]; then
+        printf "starkli deploy %s %s --keystore-password KEYSTORE_PASSWORD --rpc %s --watch \n" "$PROVIDER_CLASS" $OWNER "$STARKNET_RPC" >> ./scripts/debug_setup_provider.log
+    fi
+    output=$(starkli deploy $PROVIDER_CLASS "$OWNER" --keystore-password $KEYSTORE_PASSWORD --rpc $STARKNET_RPC --watch 2>&1)
+
+    if [[ $output == *"Error"* ]]; then
+        echo "Error: $output"
+        exit 1
+    fi
+
+    address=$(echo "$output" | grep -oP '0x[0-9a-fA-F]+' | tail -n 1) 
+    echo $address
+}
+
+setup_provider() {
+    contract=$(deploy_provider)
+    PROVIDER_ADDRESS=$contract
+    echo "Provider deployed at:"$PROVIDER_ADDRESS
+
+    readarray -t component_classes < .tmp.addr.component_classes
+
+    counter=0
+    for class_hash in ${component_classes[@]};
+    do
+        COMPONENT_CLASS=$class_hash
+        add_component
+        ((counter++))
+    done
+
+    echo "Total components added: $counter"
+}
+
+if [ $declare -eq 1 ]; then
     declare_all
+fi
 
-    echo ${#component_classes[@]}" Components to register:"
-    echo ${component_classes[*]}
-    echo "Waiting a minute.."
-
-    sleep 60
-
+if [ $setup -eq 1 ]; then
     setup_provider
-}
-
-make
-
-# SIERRA_FILE="./target/dev/compiled_metadata_components_component_logos_carbonable_Component.sierra.json"
-# class_hash=$(declare | tail -n 1)
-# echo $class_hash
+fi

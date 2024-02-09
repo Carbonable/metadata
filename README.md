@@ -37,9 +37,25 @@ scarb test
 
 Instructions for deployment
 
-1. Declare the Metadata implementations: `bash scripts/declare_contracts.sh`
-2. Declare the components: `bash scripts/deploy_components.sh` (stop before the 1 minute pause)
-3. Deploy and configure the provider: `bash scripts/deploy_components.sh`
+1. Component Declaration
+   - Run the script `bash scripts/deploy_components.sh --components --debug` to declare all components.
+   - **Note**: This script may need to be executed multiple times until all components are declared without any errors.
+
+2. Provider Deployment & Setup
+   - Use the script `bash scripts/deploy_components.sh --provider --debug` to deploy and set up the provider.
+
+3. Metadata Class Declaration
+   - Declare classes using the script `bash scripts/declare_contracts.sh --contracts --debug`.
+
+4. Project Contract Provider Setup
+   - Set the provider on the Project contract.
+
+5. Project URI Setup
+   - Set the Project URI.
+
+6. Slot URI Setup
+   - Set the Slot URI.
+
 
 ## 📄 License
 
