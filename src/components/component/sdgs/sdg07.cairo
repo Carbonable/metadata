@@ -23,9 +23,9 @@ mod Component {
             data.append(' id=\\"SDG7\\" xmlns=\\"http://w');
             data.append('ww.w3.org/2000/svg\\" viewBox=');
             data.append('\\"0 0 62.02 62.02\\"><rect fil');
-            data.append('l=\\"%23fdb714\\" width=\\"62.02');
+            data.append('l=\\"#fdb714\\" width=\\"62.02');
             data.append('\\" height=\\"62.02\\"/><g fill');
-            data.append('=\\"%23fff\\"><path d=\\"M8.3,7.1');
+            data.append('=\\"#fff\\"><path d=\\"M8.3,7.1');
             data.append('2H5.09V5.39h5.42V6.87L8,17.22H5');
             data.append('.82Z\\"/><path d=\\"M16.22,5.39');
             data.append('h.88L18,9.91h-.77l-.18-1.05h-.7');

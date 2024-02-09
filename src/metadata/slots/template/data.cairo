@@ -27,7 +27,7 @@ const BADGE_COMP_ID: felt252 = 'SFT.Badge.svg';
 const BORDER_COMP_ID: felt252 = 'SFT.Border.v2.svg';
 
 
-#[derive(Drop, Copy, Default)]
+#[derive(Drop, Copy)]
 struct TemplateData {
     project: ProjectStaticData,
     token_name: String,
@@ -37,14 +37,11 @@ struct TemplateData {
     status: String,
     project_area: String,
     end_year: String,
-    total_capacity: String,
-    projected_capacity: String,
-    audited_capacity: String,
-    asset_total_capacity: String,
-    asset_projected_capacity: String,
-    asset_audited_capacity: String,
+    project_carbon_units: String,
+    lifetime_asset_carbon_units: String,
     asset_area: String,
     // SVG specific data
+    asset_carbon_units: String,
     asset_area_formatted: String,
     progress: String,
     sdg_components: String,
@@ -141,7 +138,7 @@ fn generate_sdg_(
     data.append(x_str);
     data.append('\\" y=\\"');
     data.append(y_str);
-    data.append('\\" fill=\\"%23272727\\" rx=\\"2\\"');
+    data.append('\\" fill=\\"#272727\\" rx=\\"2\\"');
 
     // clip path and group
     data.append('/><defs>');
@@ -156,9 +153,9 @@ fn generate_sdg_(
     data.append('\\" y=\\"');
     data.append(y_str);
     data.append('\\" rx=\\"2\\"/></clipPath></de');
-    data.append('fs><g fill=\\"url(%23h)\\" fill-o');
+    data.append('fs><g fill=\\"url(#h)\\" fill-o');
     data.append('pacity=\\".6\\" clip');
-    data.append('-path=\\"url(%23clip-sdg-');
+    data.append('-path=\\"url(#clip-sdg-');
     data.append(index_str);
     data.append(')\\">');
 
@@ -284,7 +281,7 @@ fn get_asset_area_formatted_str_(storage: StorageData, static: ProjectStaticData
             let asset_area = asset_area / common_data::ONE_HA_IN_M2;
             array![asset_area.to_ascii(), 'ha'].span()
         } else {
-            array![asset_area.to_ascii(), 'm&%23xb2;'].span()
+            array![asset_area.to_ascii(), 'm&#xb2;'].span()
         }
     }
 }
@@ -328,58 +325,42 @@ fn get_progress_bar_props_(
     ) =
         match status {
         ProjectStatus::Upcoming => (
-            sft::progress_bar::Stroke::Gradient(
-                array![('.4', '%23A8C4EF'), ('1', '%230AF2AD')].span()
-            ),
+            sft::progress_bar::Stroke::Gradient(array![('.4', '#A8C4EF'), ('1', '#0AF2AD')].span()),
             Option::Some('.3'),
             Option::None,
-            sft::progress_bar::Stroke::Gradient(
-                array![('.4', '%23A8C4EF'), ('1', '%230AF2AD')].span()
-            ),
+            sft::progress_bar::Stroke::Gradient(array![('.4', '#A8C4EF'), ('1', '#0AF2AD')].span()),
             Option::Some('.8'),
             Option::None
         ),
         ProjectStatus::Live => (
-            sft::progress_bar::Stroke::Gradient(
-                array![('.4', '%23A8C4EF'), ('1', '%230AF2AD')].span()
-            ),
+            sft::progress_bar::Stroke::Gradient(array![('.4', '#A8C4EF'), ('1', '#0AF2AD')].span()),
             Option::Some('.3'),
             Option::None,
-            sft::progress_bar::Stroke::Gradient(
-                array![('.4', '%23A8C4EF'), ('1', '%230AF2AD')].span()
-            ),
+            sft::progress_bar::Stroke::Gradient(array![('.4', '#A8C4EF'), ('1', '#0AF2AD')].span()),
             Option::Some('.8'),
             Option::None
         ),
         ProjectStatus::Paused => (
-            sft::progress_bar::Stroke::Gradient(
-                array![('0', '%23EA8C55'), ('1', '%23916B33')].span()
-            ),
+            sft::progress_bar::Stroke::Gradient(array![('0', '#EA8C55'), ('1', '#916B33')].span()),
             Option::Some('.3'),
             Option::None,
-            sft::progress_bar::Stroke::Gradient(
-                array![('0', '%23C8510C'), ('1', '%23916B33')].span()
-            ),
+            sft::progress_bar::Stroke::Gradient(array![('0', '#C8510C'), ('1', '#916B33')].span()),
             Option::Some('.8'),
             Option::None
         ),
         ProjectStatus::Stopped => (
-            sft::progress_bar::Stroke::Color('%23f69a86'),
+            sft::progress_bar::Stroke::Color('#f69a86'),
             Option::Some('.2'),
             Option::None,
-            sft::progress_bar::Stroke::Color('%23b44040'),
+            sft::progress_bar::Stroke::Color('#b44040'),
             Option::None,
             Option::None
         ),
         ProjectStatus::Ended => (
-            sft::progress_bar::Stroke::Gradient(
-                array![('.4', '%23A8C4EF'), ('1', '%230AF2AD')].span()
-            ),
+            sft::progress_bar::Stroke::Gradient(array![('.4', '#A8C4EF'), ('1', '#0AF2AD')].span()),
             Option::Some('.3'),
             Option::None,
-            sft::progress_bar::Stroke::Gradient(
-                array![('.4', '%23A8C4EF'), ('1', '%230AF2AD')].span()
-            ),
+            sft::progress_bar::Stroke::Gradient(array![('.4', '#A8C4EF'), ('1', '#0AF2AD')].span()),
             Option::Some('.8'),
             Option::Some('.5')
         ),
@@ -425,19 +406,19 @@ fn get_status_props_(status: ProjectStatus) -> sft::status::Properties {
     let (status_str, r1_width, c_fill, c_opacity, t_fill, r2_stroke, r2_stroke_opacity) =
         match status {
         ProjectStatus::Upcoming => (
-            array!['Upcoming'].span(), 85, '%238CA5FF', '.9', '%2397ACFA', '%238994F5', '.3'
+            array!['Upcoming'].span(), 85, '#8CA5FF', '.9', '#97ACFA', '#8994F5', '.3'
         ),
         ProjectStatus::Live => (
-            array!['Live'].span(), 50, '%2309E1A1', '1', '%230AF2AD', '%23ABEFC6', '.3'
+            array!['Live'].span(), 50, '#09E1A1', '1', '#0AF2AD', '#ABEFC6', '.3'
         ),
         ProjectStatus::Paused => (
-            array!['Paused'].span(), 69, '%23F7640E', '.7', '%23EA8C55', '%23D2540B', '.3'
+            array!['Paused'].span(), 69, '#F7640E', '.7', '#EA8C55', '#D2540B', '.3'
         ),
         ProjectStatus::Stopped => (
-            array!['Stopped'].span(), 75, '%23F93743', '.7', '%23FF6868', '%23F93743', '.3'
+            array!['Stopped'].span(), 75, '#F93743', '.7', '#FF6868', '#F93743', '.3'
         ),
         ProjectStatus::Ended => (
-            array!['Ended'].span(), 63, '%23D0D1D6', '.7', '%23D0D1D6', '%23D0D1D6', '.2'
+            array!['Ended'].span(), 63, '#D0D1D6', '.7', '#D0D1D6', '#D0D1D6', '.2'
         ),
     };
 
@@ -509,17 +490,17 @@ fn generate_status_(storage: StorageData, static: ProjectStaticData) -> String {
     data.append('dDeviation=\\"10\\" result=\\"bl');
     data.append('ur\\"/><feBlend in2=\\"blur\\"/');
     data.append('></filter></defs><g filter=\\"u');
-    data.append('rl(%23status_blur)\\" clip-path=');
-    data.append('\\"url(%23status_blur_clip)\\"><g');
-    data.append(' filter=\\"url(%23filter0_d)\\" c');
-    data.append('lip-path=\\"url(%23clip0)\\"><g');
+    data.append('rl(#status_blur)\\" clip-path=');
+    data.append('\\"url(#status_blur_clip)\\"><g');
+    data.append(' filter=\\"url(#filter0_d)\\" c');
+    data.append('lip-path=\\"url(#clip0)\\"><g');
     data.append(' transf');
     data.append('orm=\\"matrix(-1 0 0 1 312 3)\\');
     data.append('"><rect width=\\"308\\" height=');
     data.append('\\"353\\" rx=\\"8\\" fill=\\"ur');
-    data.append('l(%23pattern0)\\"/><rect width=\\');
+    data.append('l(#pattern0)\\"/><rect width=\\');
     data.append('"308\\" height=\\"353\\" rx=\\"');
-    data.append('8\\" fill=\\"url(%23paint0_linear');
+    data.append('8\\" fill=\\"url(#paint0_linear');
     data.append(')\\"/></g></g></g>');
 
     let mut args: Array<felt252> = Default::default();
@@ -569,13 +550,13 @@ fn generate_badge_(storage: StorageData, size: AssetSize) -> String {
 fn get_border_props_(size: AssetSize) -> sft::border_v2::Properties {
     let (x1, x2, y1, y2, stops, stroke_opacity) = match size {
         AssetSize::XS => (
-            '4', '312', '180', '180', array![('0', '%2360EFFF'), ('1', '%2300FF87')].span(), '0.5'
+            '4', '312', '180', '180', array![('0', '#60EFFF'), ('1', '#00FF87')].span(), '0.5'
         ),
         AssetSize::S => (
-            '4', '312', '180', '180', array![('0', '%23FFEDBC'), ('1', '%23ED4264')].span(), '0.6'
+            '4', '312', '180', '180', array![('0', '#FFEDBC'), ('1', '#ED4264')].span(), '0.6'
         ),
         AssetSize::M => (
-            '4', '312', '180', '180', array![('0', '%23AB4883'), ('1', '%238785FF')].span(), '0.7'
+            '4', '312', '180', '180', array![('0', '#AB4883'), ('1', '#8785FF')].span(), '0.7'
         ),
         AssetSize::L => (
             '61.5',
@@ -583,15 +564,15 @@ fn get_border_props_(size: AssetSize) -> sft::border_v2::Properties {
             '4',
             '356',
             array![
-                ('.08', '%23DEB69C'),
-                ('.19', '%2355372C'),
-                ('.4', '%23FFECE0'),
-                ('.51', '%23F0CAB2'),
-                ('.57', '%23775C50'),
-                ('.62', '%2355372C'),
-                ('.79', '%237A5843'),
-                ('.91', '%23F0CAB2'),
-                ('1', '%23FFECE0'),
+                ('.08', '#DEB69C'),
+                ('.19', '#55372C'),
+                ('.4', '#FFECE0'),
+                ('.51', '#F0CAB2'),
+                ('.57', '#775C50'),
+                ('.62', '#55372C'),
+                ('.79', '#7A5843'),
+                ('.91', '#F0CAB2'),
+                ('1', '#FFECE0'),
             ]
                 .span(),
             '0.86'
@@ -602,15 +583,15 @@ fn get_border_props_(size: AssetSize) -> sft::border_v2::Properties {
             '15.5',
             '356',
             array![
-                ('.07', '%23FBFBFD'),
-                ('.24', '%23C8D4DA'),
-                ('.43', '%23fff'),
-                ('.53', '%239EB9CD'),
-                ('.66', '%23E3E9EE'),
-                ('.71', '%23FAFBFC'),
-                ('.75', '%239EB9CD'),
-                ('.86', '%23D6DFE6'),
-                ('.92', '%23A7C1D0'),
+                ('.07', '#FBFBFD'),
+                ('.24', '#C8D4DA'),
+                ('.43', '#fff'),
+                ('.53', '#9EB9CD'),
+                ('.66', '#E3E9EE'),
+                ('.71', '#FAFBFC'),
+                ('.75', '#9EB9CD'),
+                ('.86', '#D6DFE6'),
+                ('.92', '#A7C1D0'),
             ]
                 .span(),
             '0.9'
@@ -621,16 +602,16 @@ fn get_border_props_(size: AssetSize) -> sft::border_v2::Properties {
             '4',
             '361',
             array![
-                ('.07', '%23E1B950'),
-                ('.24', '%23F6F3A6'),
-                ('.43', '%23F6F3A6'),
-                ('.49', '%23EDCC7D'),
-                ('.53', '%23E1B950'),
-                ('.59', '%23675102'),
-                ('.63', '%23675102'),
-                ('.71', '%23EDCC7D'),
-                ('.77', '%23E1B950'),
-                ('.92', '%23675102'),
+                ('.07', '#E1B950'),
+                ('.24', '#F6F3A6'),
+                ('.43', '#F6F3A6'),
+                ('.49', '#EDCC7D'),
+                ('.53', '#E1B950'),
+                ('.59', '#675102'),
+                ('.63', '#675102'),
+                ('.71', '#EDCC7D'),
+                ('.77', '#E1B950'),
+                ('.92', '#675102'),
             ]
                 .span(),
             '0.8'

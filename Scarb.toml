@@ -9,7 +9,6 @@ homepage = "https://github.com/carbonable/metadata"
 
 [[target.starknet-contract]]
 sierra = true
-casm = true
 name = "compiled"
 
 [dependencies]
