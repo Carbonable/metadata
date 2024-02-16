@@ -4,7 +4,6 @@ use metadata::metadata::slots::template::data::TemplateData;
 
 fn generate(data: @TemplateData) -> Span<felt252> {
     let mut svg: Array<felt252> = Default::default();
-    svg.append('data:image/svg+xml,');
     print_head_sft_template(ref svg, data);
     svg.span()
 }
