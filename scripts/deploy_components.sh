@@ -4,9 +4,10 @@ source .env
 # Check if --debug parameter is passed
 debug=0
 declare=0
-setup=0
+provider=0
+register=0
 
-TEMP=$(getopt -o cpd --long components,provider,debug -- "$@")
+TEMP=$(getopt -o cpdr --long components,provider,register,debug -- "$@")
 
 eval set -- "$TEMP"
 
@@ -15,7 +16,9 @@ while true ; do
         -c|--components)
             declare=1 ; shift ;;
         -p|--provider)
-            setup=1 ; shift ;;
+            provider=1 ; shift ;;
+        -r|--register)
+            register=1 ; shift ;;            
         -d|--debug)
             debug=1 ; shift ;;
         --) shift ; break ;;
@@ -48,20 +51,6 @@ declare() {
     echo $address
 }
 
-add_component() {
-    if [ $debug -eq 1 ]; then
-        printf "starkli invoke %s register %s --keystore-password KEYSTORE_PASSWORD --rpc %s --watch \n" "$PROVIDER_ADDRESS" $COMPONENT_CLASS "$STARKNET_RPC" >> ./scripts/debug_setup_provider.log
-    fi
-    output=$(starkli invoke $PROVIDER_ADDRESS register $COMPONENT_CLASS --keystore-password $KEYSTORE_PASSWORD --rpc $STARKNET_RPC --watch 2>&1)
-
-    if [[ $output == *"Error"* ]]; then
-        echo "Error: $output"
-        exit 1
-    fi
-
-    echo "Registering component: " $COMPONENT_CLASS
-}
-
 component_classes=();
 
 # Declares all components
@@ -89,11 +78,11 @@ declare_all() {
     PROVIDER_CLASS=$class_hash
     echo "PROVIDER_CLASS="$PROVIDER_CLASS
 
-    echo "$PROVIDER_CLASS" > .tmp.addr.provider
+    echo "$PROVIDER_CLASS" > .tmp.declaring.provider
 
     declare_components
 
-    echo "${component_classes[@]}" > .tmp.addr.component_classes
+    echo "${component_classes[@]}" > .tmp.declaring.component_classes
 
     echo ${#component_classes[@]}" Components to register"
 }
@@ -101,7 +90,7 @@ declare_all() {
 deploy_provider() {
     OWNER=$DEPLOYER_ADDRESS
 
-    PROVIDER_CLASS=$(cat .tmp.addr.provider)
+    PROVIDER_CLASS=$(cat .tmp.declaring.provider)
     printf "Logs : Provider class : %s \n" "$PROVIDER_CLASS" > ./scripts/debug_setup_provider.log
     
     if [ $debug -eq 1 ]; then
@@ -123,15 +112,41 @@ setup_provider() {
     PROVIDER_ADDRESS=$contract
     echo "Provider deployed at:"$PROVIDER_ADDRESS
 
-    readarray -t component_classes < .tmp.addr.component_classes
+     echo "$PROVIDER_ADDRESS" > .tmp.addr.provider
+}
 
+add_component() {
+    local multi_call_param=$1
+
+    if [ $debug -eq 1 ]; then
+        printf "starkli invoke --keystore-password KEYSTORE_PASSWORD --watch %s \n" "$multi_call_param" >> ./scripts/debug_setup_provider.log
+    fi
+    output=$(starkli invoke --keystore-password $KEYSTORE_PASSWORD --watch $multi_call_param 2>&1)
+
+    if [[ $output == *"Error"* ]]; then
+        echo "Error: $output"
+        exit 1
+    fi
+
+    echo "Registering components: " $multi_call_param
+}
+
+register_provider() {
+    readarray -t component_classes < .tmp.declaring.component_classes
+
+    PROVIDER_ADDRESS=$(cat .tmp.addr.provider)
+
+    command_string=""
     counter=0
     for class_hash in ${component_classes[@]};
     do
-        COMPONENT_CLASS=$class_hash
-        add_component
+        command_string+="$PROVIDER_ADDRESS register $class_hash \\ "
         ((counter++))
     done
+
+    echo "$command_string" > .tmp.debug
+
+    add_component "$command_string"
 
     echo "Total components added: $counter"
 }
@@ -140,6 +155,10 @@ if [ $declare -eq 1 ]; then
     declare_all
 fi
 
-if [ $setup -eq 1 ]; then
+if [ $provider -eq 1 ]; then
     setup_provider
+fi
+
+if [ $register -eq 1 ]; then
+    register_provider
 fi
