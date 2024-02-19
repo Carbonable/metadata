@@ -110,7 +110,7 @@ deploy_provider() {
 setup_provider() {
     contract=$(deploy_provider)
     PROVIDER_ADDRESS=$contract
-    echo "Provider deployed at:"$PROVIDER_ADDRESS
+    echo "Provider deployed at: "$PROVIDER_ADDRESS
 
      echo "$PROVIDER_ADDRESS" > .tmp.addr.provider
 }
