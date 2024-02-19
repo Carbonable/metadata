@@ -17,7 +17,7 @@ fn add_metadata_members_(ref metadata: JsonMetadata, data: @TemplateData) {
     metadata.add_member('description', *data.token_description);
     metadata.add_member('external_url', *data.external_url);
     metadata.add_member('youtube_url', *data.youtube_url);
-    metadata.add_member('image', svg::generate(data));
+    metadata.add_member('image_data', svg::generate(data));
 }
 
 #[inline(always)]
