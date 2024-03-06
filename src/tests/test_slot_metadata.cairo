@@ -133,6 +133,8 @@ fn test_construct_slot_uri() {
     };
 
     set_contract_address(project_address);
+    set_block_timestamp(1750425366);
+
     let uri: Span<felt252> = metadata.construct_slot_uri(slot);
     let mut uri_span = uri;
 

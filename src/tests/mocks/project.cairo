@@ -55,17 +55,20 @@ mod ProjectMock {
         fn get_absorptions(self: @ContractState, slot: u256) -> Span<u64> {
             Default::default().span()
         }
+
         fn get_absorption(self: @ContractState, slot: u256, time: u64) -> u64 {
-            100 * 1_000_000
+            time * 1_000
         }
         fn get_current_absorption(self: @ContractState, slot: u256) -> u64 {
-            778 * 1_000_000
+            // 157_300001
+            41040_000001
         }
         fn get_final_absorption(self: @ContractState, slot: u256) -> u64 {
-            4096 * 1_000_000
+            410400_000000 // Karathuru
+        // 1573_000000 // BanegasFarm
         }
         fn get_project_value(self: @ContractState, slot: u256) -> u256 {
-            42_000 * 1_000_000
+            2_139_004_800000
         }
         fn get_ton_equivalent(self: @ContractState, slot: u256) -> u64 {
             1_000_000
@@ -116,7 +119,7 @@ mod ProjectMock {
         }
 
         fn value_of(self: @ContractState, token_id: u256) -> u256 {
-            369 * 1_000_000
+            200 * 1_000000
         }
 
         fn slot_of(self: @ContractState, token_id: u256) -> u256 {
