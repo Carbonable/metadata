@@ -86,9 +86,7 @@ fn generate_data(static: ProjectStaticData, storage: StorageData) -> TemplateDat
     let status: ProjectStatus = template_data::get_status_(storage);
     let size: AssetSize = template_data::get_asset_size_(static, storage);
     let empty = array![''].span();
-    let total_project_cu = storage.final_absorption / storage.ton_equivalent;
-    let project_remaining_cu = (storage.final_absorption - storage.current_absorption)
-        / storage.ton_equivalent;
+    let project_remaining_cu = storage.final_absorption - storage.current_absorption;
 
     TemplateData {
         project: static,
@@ -99,8 +97,8 @@ fn generate_data(static: ProjectStaticData, storage: StorageData) -> TemplateDat
         status: status.to_string(),
         project_area: array![static.area.to_ascii()].span(),
         end_year: array![static.end_year.to_ascii()].span(),
-        project_carbon_units: array![project_remaining_cu.to_ascii()].span(),
-        asset_carbon_units: array![static.total_cu.to_ascii(), 't'].span(),
+        project_carbon_units: array![static.total_cu.to_ascii()].span(),
+        asset_carbon_units: template_data::format_capacity_(project_remaining_cu.into()),
         lifetime_asset_carbon_units: empty,
         asset_area_formatted: array![static.area.to_ascii(), 'ha'].span(),
         asset_area: empty,

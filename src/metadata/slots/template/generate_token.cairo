@@ -86,9 +86,7 @@ fn generate_data(static: ProjectStaticData, storage: StorageData) -> TemplateDat
     let status: ProjectStatus = template_data::get_status_(storage);
     let size: AssetSize = template_data::get_asset_size_(static, storage);
     let null = array![''].span();
-    let total_project_cu = storage.final_absorption / storage.ton_equivalent;
-    let project_remaining_cu = (storage.final_absorption - storage.current_absorption)
-        / storage.ton_equivalent;
+    let project_remaining_cu = storage.final_absorption - storage.current_absorption;
 
     TemplateData {
         project: static,
