@@ -199,17 +199,25 @@ fn generate_sdgs_rows_(storage: StorageData, sdgs: Span<u8>) -> String {
 
 #[inline(always)]
 fn format_capacity_(capacity: u256) -> String {
-    if capacity < 1000 {
+    if capacity < 1_000 {
         let mut res = capacity.to_ascii();
         res.append('g');
         res.span()
-    } else if capacity < 1000000 {
-        let mut res = (capacity / 1000).to_ascii();
+    } else if capacity < 1_000_000 {
+        let mut res = (capacity / 1_000).to_ascii();
         res.append('kg');
         res.span()
-    } else {
+    } else if capacity < 1_000_000_000 {
         let mut res = (capacity / 1_000_000).to_ascii();
         res.append('t');
+        res.span()
+    } else if capacity < 1_000_000_000_000 {
+        let mut res = (capacity / 1_000_000_000).to_ascii();
+        res.append('kt');
+        res.span()
+    } else {
+        let mut res = (capacity / 1_000_000_000_000).to_ascii();
+        res.append('Mt');
         res.span()
     }
 }
