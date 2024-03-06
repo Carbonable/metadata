@@ -65,8 +65,8 @@ fn add_description_(ref data: Array<felt252>) {
     data.append('trees (2,500 per  ha), and the ');
     data.append('restoration of a carbon sink t');
     data.append('hat will result in a forecasted');
-    data.append('amount of 374,285 certified ');
-    data.append(' carbon units amongst which ');
+    data.append(' amount of 374,285 certified ');
+    data.append('carbon units amongst which ');
     data.append('187,142 Carbon Units will be ');
     data.append('reserved for investors and the ');
     data.append('other half to local communities');
