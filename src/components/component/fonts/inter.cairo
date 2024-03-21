@@ -16,7 +16,7 @@ mod Component {
 
         fn render(self: @ContractState, args: Option<Span<felt252>>) -> Array<felt252> {
             let props: b64jpg::Properties = b64jpg::parse_properties(args);
-            
+
             let mut data: Array<felt252> = Default::default();
             b64jpg::add_mime_prefix(props, ref data);
 
@@ -13365,7 +13365,7 @@ mod Component {
             data.append('D//wB4AAAIoAgABiYEvAAAAAcGbgIUA');
             data.append('AD//wB4AAAIoAhABiYEvAAAAAcGaAFM');
             data.append('AAAAAA==');
-            
+
             data
         }
     }

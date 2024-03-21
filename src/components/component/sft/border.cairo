@@ -106,19 +106,13 @@ mod Component {
                         data.append(*color);
                         data.append('\\"/>');
                     },
-                    Option::None => {
-                        break;
-                    }
+                    Option::None => { break; }
                 };
             };
 
             match props.stroke {
-                Gradient::Linear => {
-                    data.append('</linearGradient>');
-                },
-                Gradient::Radial => {
-                    data.append('</radialGradient>');
-                },
+                Gradient::Linear => { data.append('</linearGradient>'); },
+                Gradient::Radial => { data.append('</radialGradient>'); },
             }
 
             data.append('</defs></svg>');

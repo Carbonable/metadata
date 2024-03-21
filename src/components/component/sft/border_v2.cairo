@@ -100,9 +100,7 @@ mod Component {
                         data.append(*color);
                         data.append('\\"/>');
                     },
-                    Option::None => {
-                        break;
-                    }
+                    Option::None => { break; }
                 };
             };
 
