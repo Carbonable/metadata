@@ -80,8 +80,12 @@ fn get_component_instance(
 ) -> String {
     let component = provider.get(id);
     match component {
-        Option::Some(c) => { c.render(arg_props).span() },
-        Option::None => { array![].span() },
+        Option::Some(c) => {
+            c.render(arg_props).span()
+        },
+        Option::None => {
+            array![].span()
+        },
     }
 }
 
@@ -184,7 +188,9 @@ fn generate_sdgs_rows_(storage: StorageData, sdgs: Span<u8>) -> String {
                 let sdg_str = generate_sdg_(storage.component_provider, *sdg_num, size, i);
                 data.concat(sdg_str);
             },
-            Option::None => { break; },
+            Option::None => {
+                break;
+            },
         };
         i += 1;
     };

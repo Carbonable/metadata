@@ -72,7 +72,9 @@ mod Component {
             let mut need_defs: bool = false;
 
             match props.stroke_outer {
-                Stroke::Color(color) => { data.append(color); },
+                Stroke::Color(color) => {
+                    data.append(color);
+                },
                 Stroke::Gradient(gradient) => {
                     data.append('url(#a)');
                     need_defs = true;
@@ -90,13 +92,17 @@ mod Component {
                     data.append(opacity);
                     data.append('\\"/>');
                 },
-                Option::None => { data.append('/>'); },
+                Option::None => {
+                    data.append('/>');
+                },
             }
 
             data.append('<path stroke=\\"');
 
             match props.stroke_inner {
-                Stroke::Color(color) => { data.append(color); },
+                Stroke::Color(color) => {
+                    data.append(color);
+                },
                 Stroke::Gradient(gradient) => {
                     data.append('url(#b)');
                     need_defs = true;
@@ -116,7 +122,9 @@ mod Component {
                     data.append(opacity);
                     data.append('\\"/>');
                 },
-                Option::None => { data.append(' />'); },
+                Option::None => {
+                    data.append(' />');
+                },
             }
 
             if need_defs {
@@ -141,7 +149,9 @@ mod Component {
                                     data.append(*color);
                                     data.append('\\"/>');
                                 },
-                                Option::None => { break; }
+                                Option::None => {
+                                    break;
+                                }
                             };
                         };
                         data.append('</linearGradient>');
@@ -169,7 +179,9 @@ mod Component {
                                     data.append(*color);
                                     data.append('\\"/>');
                                 },
-                                Option::None => { break; }
+                                Option::None => {
+                                    break;
+                                }
                             };
                         };
                         data.append('</linearGradient>');
