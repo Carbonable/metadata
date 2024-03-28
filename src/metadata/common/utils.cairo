@@ -20,8 +20,12 @@ impl ArrayConcatTrait<T, impl TCopy: Copy<T>, impl TDrop: Drop<T>> of ArrayConca
         let mut data = data;
         loop {
             match data.pop_front() {
-                Option::Some(v) => { self.append(*v); },
-                Option::None(_) => { break (); },
+                Option::Some(v) => {
+                    self.append(*v);
+                },
+                Option::None(_) => {
+                    break ();
+                },
             };
         };
     }
