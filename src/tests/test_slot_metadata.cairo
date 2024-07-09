@@ -129,7 +129,7 @@ fn test_construct_slot_uri() {
     let slot = 1_u256;
 
     let metadata = ISlotDescriptorLibraryDispatcher {
-        class_hash: as_class(KarathuruUri::TEST_CLASS_HASH)
+        class_hash: as_class(ManjarisoaUri::TEST_CLASS_HASH)
     };
 
     set_contract_address(project_address);
@@ -151,7 +151,7 @@ fn test_construct_token_uri() {
     let token_id = 1_u256;
 
     let metadata = ISlotDescriptorLibraryDispatcher {
-        class_hash: as_class(KarathuruUri::TEST_CLASS_HASH)
+        class_hash: as_class(BanegasFarmUri::TEST_CLASS_HASH)
     };
 
     set_contract_address(project_address);
