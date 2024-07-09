@@ -99,4 +99,5 @@ struct ProjectStaticData {
     sdgs: Span<u8>,
     background_component: Shortstring,
     external_url: String,
+    paused: u8
 }

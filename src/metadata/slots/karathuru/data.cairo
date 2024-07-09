@@ -14,6 +14,7 @@ const COLOR: Shortstring = 'Blue';
 const TYPE: Shortstring = 'ARR';
 const CATEGORY: Shortstring = 'Mangrove';
 const SOURCE: Shortstring = 'Carbonable';
+const PAUSED: u8 = 0;
 
 #[inline(always)]
 fn get_sdgs_() -> Span<u8> {
@@ -41,6 +42,7 @@ fn get_static_data() -> ProjectStaticData {
         sdgs: get_sdgs_(),
         background_component: 'bg.Karathuru.jpg.b64',
         external_url: get_external_url_(),
+        paused: PAUSED,
     }
 }
 

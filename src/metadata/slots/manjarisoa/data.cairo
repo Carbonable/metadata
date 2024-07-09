@@ -14,6 +14,7 @@ const COLOR: Shortstring = 'Green';
 const TYPE: Shortstring = 'ARR';
 const CATEGORY: Shortstring = 'Forest';
 const SOURCE: Shortstring = 'Carbonable';
+const PAUSED: u8 = 1;
 
 #[inline(always)]
 fn get_sdgs_() -> Span<u8> {
@@ -41,6 +42,7 @@ fn get_static_data() -> ProjectStaticData {
         sdgs: get_sdgs_(),
         background_component: 'bg.Manjarisoa.jpg.b64',
         external_url: get_external_url_(),
+        paused: PAUSED,
     }
 }
 
