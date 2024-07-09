@@ -56,9 +56,11 @@ struct TemplateData {
 }
 
 #[inline(always)]
-fn get_status_(storage: StorageData) -> ProjectStatus {
-    let mut status: ProjectStatus = ProjectStatus::Upcoming;
-    if storage.timestamp < storage.start_time {
+fn get_status_(storage: StorageData, static: ProjectStaticData) -> ProjectStatus {
+    let mut status: ProjectStatus = ProjectStatus::Paused;
+    if static.paused == 1 {
+        status = ProjectStatus::Paused;
+    } else if storage.timestamp < storage.start_time {
         status = ProjectStatus::Upcoming;
     } else if storage.timestamp < storage.final_time {
         status = ProjectStatus::Live;
@@ -320,7 +322,7 @@ fn get_progress_str_(storage: StorageData, static: ProjectStaticData) -> String 
 fn get_progress_bar_props_(
     storage: StorageData, static: ProjectStaticData
 ) -> sft::progress_bar::Properties {
-    let status = get_status_(storage);
+    let status = get_status_(storage, static);
     let progress = get_progress_(storage, static);
 
     let (
@@ -446,7 +448,7 @@ fn get_status_props_(status: ProjectStatus) -> sft::status::Properties {
 #[inline(always)]
 fn generate_status_(storage: StorageData, static: ProjectStaticData) -> String {
     let mut data: Array<felt252> = Default::default();
-    let status = get_status_(storage);
+    let status = get_status_(storage, static);
     let props = get_status_props_(status);
 
     data.append('<defs><clipPath id=\\"status_bl');
