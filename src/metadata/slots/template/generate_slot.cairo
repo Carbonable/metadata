@@ -83,7 +83,7 @@ fn generate_data(static: ProjectStaticData, storage: StorageData) -> TemplateDat
     // Reusing the token template
     let token_name: String = static.name;
     let token_description: String = static.description;
-    let status: ProjectStatus = template_data::get_status_(storage);
+    let status: ProjectStatus = template_data::get_status_(storage, static);
     let size: AssetSize = template_data::get_asset_size_(static, storage);
     let empty = array![''].span();
     let project_remaining_cu = storage.final_absorption - storage.current_absorption;
