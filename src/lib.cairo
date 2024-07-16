@@ -4,6 +4,7 @@ mod interfaces {
     mod contract_descriptor;
     mod component;
     mod component_provider;
+    mod vintage;
 }
 
 mod components {
@@ -104,6 +105,22 @@ mod metadata {
 
         mod ipfs;
     }
+
+    mod vintages {
+        mod template {
+            mod data;
+            mod json;
+            mod storage;
+            mod svg;
+        }
+
+        mod banegas_farm {
+            mod contract;
+            mod static;
+        }
+
+        mod models;
+    }
 }
 
 #[cfg(test)]
@@ -114,8 +131,10 @@ mod tests {
     }
     mod mocks {
         mod project;
+        mod cpv3_project;
     }
     mod test_slot_metadata;
     mod test_contract_metadata;
     mod test_component_provider;
+    mod test_cpv3_metadata;
 }
