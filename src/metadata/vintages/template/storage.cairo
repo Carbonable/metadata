@@ -11,8 +11,10 @@ use cairo_erc_3525::interface::{IERC3525Dispatcher, IERC3525DispatcherTrait};
 fn fetch_data(contract_address: ContractAddress, token_id: u256) -> CPV3StorageData {
     let vintages = IVintageDispatcher { contract_address };
     let project_carbon = vintages.get_project_carbon();
-    let vintage = vintages.get_carbon_vintage(token_id);
-    let (start_year, end_year) = vintages.get_vintage_range();
+    let all_vintages = vintages.get_cc_vintages();
+    let vintage = *all_vintages.at(token_id.try_into().unwrap());
+    let start_year: u32 = *all_vintages.at(0).year;
+    let end_year: u32 = *all_vintages.at(all_vintages.len() - 1).year;
 
     let timestamp = starknet::get_block_timestamp();
 

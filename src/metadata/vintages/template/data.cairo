@@ -37,7 +37,7 @@ fn generate_data(static: ProjectStaticData, storage: StorageData) -> TemplateDat
         project_carbon_units: array![static.total_cu.to_ascii()].span(),
         project_name,
         project_description,
-        vintage_year: array![vintage.year.low.to_ascii()].span(),
+        vintage_year: array![vintage.year.to_ascii()].span(),
         vintage_supply: array![vintage.supply.to_ascii()].span(),
         vintage_supply_fmt: format_capacity_(vintage.supply.into()),
         vintage_failed: array![vintage.failed.to_ascii()].span(),
