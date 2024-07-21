@@ -11,6 +11,8 @@ mod BanegasCPV3Uri {
     use metadata::metadata::vintages::template::json::generate_json;
     use metadata::metadata::vintages::banegas_farm::static::get_static_data;
 
+    use debug::PrintTrait;
+
     use openzeppelin::introspection::interface::{ISRC5Dispatcher, ISRC5DispatcherTrait, ISRC5_ID};
 
     #[storage]
@@ -22,7 +24,6 @@ mod BanegasCPV3Uri {
             // [Check] calling contract is compatible
             let contract = get_contract_address();
             self.compatible(contract);
-
             let static_data = get_static_data();
             generate_json(contract, token_id, static_data)
         }
@@ -33,9 +34,8 @@ mod BanegasCPV3Uri {
             let src5 = ISRC5Dispatcher { contract_address };
             let is_SRC5 = src5.supports_interface(ISRC5_ID);
             assert(src5.supports_interface(ISRC5_ID), 'ISRC5 not supported');
-            
-            // TODO
-            // assert(src5.supports_interface(IERC1155_ID), 'IERC1155 not supported');
+        // TODO
+        // assert(src5.supports_interface(IERC1155_ID), 'IERC1155 not supported');
         }
     }
 }
