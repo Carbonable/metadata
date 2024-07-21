@@ -1,4 +1,7 @@
 use metadata::interfaces::component_provider::IComponentProviderDispatcher;
+use metadata::metadata::common::models::{
+    ProjectStaticData, String, Shortstring, ProjectStatus, AssetSize, ToString
+};
 
 #[derive(Copy, Drop, Serde)]
 enum CarbonVintageType {
@@ -13,21 +16,54 @@ enum CarbonVintageType {
     Audited,
 }
 
+impl CarbonVintageTypeDisplay of Into<CarbonVintageType, felt252> {
+    fn into(self: CarbonVintageType) -> felt252 {
+        match self {
+            CarbonVintageType::Unset => 'Unset',
+            CarbonVintageType::Projected => 'Projected',
+            CarbonVintageType::Confirmed => 'Confirmed',
+            CarbonVintageType::Audited => 'Audited',
+        }
+    }
+}
+
 #[derive(Drop, Copy, Serde)]
 struct CarbonVintage {
-	/// The year of the vintage
-	year: u256,
-	/// The total supply of Carbon Credit of this vintage.
-	supply: u128,
-	/// The total amount of Carbon Credit that failed during audits.
-	failed: u128,
-	/// The status of the Carbon Credit of this Vintage.
-	status: CarbonVintageType, // Unset, Projected, Confirmed, Audited
+    /// The year of the vintage
+    year: u256,
+    /// The total supply of Carbon Credit of this vintage.
+    supply: u128,
+    /// The total amount of Carbon Credit that failed during audits.
+    failed: u128,
+    /// The status of the Carbon Credit of this Vintage.
+    status: CarbonVintageType, // Unset, Projected, Confirmed, Audited
 }
 
 #[derive(Drop, Copy)]
 struct CPV3TemplateData {
-    
+    // General
+    external_url: String,
+    youtube_url: String,
+    // Project
+    project: ProjectStaticData,
+    project_area: String,
+    project_carbon_units: String,
+    project_name: String,
+    project_description: String,
+    //Vintage
+    vintage_year: String,
+    vintage_supply: String,
+    vintage_supply_fmt: String,
+    vintage_type: String,
+    vintage_failed: String,
+    // SVG specific data
+    asset_carbon_units: String,
+    sdg_components: String,
+    sdg_count: String,
+    // Components data
+    background_image: String,
+    status_component: String, 
+    border_component: String,
 }
 
 #[derive(Drop, Copy)]
@@ -37,9 +73,10 @@ struct CPV3StorageData {
     token_id: u256,
     vintage: CarbonVintage,
     timestamp: u64,
+    start_year: u32,
+    end_year: u32,
 }
 
 #[derive(Drop, Copy)]
-struct CPV3StaticData {
+struct CPV3StaticData {}
 
-}

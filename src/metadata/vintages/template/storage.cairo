@@ -12,6 +12,7 @@ fn fetch_data(contract_address: ContractAddress, token_id: u256) -> CPV3StorageD
     let vintages = IVintageDispatcher { contract_address };
     let project_carbon = vintages.get_project_carbon();
     let vintage = vintages.get_carbon_vintage(token_id);
+    let (start_year, end_year) = vintages.get_vintage_range();
 
     let timestamp = starknet::get_block_timestamp();
 
@@ -25,6 +26,8 @@ fn fetch_data(contract_address: ContractAddress, token_id: u256) -> CPV3StorageD
         project_carbon,
         token_id,
         vintage,
-        timestamp
+        timestamp,
+        start_year,
+        end_year,
     }
 }
