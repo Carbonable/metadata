@@ -30,7 +30,7 @@ impl CarbonVintageTypeDisplay of Into<CarbonVintageType, felt252> {
 #[derive(Drop, Copy, Serde)]
 struct CarbonVintage {
     /// The year of the vintage
-    year: u256,
+    year: u32,
     /// The total supply of Carbon Credit of this vintage.
     supply: u128,
     /// The total amount of Carbon Credit that failed during audits.
