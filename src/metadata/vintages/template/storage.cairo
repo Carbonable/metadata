@@ -22,12 +22,6 @@ fn fetch_data(contract_address: ContractAddress, token_id: u256) -> CPV3StorageD
     };
 
     CPV3StorageData {
-        component_provider,
-        project_carbon,
-        token_id,
-        vintage,
-        timestamp,
-        start_year,
-        end_year,
+        component_provider, project_carbon, token_id, vintage, timestamp, start_year, end_year,
     }
 }

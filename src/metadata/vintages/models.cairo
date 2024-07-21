@@ -62,7 +62,7 @@ struct CPV3TemplateData {
     sdg_count: String,
     // Components data
     background_image: String,
-    status_component: String, 
+    status_component: String,
     border_component: String,
 }
 
