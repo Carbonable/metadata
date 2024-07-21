@@ -8,7 +8,9 @@ use test::test_utils::assert_eq;
 
 use metadata::metadata::vintages::banegas_farm::contract::BanegasCPV3Uri;
 use metadata::tests::mocks::cpv3_project::CPV3ProjectMock;
-use metadata::interfaces::slot_descriptor::{IUriDescriptorLibraryDispatcher, IUriDescriptorDispatcherTrait};
+use metadata::interfaces::slot_descriptor::{
+    IUriDescriptorLibraryDispatcher, IUriDescriptorDispatcherTrait
+};
 use metadata::interfaces::component_provider::{
     IComponentProviderDispatcher, IComponentProviderDispatcherTrait
 };

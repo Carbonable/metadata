@@ -4,7 +4,7 @@ use metadata::metadata::vintages::models::CarbonVintage;
 trait IVintage<TContractState> {
     /// Returns the vintage start and end years.
     fn get_vintage_range(self: @TContractState) -> (u32, u32);
-    
+
     /// Returns the project total carbon credits.
     fn get_project_carbon(self: @TContractState) -> u128;
 

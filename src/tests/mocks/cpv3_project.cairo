@@ -66,45 +66,44 @@ mod CPV3ProjectMock {
         fn get_vintage_range(self: @ContractState) -> (u32, u32) {
             (2023, 2025)
         }
+
         fn get_project_carbon(self: @ContractState) -> u128 {
             3133700000000
         }
-    
+
         /// Returns the number of vintages of the project.
         fn get_num_vintages(self: @ContractState) -> usize {
             3
         }
-    
+
         /// Returns all available vintage details.
         fn get_cc_vintages(self: @ContractState) -> Span<CarbonVintage> {
             array![
                 CarbonVintage {
-                    year: 2023,
-                    supply : 133700000000,
-                    failed: 0,
-                    status: CarbonVintageType::Audited,
+                    year: 2023, supply: 133700000000, failed: 0, status: CarbonVintageType::Audited,
                 },
                 CarbonVintage {
                     year: 2024,
-                    supply : 1000000000000,
+                    supply: 1000000000000,
                     failed: 0,
                     status: CarbonVintageType::Projected,
                 },
                 CarbonVintage {
                     year: 2025,
-                    supply : 2000000000000,
+                    supply: 2000000000000,
                     failed: 0,
                     status: CarbonVintageType::Projected,
                 }
-            ].span()
+            ]
+                .span()
         }
-    
+
         /// Returns the vintage details with the given token_id.
         fn get_carbon_vintage(self: @ContractState, token_id: u256) -> CarbonVintage {
             let v = self.get_cc_vintages();
             *v[token_id.try_into().unwrap()]
         }
-    
+
         /// Get number of decimal for total supply to have a carbon credit
         fn get_cc_decimals(self: @ContractState) -> u8 {
             8
