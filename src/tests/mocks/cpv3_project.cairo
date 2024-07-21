@@ -1,21 +1,23 @@
 use metadata::metadata::vintages::models::{CarbonVintageType, CarbonVintage};
 
 #[starknet::interface]
-trait ICPV3ProjectMock<ContractState> {
+trait ICPV3ProjectMock<TContractState> {
     /// Returns the project total carbon credits.
-    fn get_project_carbon(self: @ContractState) -> u128;
+    fn get_project_carbon(self: @TContractState) -> u128;
 
     /// Returns the number of vintages of the project.
-    fn get_num_vintages(self: @ContractState) -> usize;
+    fn get_num_vintages(self: @TContractState) -> usize;
 
     /// Returns all available vintage details.
-    fn get_cc_vintages(self: @ContractState) -> Span<CarbonVintage>;
+    fn get_cc_vintages(self: @TContractState) -> Span<CarbonVintage>;
 
     /// Returns the vintage details with the given token_id.
-    fn get_carbon_vintage(self: @ContractState, token_id: u256) -> CarbonVintage;
+    fn get_carbon_vintage(self: @TContractState, token_id: u256) -> CarbonVintage;
 
     /// Get number of decimal for total supply to have a carbon credit
-    fn get_cc_decimals(self: @ContractState) -> u8;
+    fn get_cc_decimals(self: @TContractState) -> u8;
+
+    fn get_vintage_range(self: @TContractState) -> (u32, u32);
 }
 
 
@@ -61,6 +63,9 @@ mod CPV3ProjectMock {
 
     #[external(v0)]
     impl MockVintagesImpl of super::ICPV3ProjectMock<ContractState> {
+        fn get_vintage_range(self: @ContractState) -> (u32, u32) {
+            (2023, 2025)
+        }
         fn get_project_carbon(self: @ContractState) -> u128 {
             3133700000000
         }
