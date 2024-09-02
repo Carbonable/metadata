@@ -3,7 +3,7 @@ use metadata::metadata::vintages::models::{CarbonVintageType, CarbonVintage};
 #[starknet::interface]
 trait ICPV3ProjectMock<TContractState> {
     /// Returns the project total carbon credits.
-    fn get_project_carbon(self: @TContractState) -> u128;
+    fn get_project_carbon(self: @TContractState) -> u256;
 
     /// Returns the number of vintages of the project.
     fn get_num_vintages(self: @TContractState) -> usize;
@@ -50,13 +50,15 @@ mod CPV3ProjectMock {
         SRC5::InternalImpl::register_interface(ref unsafe_state, ISRC5_ID);
     }
 
+
+    #[generate_trait]
     #[external(v0)]
-    impl MockProviderImpl of IProviderExt<ContractState> {
-        fn get_component_provider(self: @ContractState) -> ContractAddress {
+    impl MockProviderImpl of IProvider {
+        fn get_provider(self: @ContractState) -> ContractAddress {
             self.provider.read()
         }
 
-        fn set_component_provider(ref self: ContractState, provider: ContractAddress) {
+        fn set_provider(ref self: ContractState, provider: ContractAddress) {
             self.provider.write(provider)
         }
     }
@@ -67,7 +69,7 @@ mod CPV3ProjectMock {
             (2023, 2025)
         }
 
-        fn get_project_carbon(self: @ContractState) -> u128 {
+        fn get_project_carbon(self: @ContractState) -> u256 {
             3133700000000
         }
 
@@ -80,18 +82,24 @@ mod CPV3ProjectMock {
         fn get_cc_vintages(self: @ContractState) -> Span<CarbonVintage> {
             array![
                 CarbonVintage {
-                    year: 2023, supply: 133700000000, failed: 0, status: CarbonVintageType::Audited,
+                    year: 2023,
+                    supply: 133700000000,
+                    failed: 0,
+                    created: 0,
+                    status: CarbonVintageType::Audited,
                 },
                 CarbonVintage {
                     year: 2024,
                     supply: 1000000000000,
                     failed: 0,
+                    created: 0,
                     status: CarbonVintageType::Projected,
                 },
                 CarbonVintage {
                     year: 2025,
                     supply: 2000000000000,
                     failed: 0,
+                    created: 0,
                     status: CarbonVintageType::Projected,
                 }
             ]
@@ -101,7 +109,7 @@ mod CPV3ProjectMock {
         /// Returns the vintage details with the given token_id.
         fn get_carbon_vintage(self: @ContractState, token_id: u256) -> CarbonVintage {
             let v = self.get_cc_vintages();
-            *v[token_id.try_into().unwrap()]
+            *v[token_id.try_into().expect('invalid token_id')]
         }
 
         /// Get number of decimal for total supply to have a carbon credit
