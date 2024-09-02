@@ -3,7 +3,7 @@ use metadata::metadata::common::models::{
     ProjectStaticData, String, Shortstring, ProjectStatus, AssetSize, ToString
 };
 
-#[derive(Copy, Drop, Serde)]
+#[derive(Copy, Drop, Serde, Default, PartialEq)]
 enum CarbonVintageType {
     #[default]
     /// Unset: the Carbon Credit is not yet created nor projected.
@@ -27,16 +27,18 @@ impl CarbonVintageTypeDisplay of Into<CarbonVintageType, felt252> {
     }
 }
 
-#[derive(Drop, Copy, Serde)]
+#[derive(Copy, Drop, Debug, Serde, PartialEq, Default)]
 struct CarbonVintage {
     /// The year of the vintage
     year: u32,
-    /// The total supply of Carbon Credit of this vintage.
-    supply: u128,
-    /// The total amount of Carbon Credit that failed during audits.
-    failed: u128,
-    /// The status of the Carbon Credit of this Vintage.
-    status: CarbonVintageType, // Unset, Projected, Confirmed, Audited
+    /// The total supply of Carbon Credit for this vintage.
+    supply: u256,
+    /// The total amount of Carbon Credit that was failed during audits.
+    failed: u256,
+    /// The total amount of Carbon Credit that was created during audits.
+    created: u256,
+    /// The status of the Carbon Credit of this Vintage. 
+    status: CarbonVintageType,
 }
 
 #[derive(Drop, Copy)]
