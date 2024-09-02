@@ -14,7 +14,6 @@ use metadata::interfaces::slot_descriptor::{
 use metadata::interfaces::component_provider::{
     IComponentProviderDispatcher, IComponentProviderDispatcherTrait
 };
-use metadata::interfaces::component_provider::{IProviderExtDispatcher, IProviderExtDispatcherTrait};
 
 use metadata::components::component::logos::carbonable::Component as CarbonableLogo;
 use metadata::components::component::logos::ers::Component as ERSLogo;
@@ -52,6 +51,13 @@ use metadata::components::provider::ComponentProvider;
 
 use metadata::tests::utils;
 use starknet::ClassHash;
+
+#[starknet::interface]
+trait IProviderExternal<TContractState> {
+    fn get_provider(self: @TContractState) -> ContractAddress;
+    fn set_provider(self: @TContractState, provider: ContractAddress);
+}
+
 
 fn as_class(class: felt252) -> ClassHash {
     class.try_into().unwrap()
@@ -106,8 +112,8 @@ fn setup() -> (IComponentProviderDispatcher, ContractAddress, ContractAddress) {
     provider.register(as_class(SFTBadgeS::TEST_CLASS_HASH));
     provider.register(as_class(SFTBadgeXS::TEST_CLASS_HASH));
 
-    let project = IProviderExtDispatcher { contract_address: project_address };
-    project.set_component_provider(provider.contract_address);
+    let project = IProviderExternalDispatcher { contract_address: project_address };
+    project.set_provider(provider.contract_address);
 
     (provider, project_address, account)
 }
