@@ -7,6 +7,9 @@ use starknet::syscalls::deploy_syscall;
 use test::test_utils::assert_eq;
 
 use metadata::metadata::vintages::banegas_farm::contract::BanegasCPV3Uri;
+use metadata::metadata::vintages::karathuru::contract::KarathuruCPV3Uri;
+use metadata::metadata::vintages::las_delicias::contract::LasDeliciasCPV3Uri;
+use metadata::metadata::vintages::manjarisoa::contract::ManjarisoaCPV3Uri;
 use metadata::tests::mocks::cpv3_project::CPV3ProjectMock;
 use metadata::interfaces::slot_descriptor::{
     IUriDescriptorLibraryDispatcher, IUriDescriptorDispatcherTrait
@@ -132,7 +135,7 @@ fn test_construct_uri() {
     let token_id = 1_u256;
 
     let metadata = IUriDescriptorLibraryDispatcher {
-        class_hash: as_class(BanegasCPV3Uri::TEST_CLASS_HASH)
+        class_hash: as_class(KarathuruCPV3Uri::TEST_CLASS_HASH)
     };
 
     set_contract_address(project_address);
