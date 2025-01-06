@@ -119,6 +119,21 @@ mod metadata {
             mod static;
         }
 
+        mod las_delicias {
+            mod contract;
+            mod static;
+        }
+
+        mod karathuru {
+            mod contract;
+            mod static;
+        }
+
+        mod manjarisoa {
+            mod contract;
+            mod static;
+        }
+
         mod models;
     }
 }

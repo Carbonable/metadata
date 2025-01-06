@@ -22,7 +22,7 @@ fn fetch_data(contract_address: ContractAddress, token_id: u256) -> StorageData 
     let mut start_year: u32 = 1970;
     let mut end_year: u32 = 2999;
     if num != 0 && token_id <= num.into() {
-        vintage = *all_vintages.at(token_id.try_into().unwrap());
+        vintage = *all_vintages.at((token_id - 1).try_into().unwrap());
         start_year = *all_vintages.at(0).year;
         end_year = *all_vintages.at(all_vintages.len() - 1).year;
     }
