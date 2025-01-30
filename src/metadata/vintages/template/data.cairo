@@ -324,22 +324,26 @@ fn format_capacity_(capacity: u256) -> String {
     // TODO: use decimals
     if capacity < 1_000 {
         let mut res = capacity.to_ascii();
-        res.append('g');
+        res.append('mg');
         res.span()
     } else if capacity < 1_000_000 {
         let mut res = (capacity / 1_000).to_ascii();
-        res.append('kg');
+        res.append('g');
         res.span()
     } else if capacity < 1_000_000_000 {
         let mut res = (capacity / 1_000_000).to_ascii();
-        res.append('t');
+        res.append('kg');
         res.span()
     } else if capacity < 1_000_000_000_000 {
         let mut res = (capacity / 1_000_000_000).to_ascii();
+        res.append('t');
+        res.span()
+    } else if capacity < 1_000_000_000_000_000 {
+        let mut res = (capacity / 1_000_000_000_000).to_ascii();
         res.append('kt');
         res.span()
     } else {
-        let mut res = (capacity / 1_000_000_000_000).to_ascii();
+        let mut res = (capacity / 1_000_000_000_000_000).to_ascii();
         res.append('Mt');
         res.span()
     }
